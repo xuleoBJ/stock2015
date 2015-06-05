@@ -2,6 +2,12 @@
 Thumbs.db
 ehthumbs.db
 
+#xuleo filters
+*.txt
+export/
+*.swp
+dist/
+
 # Folder config file
 Desktop.ini
 
