@@ -58,7 +58,7 @@ class StockSH:
     def __init__(self):
         print("#"*80)
         print ("当前股票代码:"+"sh999999")
-        stockDataFile=os.path.join("market",'999999.txt')
+        stockDataFile=os.path.join("export",'999999.txt')
         fileOpened=open(stockDataFile,'r')
         lineIndex=0
         for line in fileOpened.readlines():
