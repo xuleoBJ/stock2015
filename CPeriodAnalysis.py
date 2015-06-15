@@ -5,7 +5,8 @@ import shutil
 import time
 import datetime
 import numpy
-import Cstock
+
+
 from scipy.stats.stats import pearsonr
 
 ##分析股票与大盘走势的同步性
@@ -39,7 +40,7 @@ if __name__=="__main__":
     
     shStock=Cstock.StockSH()
     
-    stockID="600196"
+    stockID="601766"
     curStock=Cstock.Stock(stockID)
 
     for numOfTradeDays in [5,10,20,30]:

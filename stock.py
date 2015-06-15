@@ -277,7 +277,7 @@ if __name__=="__main__":
     findPeak(240,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
     findPeak(300,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
 
-    stockID="600089"
+    stockID="601766"
     readStockByID(stockID)
 
   ##  highAndlowPrice(stockID,[iDaysPeriodUser,30,60,120])
