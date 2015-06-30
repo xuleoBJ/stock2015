@@ -7,7 +7,7 @@ import datetime
 import numpy
 from scipy.stats.stats import pearsonr
 
-
+dirData="export"
 ##定义上证大盘指数List
 shLineList=[]
 shDateStrList=[]
@@ -22,7 +22,7 @@ shWaveRateFLst=[] ##波动涨幅
 def readStockSH999999():
     print("\n"+"#"*80)
     print ("当前股票代码:"+"sh999999")
-    stockDataFile=os.path.join(dataPath,'999999.txt')
+    stockDataFile=os.path.join(dirData,'999999.txt')
     fileOpened=open(stockDataFile,'r')
     lineIndex=0
     for line in fileOpened.readlines():
@@ -54,7 +54,6 @@ riseRateFList=[]  ##涨幅
 waveRateFList=[] ##波动涨幅
 
 def readStockByID(stockID):
-    dirData="export"
     print("\n"+"#"*80)
     stockDataFile=os.path.join(dirData,stockID+'.txt')
 ##    if stockID.startswith("6"):
@@ -269,6 +268,7 @@ if __name__=="__main__":
     dateStrEnd=shDateStrList[-1]
     analysisDate(dateStrStart,dateStrEnd,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
     print ("正在进行大盘时空分析：")
+    findPeak(10,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
     findPeak(30,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
     findPeak(60,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
     findPeak(90,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
@@ -277,7 +277,7 @@ if __name__=="__main__":
     findPeak(240,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
     findPeak(300,shDateStrList,shPriceOpeningFList,shPriceHighestFList,shPriceLowestFList,shPriceCloseingFList)
 
-    stockID="601766"
+    stockID="600000"
     readStockByID(stockID)
 
   ##  highAndlowPrice(stockID,[iDaysPeriodUser,30,60,120])
