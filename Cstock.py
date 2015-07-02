@@ -14,7 +14,7 @@ class Stock:
     priceHighestFList=[]
     priceLowestFList=[]
     tradeVolumeFList=[] ##成交量
-    turnoverFList=[]  ##成交额
+    turnOverFList=[]  ##成交额
     riseRateFList=[]  ##涨幅
     waveRateFList=[] ##波动涨幅
     def __init__(self,stockID):
@@ -35,6 +35,7 @@ class Stock:
                 self.priceLowestFList.append(float(splitLine[3]))
                 self.priceCloseingFList.append(float(splitLine[4]))
                 self.tradeVolumeFList.append(float(splitLine[5]))
+                self.turnOverFList.append(float(splitLine[6]))
                 if len(self.priceCloseingFList)>=2:
                     self.riseRateFList.append(round(100*(self.priceCloseingFList[-1]-self.priceCloseingFList[-2])/self.priceCloseingFList[-1],2))
                     self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-2])/self.priceCloseingFList[-1],2))
@@ -53,6 +54,7 @@ class StockSH:
     shPriceHighestFList=[]
     shPriceLowestFList=[]
     shTradeVolumeFList=[]
+    shTurnoverFList=[]
     shRiseRateFList=[]  ##涨幅
     shWaveRateFLst=[] ##波动涨幅
     def __init__(self):
@@ -72,6 +74,7 @@ class StockSH:
                 self.shPriceLowestFList.append(float(splitLine[3]))
                 self.shPriceCloseingFList.append(float(splitLine[4]))
                 self.shTradeVolumeFList.append(float(splitLine[5]))
+                self.shTurnoverFList.append(float(splitLine[6]))
         fileOpened.close()
         print("上证数据读取完毕,数据开始日：\t"+self.shDateStrList[0]+"数据结束日：\t"+self.shDateStrList[-1])
 if __name__=="__main__":

@@ -26,10 +26,10 @@ def getDateOfPrice(price,priceFList,dateStrList):
     return dateStrList[indexPrice]
 
 
-def findPeak(days,curDateStrList,curPriceOpeningFList,curPriceHighestFList,curPriceLowestFList,curPriceCloseingFList):
-    print('进行峰值分析，分析周期(天):'+str(days))
+def findPeakPrice(days,curDateStrList,curPriceOpeningFList,curPriceHighestFList,curPriceLowestFList,curPriceCloseingFList):
+    print('进行价格峰值分析，分析周期(天):'+str(days))
     lineWrited.append('-'*50)
-    lineWrited.append('分析周期(天):'+str(days))
+    lineWrited.append('价格峰值分析分析周期(天):'+str(days))
     lineWrited.append("日期"+"\t局部高点/低点\t"+"\t距上次峰值交易日个数\t"+"\t距上次峰值自然日个数\t"+"\t浮动幅度%:\t")
     d1=convertDateStr2Date(curDateStrList[0])
     d2=convertDateStr2Date(curDateStrList[0])
@@ -61,22 +61,75 @@ def findPeak(days,curDateStrList,curPriceOpeningFList,curPriceHighestFList,curPr
     daysSpan=(d2-d1).days
     lineWrited.append(curDateStrList[-1]+"\t"+str(curPriceCloseingFList[-1])+"\t"+str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curPriceCloseingFList[-1]-standValue)/standValue,3)*100))
 
-
-def contiveTradeDaysAnalysis(numDays,curDateStrList,curRiseRateFList):
+def findPeakVolume(days,curDateStrList,curTradeVolumeFList):
+    print('进行成交量峰值分析，分析周期(天):'+str(days))
     lineWrited.append('-'*50)
-    lineWrited.append('连续下跌交易日个数:'+str(numDays))
-    indexList=[]
-    for i in range(0,len(curRiseRateFList)-numDays):
-        bFall=0
-        for j in range(numDays):
-            if curRiseRateFList[i+j]>=0:
-                bFall=1
-        if bFall==0:
-            print curDateStrList[i]
-  ##  lineWrited.append(curDateStrList[-1]+"\t"+str(curPriceCloseingFList[-1])+"\t"+str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curPriceCloseingFList[-1]-standValue)/standValue,3)*100))
+    lineWrited.append('成交量峰值分析周期(天):'+str(days))
+    lineWrited.append("日期"+"\t局部高点/低点(万手)\t"+"\t距上次峰值交易日个数\t"+"\t距上次峰值自然日个数\t"+"\t浮动幅度%:\t")
+
+    d1=convertDateStr2Date(curDateStrList[0])
+    d2=convertDateStr2Date(curDateStrList[0])
+    standValue=100
+    indexLast=1
+    days=days/2
+    for i in range(days,len(curDateStrList)-days):
+        max_value = max(curTradeVolumeFList[i-days:i+days])
+        max_index = curTradeVolumeFList.index(max_value)
+        if max_index==i:
+            d2=convertDateStr2Date(curDateStrList[i])
+            daysSpan=(d2-d1).days
+            lineWrited.append(curDateStrList[i]+"\t"+str(curTradeVolumeFList[i])+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((max_value-standValue)/standValue,3)*100))
+            d1=d2
+            indexLast=max_index
+            standValue=max_value
+           
+        min_value = min(curTradeVolumeFList[i-days:i+days])
+        min_index = curTradeVolumeFList.index(min_value)
+        if min_index==i:
+            d2=convertDateStr2Date(curDateStrList[i])
+            daysSpan=(d2-d1).days
+            lineWrited.append(curDateStrList[i]+"\t"+str(curTradeVolumeFList[i])+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((min_value-standValue)/standValue,3)*100))
+            d1=d2
+            indexLast=min_index
+            standValue=min_value
+    d2=convertDateStr2Date(curDateStrList[-1])
+    daysSpan=(d2-d1).days
+    lineWrited.append(curDateStrList[-1]+"\t"+str(curTradeVolumeFList[-1])+"\t"+str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curTradeVolumeFList[-1]-standValue)/standValue,3)*100))
 
 
-
+def findPeakTurnover(days,curDateStrList,curTurnover):
+    print('进行交易额峰值分析，分析周期(天):'+str(days))
+    lineWrited.append('-'*50)
+    lineWrited.append('行交易额峰值分析周期(天):'+str(days))
+    lineWrited.append("日期"+"\t局部高点/低点(亿元)\t"+"\t距上次峰值交易日个数\t"+"\t距上次峰值自然日个数\t"+"\t浮动幅度%:\t")
+    d1=convertDateStr2Date(curDateStrList[0])
+    d2=convertDateStr2Date(curDateStrList[0])
+    standValue=100
+    indexLast=1
+    days=days/2
+    for i in range(days,len(curDateStrList)-days):
+        max_value = max(curTurnover[i-days:i+days])
+        max_index = curTurnover.index(max_value)
+        if max_index==i:
+            d2=convertDateStr2Date(curDateStrList[i])
+            daysSpan=(d2-d1).days
+            lineWrited.append(curDateStrList[i]+"\t"+str(round(curTurnover[i]/10000,1))+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((max_value-standValue)/standValue,3)*100))
+            d1=d2
+            indexLast=max_index
+            standValue=max_value
+           
+        min_value = min(curTurnover[i-days:i+days])
+        min_index = curTurnover.index(min_value)
+        if min_index==i:
+            d2=convertDateStr2Date(curDateStrList[i])
+            daysSpan=(d2-d1).days
+            lineWrited.append(curDateStrList[i]+"\t"+str(round(curTurnover[i]/10000,1))+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((min_value-standValue)/standValue,3)*100))
+            d1=d2
+            indexLast=min_index
+            standValue=min_value
+    d2=convertDateStr2Date(curDateStrList[-1])
+    daysSpan=(d2-d1).days
+    lineWrited.append(curDateStrList[-1]+"\t"+str(round(curTurnover[-1]/10000,1))+"\t"+str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curTurnover[-1]-standValue)/standValue,3)*100))
 
 def analysisDate(dateStrStart,dateStrEnd,curDateStrList,curPriceOpeningFList,curPriceHighestFList,curPriceLowestFList,curPriceCloseingFList):
 ## get analysis indexStartDay and indexEndDay by dateStrList
@@ -138,7 +191,7 @@ if __name__=="__main__":
     
     shStock=Cstock.StockSH()
     
-    stockID="601766"
+    stockID="999999"
     curStock=Cstock.Stock(stockID)
     
     goalFilePath='result.txt'
@@ -148,13 +201,11 @@ if __name__=="__main__":
     dateStrEnd=curStock.dateStrList[-1]
 
     print ("正在进行时空分析：")
-    findPeak(30,curStock.dateStrList,curStock.priceOpeningFList,curStock.priceHighestFList,curStock.priceLowestFList,curStock.priceCloseingFList)
-    findPeak(60,curStock.dateStrList,curStock.priceOpeningFList,curStock.priceHighestFList,curStock.priceLowestFList,curStock.priceCloseingFList)
-    findPeak(90,curStock.dateStrList,curStock.priceOpeningFList,curStock.priceHighestFList,curStock.priceLowestFList,curStock.priceCloseingFList)
-    findPeak(120,curStock.dateStrList,curStock.priceOpeningFList,curStock.priceHighestFList,curStock.priceLowestFList,curStock.priceCloseingFList)
-    findPeak(180,curStock.dateStrList,curStock.priceOpeningFList,curStock.priceHighestFList,curStock.priceLowestFList,curStock.priceCloseingFList)
-
-
+    for days in [10,20,30,60,90,120,180,300]:
+        findPeakPrice(days,curStock.dateStrList,curStock.priceOpeningFList,curStock.priceHighestFList,curStock.priceLowestFList,curStock.priceCloseingFList)
+        findPeakVolume(days,curStock.dateStrList,curStock.tradeVolumeFList)
+        findPeakTurnover(days,curStock.dateStrList,curStock.turnOverFList)
+    
     fileWrited=open(goalFilePath,'w')
     fileWrited.write(stockID+'\n')
     for line in lineWrited:
