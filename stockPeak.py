@@ -185,19 +185,28 @@ def analysisScale(stockID,dateStrStart,dateStrEnd):
 if __name__=="__main__":
     print("\n"+"#"*80)
     print ("股市有风险，股市有无穷的机会，股市需要耐心，股市态度要认真。")
+    print ("分析大的趋势和振幅，波峰和波谷。")
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
+   
+    ##读取上证指数数据
+    ##shStock=Cstock.StockSH()
     
-    shStock=Cstock.StockSH()
-    
+
+    ##读取股票代码，存储在curStock里
     stockID="999999"
     curStock=Cstock.Stock(stockID)
     
+    ##输出文件名
     goalFilePath='result.txt'
+    
 
+    ##设置分析周期
     iDaysPeriodUser=300
+    ##起始分析日期 dateStrStart
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser-1]
+    ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
 
     print ("正在进行时空分析：")
