@@ -4,7 +4,6 @@ import os
 import shutil
 import time
 import datetime
-import numpy
 
 ##读取指定代码List
 class Stock:
@@ -89,6 +88,5 @@ if __name__=="__main__":
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
-    raw_input()
 
 

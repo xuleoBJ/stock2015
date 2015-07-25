@@ -4,7 +4,7 @@ import os
 import shutil
 import time
 import datetime
-import numpy
+##import numpy
 import Cstock
 
 
@@ -136,15 +136,15 @@ def analysisDate(dateStrStart,dateStrEnd,curDateStrList,curPriceOpeningFList,cur
     indexStart=curDateStrList.index(dateStrStart)
     indexEnd=curDateStrList.index(dateStrEnd)
     print("-"*50)
-    print("分析周期(交易日/天):\t"+str(indexEnd-indexStart)+"\t起始日期:"+curDateStrList[indexStart]+"\t结束日期:"+curDateStrList[indexEnd])
+    print("分析周期(交易日/天):\t"+str(indexEnd-indexStart)+"起始日期:\t"+curDateStrList[indexStart]+"\t结束日期:"+curDateStrList[indexEnd])
     
     curPriceHighest=max(curPriceHighestFList[indexStart:indexEnd])
     datePriceHighest=getDateOfPrice(curPriceHighest,curPriceHighestFList,curDateStrList)
-    print("区间内最高价:\t"+str(curPriceHighest)+"\t出现日期:\t"+datePriceHighest)
+    print("区间内最高价:\t"+str(curPriceHighest)+"出现日期:\t"+datePriceHighest)
     
     curPriceLowest=min(curPriceLowestFList[indexStart:indexEnd])
     datePriceLowest=getDateOfPrice(curPriceLowest,curPriceLowestFList,curDateStrList)
-    print("区间内最低价:\t"+str(curPriceLowest)+"\t出现日期:\t"+datePriceLowest)
+    print("区间内最低价:\t"+str(curPriceLowest)+"出现日期:\t"+datePriceLowest)
 
     natureDaysNumFromLastPeak2Today=-1  
     if datePriceHighest>=datePriceLowest:
@@ -199,7 +199,7 @@ if __name__=="__main__":
     curStock=Cstock.Stock(stockID)
     
     ##输出文件名
-    goalFilePath='result.txt'
+    goalFilePath=stockID+'峰值周期历史分析.txt'
     
 
     ##设置分析周期
