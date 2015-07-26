@@ -47,8 +47,9 @@ if __name__=="__main__":
     print ("正在查找历史K线日期：")
     for i in range(-iDaysPeriodUser,-1):
         ##这里变更条件找历史图行，又一周的行情分析
-        if  curStock.riseRateFList[i-3]>=2 and curStock.riseRateFList[i]<=-2:  ##
-            if curStock.waveRateFList[i]>=3: ##振幅
+      if 0<curStock.riseRateFList[i-2]<=1 and -0.5<=curStock.riseRateFList[i-1]<=0.5 and 2<=curStock.riseRateFList[i]:
+ ##       if  curStock.riseRateFList[i-3]>=2 and curStock.riseRateFList[i]<=-2:  ##
+ ##           if curStock.waveRateFList[i]>=3: ##振幅
  ##              if (curStock.tradeVolumeFList[i]-curStock.tradeVolumeFList[i-1])/curStock.tradeVolumeFList[i-1]>=0.1: ## 成交量
                 print(curStock.dateStrList[i])
                 fileWrited.write(curStock.dateStrList[i]+'\n')
@@ -56,7 +57,6 @@ if __name__=="__main__":
     for line in lineWrited:
         fileWrited.write(line+'\n')
     fileWrited.close()
-    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

@@ -29,7 +29,7 @@ class Stock:
                 print(line)
             if line!="" and lineIndex>=3 and len(splitLine)>=5:
                 self.dateStrList.append(splitLine[0])
-                self.priceOpeningFList.append(float(splitLine[1]))
+                self.riceOpeningFList.append(float(splitLine[1]))
                 self.priceHighestFList.append(float(splitLine[2]))
                 self.priceLowestFList.append(float(splitLine[3]))
                 self.priceCloseingFList.append(float(splitLine[4]))
