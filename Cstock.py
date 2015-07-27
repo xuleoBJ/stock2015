@@ -29,13 +29,13 @@ class Stock:
                 print(line)
             if line!="" and lineIndex>=3 and len(splitLine)>=5:
                 self.dateStrList.append(splitLine[0])
-                self.riceOpeningFList.append(float(splitLine[1]))
+                self.priceOpeningFList.append(float(splitLine[1]))
                 self.priceHighestFList.append(float(splitLine[2]))
                 self.priceLowestFList.append(float(splitLine[3]))
                 self.priceCloseingFList.append(float(splitLine[4]))
                 self.tradeVolumeFList.append(float(splitLine[5]))
                 self.turnOverFList.append(float(splitLine[6]))
-                if len(self.priceCloseingFList)>=2:
+                if len(self.priceCloseingFList)>=2 and self.priceCloseingFList[-1]>0:
                     self.riseRateFList.append(round(100*(self.priceCloseingFList[-1]-self.priceCloseingFList[-2])/self.priceCloseingFList[-1],2))
                     self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-2])/self.priceCloseingFList[-1],2))
                 else:
