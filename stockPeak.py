@@ -195,7 +195,7 @@ if __name__=="__main__":
     
 
     ##读取股票代码，存储在curStock里
-    stockID="999999"
+    stockID="000001"
     curStock=Cstock.Stock(stockID)
     
     ##输出文件名

@@ -19,7 +19,7 @@ if __name__=="__main__":
     print("\n"+"#"*80)
     print ("控制风险，保持耐心，态度认真。")
     print ("下跌过程永远不买票！企稳后再买卖！最好是尾盘15分钟买卖！要么就挂相对的低价单钓鱼。")
-    print ("在历史K线中寻找有类似特征信息的日期，因为历史是重复的，错误也是循环的。")
+    print ("在历史K线中寻找有类似成交量特征信息的日期，因为历史是重复的，错误也是循环的。")
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
@@ -44,14 +44,16 @@ if __name__=="__main__":
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
 
-    print ("正在查找历史K线日期：")
+    print ("正在分析成交量变动：")
+    for i in range(-20,-1):
+        print curStock.dateStrList[i],curStock.riseOfTradeVolumeFList[i],curStock.riseOfTurnOverFList[i]
     for i in range(-iDaysPeriodUser,-1):
         ##这里变更条件找历史图行，又一周的行情分析
-        if  curStock.riseRateFList[i]>=3 and curStock.priceCloseingFList[i-2]>curStock.priceCloseingFList[i-1]:
+        if curStock.riseRateFList[i-2]<=-3 and curStock.riseRateFList[i]>=3 and curStock.priceCloseingFList[i-2]>curStock.priceCloseingFList[i-1]:
  ##    if curStock.riseRateFList[i-2]<= curStock.riseRateFList[i-1]<=curStock.riseRateFList[i]<0 and curStock.priceCloseingFList[i-2]>curStock.priceCloseingFList[i-1]>curStock.priceCloseingFList[i]:
  ##       if  curStock.riseRateFList[i-3]>=2 and curStock.riseRateFList[i]<=-2:  ##
- ##           if curStock.waveRateFList[i]>=3: ##振幅
-              if curStock.riseOfTradeVolumeFList[i]<-20:
+            if curStock.waveRateFList[i]>=3: ##振幅
+               if curStock.tradeVolumeFList[i-2]>curStock.tradeVolumeFList[i-1]>curStock.tradeVolumeFList[i]: ## 成交量
                 print(curStock.dateStrList[i])
                 fileWrited.write(curStock.dateStrList[i]+'\n')
                  

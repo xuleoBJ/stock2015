@@ -14,8 +14,10 @@ class Stock:
     priceLowestFList=[]
     tradeVolumeFList=[] ##成交量
     turnOverFList=[]  ##成交额
-    riseRateFList=[]  ##涨幅
+    riseRateFList=[]  ##价格涨幅
     waveRateFList=[] ##波动涨幅
+    riseOfTradeVolumeFList=[]  ##成交量涨幅
+    riseOfTurnOverFList=[]  ##成交额涨幅
     def __init__(self,stockID):
         dirData="export"
         print("#"*80)
@@ -41,6 +43,12 @@ class Stock:
                 else:
                     self.riseRateFList.append(0)
                     self.waveRateFList.append(0)
+                if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
+                    self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-1],2))
+                    self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
+                else:
+                    self.riseOfTradeVolumeFList.append(0)
+                    self.riseOfTurnOverFList.append(0)
         fileOpened.close()
         print("数据读取完毕,数据开始日：\t"+self.dateStrList[0]+"\t数据结束日：\t"+self.dateStrList[-1])
 
@@ -83,7 +91,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    a=Stock('600000') 
+    a=Stock('999999') 
     print ("分析近期走势：")
     
     timeSpan=time.clock()-startClock
