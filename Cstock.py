@@ -5,6 +5,9 @@ import shutil
 import time
 import datetime
 
+##数据目录
+dirData="C:\\new_dxzq_v6\\T0002\\export\\" 
+
 ##读取指定代码List
 class Stock:
     dateStrList=[]
@@ -19,38 +22,40 @@ class Stock:
     riseOfTradeVolumeFList=[]  ##成交量涨幅
     riseOfTurnOverFList=[]  ##成交额涨幅
     def __init__(self,stockID):
-        dirData="export"
         print("#"*80)
         stockDataFile=os.path.join(dirData,stockID+'.txt')
-        fileOpened=open(stockDataFile,'r')
-        lineIndex=0
-        for line in fileOpened.readlines():
-            lineIndex=lineIndex+1
-            splitLine=line.split()
-            if lineIndex==1:
-                print(line)
-            if line!="" and lineIndex>=3 and len(splitLine)>=5:
-                self.dateStrList.append(splitLine[0])
-                self.priceOpeningFList.append(float(splitLine[1]))
-                self.priceHighestFList.append(float(splitLine[2]))
-                self.priceLowestFList.append(float(splitLine[3]))
-                self.priceCloseingFList.append(float(splitLine[4]))
-                self.tradeVolumeFList.append(float(splitLine[5]))
-                self.turnOverFList.append(float(splitLine[6]))
-                if len(self.priceCloseingFList)>=2 and self.priceCloseingFList[-1]>0:
-                    self.riseRateFList.append(round(100*(self.priceCloseingFList[-1]-self.priceCloseingFList[-2])/self.priceCloseingFList[-1],2))
-                    self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-2])/self.priceCloseingFList[-1],2))
-                else:
-                    self.riseRateFList.append(0)
-                    self.waveRateFList.append(0)
-                if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
-                    self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-1],2))
-                    self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
-                else:
-                    self.riseOfTradeVolumeFList.append(0)
-                    self.riseOfTurnOverFList.append(0)
-        fileOpened.close()
-        print("数据读取完毕,数据开始日：\t"+self.dateStrList[0]+"\t数据结束日：\t"+self.dateStrList[-1])
+        if os.path.exists(stockDataFile):
+            fileOpened=open(stockDataFile,'r')
+            lineIndex=0
+            for line in fileOpened.readlines():
+                lineIndex=lineIndex+1
+                splitLine=line.split()
+                if lineIndex==1:
+                    print(line)
+                if line!="" and lineIndex>=3 and len(splitLine)>=5:
+                    self.dateStrList.append(splitLine[0])
+                    self.priceOpeningFList.append(float(splitLine[1]))
+                    self.priceHighestFList.append(float(splitLine[2]))
+                    self.priceLowestFList.append(float(splitLine[3]))
+                    self.priceCloseingFList.append(float(splitLine[4]))
+                    self.tradeVolumeFList.append(float(splitLine[5]))
+                    self.turnOverFList.append(float(splitLine[6]))
+                    if len(self.priceCloseingFList)>=2 and self.priceCloseingFList[-1]>0:
+                        self.riseRateFList.append(round(100*(self.priceCloseingFList[-1]-self.priceCloseingFList[-2])/self.priceCloseingFList[-1],2))
+                        self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-2])/self.priceCloseingFList[-1],2))
+                    else:
+                        self.riseRateFList.append(0)
+                        self.waveRateFList.append(0)
+                    if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
+                        self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-1],2))
+                        self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
+                    else:
+                        self.riseOfTradeVolumeFList.append(0)
+                        self.riseOfTurnOverFList.append(0)
+            fileOpened.close()
+            print("数据读取完毕,数据开始日：\t"+self.dateStrList[0]+"\t数据结束日：\t"+self.dateStrList[-1])
+        else:
+            print(stockID+"数据不存在")
 
 
 class StockSH:   
@@ -91,7 +96,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    a=Stock('999999') 
+    a=Stock('601318') 
     print ("分析近期走势：")
     
     timeSpan=time.clock()-startClock
