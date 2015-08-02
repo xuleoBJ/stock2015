@@ -4,6 +4,7 @@ ehthumbs.db
 
 #xuleo filters
 *.txt
+*.*~
 export/
 *.swp
 dist/
