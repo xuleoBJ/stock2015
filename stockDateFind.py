@@ -38,20 +38,20 @@ if __name__=="__main__":
     fileWrited.write(stockID+'\n')
 
     ##设置分析周期
-    iDaysPeriodUser=5000
+    iDaysPeriodUser=len(curStock.dateStrList)
     ##起始分析日期 dateStrStart
-    dateStrStart=curStock.dateStrList[-iDaysPeriodUser-1]
+    dateStrStart=curStock.dateStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
 
     print ("正在查找历史K线日期：")
-    for i in range(-iDaysPeriodUser,-1):
+    for i in range(-iDaysPeriodUser+2,-1):
         ##这里变更条件找历史图行，又一周的行情分析
-        if  curStock.riseRateFList[i]>=3 and curStock.priceCloseingFList[i-2]>curStock.priceCloseingFList[i-1]:
+        if curStock.riseRateFList[i-2]<=-1 and curStock.riseRateFList[i-1]>=3 and curStock.riseRateFList[i]<-1.5 and curStock.priceCloseingFList[i]<=curStock.priceCloseingFList[i-1]:
  ##    if curStock.riseRateFList[i-2]<= curStock.riseRateFList[i-1]<=curStock.riseRateFList[i]<0 and curStock.priceCloseingFList[i-2]>curStock.priceCloseingFList[i-1]>curStock.priceCloseingFList[i]:
  ##       if  curStock.riseRateFList[i-3]>=2 and curStock.riseRateFList[i]<=-2:  ##
  ##           if curStock.waveRateFList[i]>=3: ##振幅
-              if curStock.riseOfTradeVolumeFList[i]<-20:
+ ##             if curStock.riseOfTradeVolumeFList[i]<-20:
                 print(curStock.dateStrList[i])
                 fileWrited.write(curStock.dateStrList[i]+'\n')
                  

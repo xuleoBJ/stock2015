@@ -5,8 +5,10 @@ ehthumbs.db
 #xuleo filters
 *.txt
 *.*~
-export/
+resultDir/
 *.swp
+*.pyc
+
 dist/
 
 # Folder config file

@@ -48,9 +48,11 @@ class Stock:
                         self.waveRateFList.append(0)
                     if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
                         self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-1],2))
-                        self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
                     else:
                         self.riseOfTradeVolumeFList.append(0)
+                    if len(self.turnOverFList)>=2 and self.turnOverFList[-1]>0:
+                        self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
+                    else:
                         self.riseOfTurnOverFList.append(0)
             fileOpened.close()
             print("数据读取完毕,数据开始日：\t"+self.dateStrList[0]+"\t数据结束日：\t"+self.dateStrList[-1])
