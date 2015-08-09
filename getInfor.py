@@ -1,5 +1,6 @@
 import datetime
-from bs4 import BeautifulSoup
+import lxml.etree as etree
+import lxml.html
 import urllib2
 import re
 import ConfigParser
@@ -32,7 +33,8 @@ html_page = urllib2.urlopen(url)
 print "starting:"
 ##soup = BeautifulSoup(html_page)
 ##globalheader=soup.find("header",{'id':"globalheader"})
-##webs=[]
+webs=[]
+webs.append(url)
 ##for link in globalheader.findAll('a'):
 ##    sLink=str(link.get('href'))
 ##    if (sLink.find('section')==True):
@@ -55,9 +57,10 @@ for urlLink in webs:
         req=urllib2.Request(urlLink)
         response=urllib2.urlopen(req)
         if response.code==200:
-            parsed_html=response.read()
-            print parsed_html.body.find('li').text
-            ##print re.findall('download.*Download',html)
+            html=response.read()
+            parsed_html = lxml.html.fromstring(html)
+            li=parsed_html.xpath("//li")
+            print li
         print "Job is OK:\n"
     except urllib2.HTTPError,e:
         print "server error"
