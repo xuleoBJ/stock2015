@@ -19,8 +19,8 @@ def writeConfig(websites):
 '''
 set proxy here
 '''
-enable_proxy = 0  
-proxy_handler = urllib2.ProxyHandler({"http" : 'yourproxy'})  
+enable_proxy = 1  
+proxy_handler = urllib2.ProxyHandler({"http" : '10.22.96.29:8080'})  
 null_proxy_handler = urllib2.ProxyHandler({})  
 if enable_proxy:  
 	opener = urllib2.build_opener(proxy_handler)  
@@ -59,8 +59,9 @@ for urlLink in webs:
         if response.code==200:
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
-            li=parsed_html.xpath("//li")
-            print li
+            for elem in parsed_html.xpath("//ul[@class='govpushinfo150203']/li"):
+                print elem.text_content()
+                print "1"
         print "Job is OK:\n"
     except urllib2.HTTPError,e:
         print "server error"
