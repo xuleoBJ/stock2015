@@ -1,11 +1,12 @@
 import datetime
 import lxml.etree as etree
 import lxml.html
-import urllib2
-import re
 import ConfigParser
-import os
+import time,sched,os,urllib2,re,string
 
+resultDir="resultDir"
+s = sched.scheduler(time.time,time.sleep)
+newsList=[]
 def writeConfig(websites):
     cf=ConfigParser.ConfigParser()
     configFilePath="config.ini"
@@ -27,45 +28,57 @@ if enable_proxy:
 else:  
 	opener = urllib2.build_opener(null_proxy_handler)  
 urllib2.install_opener(opener)  
-url="http://www.sdpc.gov.cn/govszyw/"
-html_page = urllib2.urlopen(url)
+##html_page = urllib2.urlopen(url)
 ##file_savelink=open("fileSave.txt","w")
 print "starting:"
-##soup = BeautifulSoup(html_page)
-##globalheader=soup.find("header",{'id':"globalheader"})
-webs=[]
-webs.append(url)
-##for link in globalheader.findAll('a'):
-##    sLink=str(link.get('href'))
-##    if (sLink.find('section')==True):
-##        webs.append(url+sLink)
-##        print sLink
-##writeConfig('|'.join(webs))
 
 storeDir=datetime.date.today().strftime("%Y%m%d")
 
-##if not os.path.exists(storeDir):
-##    os.mkdir(storeDir)
-##    print storeDir+"has created"
-##else:
-##    storeDir+"exists"
-
-
-for urlLink in webs:
+def event_func():
+    goalFilePath=os.path.join(resultDir,'news.txt')
+    fileWrited=open(goalFilePath,'w')
+    num=0
+    urlLink="http://www.gov.cn/xinwen/"
+    lineList=[]
     try:
+        print time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
         print "start:"+urlLink
         req=urllib2.Request(urlLink)
         response=urllib2.urlopen(req)
         if response.code==200:
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
-            for elem in parsed_html.xpath("//ul[@class='govpushinfo150203']/li"):
-                print elem.text_content()
-                print "1"
-        print "Job is OK:\n"
+    ##        print type(parsed_html)
+            for elem in parsed_html.xpath("//div/ul/ul/li"):
+                newOne=elem.text_content()
+                if not newOne in newsList:
+                    newsList.append(elem.text_content())
+                    print num,newOne
+                num=num+1
+               ## fileWrited.write(elem.text_content())
     except urllib2.HTTPError,e:
         print "server error"
         print e.code
     except urllib2.URLError,e:
         print "URLError:"
         print e.reason
+ ##   for line in lineList:
+ ##       print line
+ ##       fileWrited.write(line)
+    fileWrited.close()
+
+def perform(inc):
+    s.enter(inc,0,perform,(inc,))
+    event_func()
+
+def mymain(inc=90):
+    if not os.path.exists(resultDir):
+        os.makedirs(resultDir)
+    s.enter(0,0,perform,(inc,))
+    s.run()
+
+if __name__ == "__main__":
+    mymain()
+
+
+
