@@ -39,7 +39,7 @@ def event_func():
     goalFilePath=os.path.join(resultDir,'news.txt')
     fileWrited=open(goalFilePath,'w')
     num=0
-    urlLink="http://www.gov.cn/xinwen/"
+    urlLink="http://www.news.cn/fortune/"
     lineList=[]
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
@@ -51,14 +51,25 @@ def event_func():
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
     ##        print type(parsed_html)
-            for elem in parsed_html.xpath("//div/ul/ul/li"):
+            for elem in parsed_html.xpath("//div[@class='headNews']/h2"):
                 newOne=elem.text_content()
                 if not newOne in newsList:
                     newsList.append(elem.text_content())
                     print num,newOne
                     now = datetime.datetime.now()
                     startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
-                    endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
+                    endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
+                    if startTime<=now<=endTime:
+                        ctypes.windll.user32.MessageBoxA(0,"new news!!", currentTimeStr, 1)
+                num=num+1
+            for elem in parsed_html.xpath("//p[@class='ywzy']/a"):
+                newOne=elem.text_content()
+                if not newOne in newsList:
+                    newsList.append(elem.text_content())
+                    print num,newOne
+                    now = datetime.datetime.now()
+                    startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+                    endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
                     if startTime<=now<=endTime:
                         ctypes.windll.user32.MessageBoxA(0,"new news!!", currentTimeStr, 1)
                 num=num+1
