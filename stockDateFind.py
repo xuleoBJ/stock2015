@@ -45,9 +45,13 @@ if __name__=="__main__":
     dateStrEnd=curStock.dateStrList[-1]
 
     print ("正在查找历史K线日期：")
+    value_i_2=1.0
+    value_i_1=1.0
+    value_i=1.0
     for i in range(-iDaysPeriodUser+2,-1):
         ##这里变更条件找历史图行，又一周的行情分析
-        if curStock.riseRateFList[i-2]>=3 and -1.5<=curStock.riseRateFList[i]<-1 and -0.5<=curStock.riseRateFList[i-1]<=0.5 :
+        if value_i_2<=curStock.riseRateFList[i-2]<=value_i_2+0.5 and value_i_1<=curStock.riseRateFList[i-1]<=value_i_1+0.5 \
+           and value_i<=curStock.riseRateFList[i]<=value_i+0.5 :
  ##    if curStock.riseRateFList[i-2]<= curStock.riseRateFList[i-1]<=curStock.riseRateFList[i]<0 and curStock.priceCloseingFList[i-2]>curStock.priceCloseingFList[i-1]>curStock.priceCloseingFList[i]:
  ##       if  curStock.riseRateFList[i-3]>=2 and curStock.riseRateFList[i]<=-2:  ##
  ##           if curStock.waveRateFList[i]>=3: ##振幅
