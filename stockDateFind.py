@@ -45,9 +45,9 @@ if __name__=="__main__":
     dateStrEnd=curStock.dateStrList[-1]
 
     print ("正在查找历史K线日期：")
-    value_i_2=1.0
-    value_i_1=1.0
-    value_i=1.0
+    value_i_2=(curStock.riseRateFList[-3]/0.5-1)*0.5
+    value_i_1=(curStock.riseRateFList[-2]/0.5-1)*0.5
+    value_i=(curStock.riseRateFList[-1]/0.5-1)*0.5
     for i in range(-iDaysPeriodUser+2,-1):
         ##这里变更条件找历史图行，又一周的行情分析
         if value_i_2<=curStock.riseRateFList[i-2]<=value_i_2+0.5 and value_i_1<=curStock.riseRateFList[i-1]<=value_i_1+0.5 \

@@ -21,7 +21,7 @@ def writeConfig(websites):
 '''
 set proxy here
 '''
-enable_proxy = 0  
+enable_proxy = 1  
 proxy_handler = urllib2.ProxyHandler({"http" : '10.22.96.29:8080'})  
 null_proxy_handler = urllib2.ProxyHandler({})  
 if enable_proxy:  
@@ -61,7 +61,7 @@ def event_func():
                         newsList.append(elem.text_content())
                         print num,newOne
                         now = datetime.datetime.now()
-                        startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+                        startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
                         endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
                         if startTime<=now<=endTime:
                             ctypes.windll.user32.MessageBoxA(0,"attention:have new news!!", currentTimeStr, 1)

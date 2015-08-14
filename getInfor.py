@@ -57,7 +57,7 @@ def event_func():
                     newsList.append(elem.text_content())
                     print num,newOne
                     now = datetime.datetime.now()
-                    startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+                    startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
                     endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
                     if startTime<=now<=endTime:
                         ctypes.windll.user32.MessageBoxA(0,"new news!!", currentTimeStr, 1)
