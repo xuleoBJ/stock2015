@@ -21,7 +21,7 @@ def writeConfig(websites):
 '''
 set proxy here
 '''
-enable_proxy = 1  
+enable_proxy = 0  
 proxy_handler = urllib2.ProxyHandler({"http" : '10.22.96.29:8080'})  
 null_proxy_handler = urllib2.ProxyHandler({})  
 if enable_proxy:  
@@ -36,21 +36,18 @@ print "starting:"
 storeDir=datetime.date.today().strftime("%Y%m%d")
 
 def event_func():
-    goalFilePath=os.path.join(resultDir,'news.txt')
-    fileWrited=open(goalFilePath,'w')
-    num=0
+    num=1
     urlLink="http://www.gov.cn/xinwen/"
     lineList=[]
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
         print currentTimeStr
-        print "start:"+urlLink
+        print "国务院新闻start:"+urlLink
         req=urllib2.Request(urlLink)
         response=urllib2.urlopen(req)
         if response.code==200:
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
-    ##        print type(parsed_html)
             for elem in parsed_html.xpath("//div/ul/ul/li"):
                 newOne=elem.text_content()
                 if not newOne in newsList:
@@ -60,7 +57,7 @@ def event_func():
                     startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
                     endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
                     if startTime<=now<=endTime:
-                        ctypes.windll.user32.MessageBoxA(0,"new news!!", currentTimeStr, 1)
+                        ctypes.windll.user32.MessageBoxA(0,"gwy_new news!!", currentTimeStr, 1)
                 num=num+1
                ## fileWrited.write(elem.text_content())
     except urllib2.HTTPError,e:
@@ -69,14 +66,96 @@ def event_func():
     except urllib2.URLError,e:
         print "URLError:"
         print e.reason
- ##   for line in lineList:
- ##       print line
- ##       fileWrited.write(line)
-    fileWrited.close()
+
+def event_func_xhs():
+    num=1
+    urlLink="http://www.news.cn/fortune/"
+    lineList=[]
+    try:
+        currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
+        print currentTimeStr
+        print "新华社新闻start:"+urlLink
+        req=urllib2.Request(urlLink)
+        response=urllib2.urlopen(req)
+        if response.code==200:
+            html=response.read()
+            parsed_html = lxml.html.fromstring(html)
+    ##        print type(parsed_html)
+            for elem in parsed_html.xpath("//div[@class='headNews']/h2"):
+                newOne=elem.text_content()
+                if not newOne in newsList:
+                    newsList.append(elem.text_content())
+                    print num,newOne
+                    now = datetime.datetime.now()
+                    startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+                    endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
+                    if startTime<=now<=endTime:
+                        ctypes.windll.user32.MessageBoxA(0,"new news!!", currentTimeStr, 1)
+                num=num+1
+            for elem in parsed_html.xpath("//p[@class='ywzy']/a"):
+                newOne=elem.text_content()
+                if not newOne in newsList:
+                    newsList.append(elem.text_content())
+                    print num,newOne
+                    now = datetime.datetime.now()
+                    startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+                    endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
+                    if startTime<=now<=endTime:
+                        ctypes.windll.user32.MessageBoxA(0,"xhs_new news!!", currentTimeStr, 1)
+                num=num+1
+               ## fileWrited.write(elem.text_content())
+    except urllib2.HTTPError,e:
+        print "server error"
+        print e.code
+    except urllib2.URLError,e:
+        print "URLError:"
+        print e.reason
+
+def event_func_fgw():
+    num=1
+    webs=[]
+    urlLink="http://www.sdpc.gov.cn/gzdt/"
+    webs.append(urlLink)
+    urlLink="http://www.sdpc.gov.cn/govszyw/"
+    webs.append(urlLink)
+    lineList=[]
+    for linkWeb in webs :
+        try:
+            currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
+            print currentTimeStr
+            print "发改委新闻start:"+linkWeb
+            req=urllib2.Request(linkWeb)
+            response=urllib2.urlopen(req)
+            if response.code==200:
+                html=response.read()
+                parsed_html = lxml.html.fromstring(html)
+        ##        print type(parsed_html)
+                for elem in parsed_html.xpath("//div/div/div/div/ul/li/a"):
+                    newOne=elem.text_content()
+                    if not newOne in newsList:
+                        newsList.append(elem.text_content())
+                        print num,newOne
+                        now = datetime.datetime.now()
+                        startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
+                        endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
+                        if startTime<=now<=endTime:
+                            ctypes.windll.user32.MessageBoxA(0,"fgw_have new news!!", currentTimeStr, 1)
+                    num=num+1
+                
+                   ## fileWrited.write(elem.text_content())
+        except urllib2.HTTPError,e:
+            print "server error"
+            print e.code
+        except urllib2.URLError,e:
+            print "URLError:"
+            print e.reason
+
 
 def perform(inc):
     s.enter(inc,0,perform,(inc,))
     event_func()
+    event_func_xhs()
+    event_func_fgw()
 
 def mymain(inc=90):
     if not os.path.exists(resultDir):

@@ -68,7 +68,8 @@ if __name__=="__main__":
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-		    print(curStock.dateStrList[i])
+		    print(curStock.dateStrList[i],curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
+                          "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
     for line in lineWrited:
         fileWrited.write(line+'\n')
     fileWrited.close()
