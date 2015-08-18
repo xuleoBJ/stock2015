@@ -16,7 +16,7 @@ class Stock:
     priceHighestFList=[]
     priceLowestFList=[]
     tradeVolumeFList=[] ##成交量
-    turnOverFList=[]  ##成交额
+    turnOverFList=[]  ##成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
     riseRateFList=[]  ##价格涨幅
     waveRateFList=[] ##波动涨幅
     riseOfTradeVolumeFList=[]  ##成交量涨幅
@@ -40,16 +40,19 @@ class Stock:
                     self.priceCloseingFList.append(float(splitLine[4]))
                     self.tradeVolumeFList.append(float(splitLine[5]))
                     self.turnOverFList.append(float(splitLine[6]))
+                    ##计算涨幅
                     if len(self.priceCloseingFList)>=2 and self.priceCloseingFList[-1]>0:
                         self.riseRateFList.append(round(100*(self.priceCloseingFList[-1]-self.priceCloseingFList[-2])/self.priceCloseingFList[-1],2))
                         self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-2])/self.priceCloseingFList[-1],2))
                     else:
                         self.riseRateFList.append(0)
                         self.waveRateFList.append(0)
+                    ##计算成交量涨幅
                     if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
                         self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-1],2))
                     else:
                         self.riseOfTradeVolumeFList.append(0)
+                        
                     if len(self.turnOverFList)>=2 and self.turnOverFList[-1]>0:
                         self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
                     else:
@@ -98,8 +101,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    a=Stock('601318') 
-    print ("分析近期走势：")
+    a=Stock('999999') 
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

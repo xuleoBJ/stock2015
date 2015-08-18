@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+import datetime
 '''
 发送txt文本邮件
 '''
@@ -10,14 +11,19 @@ import smtplib
 #========================================== 
 # 要发给谁，这里发给2个人 
 #========================================== 
-mailto_list=["38643987@qq.com","2113978745@qq.com"] 
+mailto_list=["38643987@qq.com","787687312@qq.com"] 
 #========================================== 
 # 设置服务器，用户名、口令以及邮箱的后缀 
 #========================================== 
-mail_host="mail.petrochina.ocm.cn"
-mail_user="xuleo"
-mail_pass="820729"
-mail_postfix="petrochina.com.cn"
+##mail_host="mail.petrochina.com.cn"  #设置服务器
+##mail_user="xuleo"
+##mail_pass="820729"
+##mail_postfix="petrochina.com.cn"
+
+mail_host="smtp.qq.com"  #设置服务器
+mail_user="38643987"
+mail_pass="xulei820729"
+mail_postfix="qq.com"
 #========================================== 
 # 发送邮件 
 #========================================== 
@@ -43,8 +49,10 @@ def send_mail(to_list,sub,content):
   except Exception, e: 
     print str(e) 
     return False
-if __name__ == '__main__': 
-  if send_mail(mailto_list,"here is subject","here is content"): 
-    print "success"
+if __name__ == '__main__':
+  nowStr=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+  news="hello,world"
+  if send_mail(mailto_list,nowStr,news): 
+    print "mail success"
   else: 
-    print "fail"
+    print "mail fail"

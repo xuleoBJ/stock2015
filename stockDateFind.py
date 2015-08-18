@@ -53,6 +53,7 @@ if __name__=="__main__":
     for i in range(kDays):
 	    print(curStock.dateStrList[-kDays+i],",rate",curStock.riseRateFList[-kDays+i],"turnOver",curStock.riseOfTurnOverFList[-kDays+i])
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
+    
     if stockID!="999999":
         bias=1.0 
     for i in range(-iDaysPeriodUser+kDays,-1):
@@ -62,9 +63,9 @@ if __name__=="__main__":
 		    valueRate=math.floor(curStock.riseRateFList[-iCount-1]/bias)*bias
 		    if not valueRate<=curStock.riseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
-		    ##成交量要同步增加或者减少
+		    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
 		    if isConsiderVOlume==1 and curStock.riseOfTradeVolumeFList[i-iCount]>0 and \
-                       not curStock.riseOfTradeVolumeFList[-iCount-1]/curStock.riseOfTradeVolumeFList[i-iCount]>=0: 
+                        curStock.riseOfTradeVolumeFList[-iCount-1]/curStock.riseOfTradeVolumeFList[i-iCount]<0: 
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
