@@ -28,7 +28,7 @@ if __name__=="__main__":
     
 
     ##读取股票代码，存储在curStock里
-    stockID="002573"
+    stockID="999999"
     curStock=Cstock.Stock(stockID)
     
     ##输出文件名
@@ -49,7 +49,7 @@ if __name__=="__main__":
     ## 是否考虑成交量增加或者减少，1考虑 0 不考虑
     isConsiderVOlume=0 
     
-    kDays=3 ##需要分析的K线天数
+    kDays=1 ##需要分析的K线天数
     for i in range(kDays):
 	    print(curStock.dateStrList[-kDays+i],",rate",curStock.riseRateFList[-kDays+i],"turnOver",curStock.riseOfTurnOverFList[-kDays+i])
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5

@@ -21,7 +21,7 @@ def writeConfig(websites):
 '''
 set proxy here
 '''
-enable_proxy = 0  
+enable_proxy = 1  
 proxy_handler = urllib2.ProxyHandler({"http" : '10.22.96.29:8080'})  
 null_proxy_handler = urllib2.ProxyHandler({})  
 if enable_proxy:  
@@ -42,7 +42,7 @@ def event_func():
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
         print currentTimeStr
-        print "国务院新闻start:"+urlLink
+        print "gwyNEWS start:"+urlLink
         req=urllib2.Request(urlLink)
         response=urllib2.urlopen(req)
         if response.code==200:
@@ -74,7 +74,7 @@ def event_func_xhs():
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
         print currentTimeStr
-        print "新华社新闻start:"+urlLink
+        print "xhsNEWS start:"+urlLink
         req=urllib2.Request(urlLink)
         response=urllib2.urlopen(req)
         if response.code==200:
@@ -123,7 +123,7 @@ def event_func_fgw():
         try:
             currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
             print currentTimeStr
-            print "发改委新闻start:"+linkWeb
+            print "fgwNEWS start:"+linkWeb
             req=urllib2.Request(linkWeb)
             response=urllib2.urlopen(req)
             if response.code==200:
