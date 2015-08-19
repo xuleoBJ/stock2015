@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import shutil
 import time
@@ -5,8 +6,6 @@ import datetime
 import math
 import Cstock
 
-
-##计算按周期计算涨停幅度
 
 lineWrited=[]
 
@@ -28,7 +27,7 @@ if __name__=="__main__":
     
 
     ##读取股票代码，存储在curStock里
-    stockID="999999"
+    stockID="600804"
     curStock=Cstock.Stock(stockID)
     
     ##输出文件名
@@ -37,7 +36,9 @@ if __name__=="__main__":
     fileWrited.write(stockID+'\n')
 
     ##设置分析周期
-    iDaysPeriodUser=len(curStock.dateStrList)
+    iDaysPeriodUser=1000
+    if stockID!="999999":
+        iDaysPeriodUser=len(curStock.dateStrList)
     ##起始分析日期 dateStrStart
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
@@ -51,7 +52,8 @@ if __name__=="__main__":
     
     kDays=1 ##需要分析的K线天数
     for i in range(kDays):
-	    print(curStock.dateStrList[-kDays+i],",rate",curStock.riseRateFList[-kDays+i],"turnOver",curStock.riseOfTurnOverFList[-kDays+i])
+            weekDay=convertDateStr2Date(curStock.dateStrList[-kDays+i]).weekday()+1 ##老外的weekDay比我们少一天，周一是0
+            print(curStock.dateStrList[-kDays+i],"weekDay_"+str(weekDay),",rate",curStock.riseRateFList[-kDays+i],"turnOver",curStock.riseOfTurnOverFList[-kDays+i])
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
     
     if stockID!="999999":
@@ -69,7 +71,8 @@ if __name__=="__main__":
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-		    print(curStock.dateStrList[i],curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
+                    weekDay=convertDateStr2Date(curStock.dateStrList[i]).weekday()+1 ##老外的weekDay比我们少一天，周一是0
+                    print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
                           "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
     for line in lineWrited:
         fileWrited.write(line+'\n')
