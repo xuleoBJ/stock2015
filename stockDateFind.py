@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#coding:utf-8
 import os
 import shutil
 import time
@@ -15,49 +15,64 @@ def convertDateStr2Date(dateStr):
 
 if __name__=="__main__":
     print("\n"+"#"*80)
-    print ("¿ØÖÆ·çÏÕ£¬±£³ÖÄÍĞÄ£¬Ì¬¶ÈÈÏÕæ¡£")
-    print ("ĞÜÊĞÉõÖÁĞĞÇé²»È·¶¨Ê±£¬×îºÃÊÇÎ²ÅÌ15·ÖÖÓÂòÂô£¡")
-    print ("ÔÚÀúÊ·KÏßÖĞÑ°ÕÒÓĞÀàËÆÌØÕ÷ĞÅÏ¢µÄÈÕÆÚ£¬ÒòÎªÀúÊ·ÊÇÖØ¸´µÄ£¬´íÎóÒ²ÊÇÑ­»·µÄ¡£")
+    print ("æ§åˆ¶é£é™©ï¼Œä¿æŒè€å¿ƒï¼Œæ€åº¦è®¤çœŸã€‚")
+    print ("ç†Šå¸‚ç”šè‡³è¡Œæƒ…ä¸ç¡®å®šæ—¶ï¼Œæœ€å¥½æ˜¯å°¾ç›˜15åˆ†é’Ÿä¹°å–ï¼")
+    print ("åœ¨å†å²Kçº¿ä¸­å¯»æ‰¾æœ‰ç±»ä¼¼ç‰¹å¾ä¿¡æ¯çš„æ—¥æœŸï¼Œå› ä¸ºå†å²æ˜¯é‡å¤çš„ï¼Œé”™è¯¯ä¹Ÿæ˜¯å¾ªç¯çš„ã€‚")
     print("\n"+"#"*80)
     
-    startClock=time.clock() ##¼ÇÂ¼³ÌĞò¿ªÊ¼¼ÆËãÊ±¼ä
+    startClock=time.clock() ##è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
    
-    ##¶ÁÈ¡ÉÏÖ¤Ö¸ÊıÊı¾İ
+    ##è¯»å–ä¸Šè¯æŒ‡æ•°æ•°æ®
     ##shStock=Cstock.StockSH()
     
 
-    ##¶ÁÈ¡¹ÉÆ±´úÂë£¬´æ´¢ÔÚcurStockÀï
-    stockID="600804"
+    ##è¯»å–è‚¡ç¥¨ä»£ç ï¼Œå­˜å‚¨åœ¨curStocké‡Œ
+    stockID="999999"
     curStock=Cstock.Stock(stockID)
     
-    ##Êä³öÎÄ¼şÃû
+    ##è¾“å‡ºæ–‡ä»¶å
     goalFilePath='result.txt'
     fileWrited=open(goalFilePath,'w')
     fileWrited.write(stockID+'\n')
 
-    ##ÉèÖÃ·ÖÎöÖÜÆÚ
+    ##è®¾ç½®åˆ†æå‘¨æœŸ
     iDaysPeriodUser=1000
-    if stockID!="999999":
+    if stockID=="999999":
         iDaysPeriodUser=len(curStock.dateStrList)
-    ##ÆğÊ¼·ÖÎöÈÕÆÚ dateStrStart
+    ##èµ·å§‹åˆ†ææ—¥æœŸ dateStrStart
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser]
-    ##ÖÕÁË·ÖÎöÈÕÆÚ dateStrEnd
+    ##ç»ˆäº†åˆ†ææ—¥æœŸ dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
 
-    print ("ÕıÔÚ²éÕÒÀúÊ·KÏßÈÕÆÚ£º£¡£¡£¡£¡ÈÕÆÚÑ¡Íê£¬Çë×¢Òâ¿´KÏßÇ÷ÊÆ£¬Í¬Ê±×¢Òâ³É½»Á¿µÄ±íÏÖ£º")
-    ##ĞèÒªÌí¼ÓÈÕÆÚÑ¡Ôñ£¬
+    print ("æ­£åœ¨æŸ¥æ‰¾å†å²Kçº¿æ—¥æœŸï¼šï¼ï¼ï¼ï¼æ—¥æœŸé€‰å®Œï¼Œè¯·æ³¨æ„çœ‹Kçº¿è¶‹åŠ¿ï¼ŒåŒæ—¶æ³¨æ„æˆäº¤é‡çš„è¡¨ç°ï¼š")
+    ##éœ€è¦æ·»åŠ æ—¥æœŸé€‰æ‹©ï¼Œ
 
-    ## ÊÇ·ñ¿¼ÂÇ³É½»Á¿Ôö¼Ó»òÕß¼õÉÙ£¬1¿¼ÂÇ 0 ²»¿¼ÂÇ
+    ## æ‰‹åŠ¨è®¾ç½®æŸ¥æ‰¾æ¡ä»¶
+    print ("æ‰‹åŠ¨æ¡ä»¶æŸ¥æ‰¾å†å²Kçº¿ï¼š")
+    for i in range(-iDaysPeriodUser+2,-1):
+	    bSelect=False
+	    if  -6>=curStock.riseRateFList[i-1] and curStock.riseRateFList[i]>=1:
+		    bSelect=True
+	    if bSelect==True:
+                weekDay=convertDateStr2Date(curStock.dateStrList[i]).weekday()+1 ##è€å¤–çš„weekDayæ¯”æˆ‘ä»¬å°‘ä¸€å¤©ï¼Œå‘¨ä¸€æ˜¯0
+                print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
+                          "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
+    ## æ˜¯å¦è€ƒè™‘æˆäº¤é‡å¢åŠ æˆ–è€…å‡å°‘ï¼Œ1è€ƒè™‘ 0 ä¸è€ƒè™‘
+    
+    
+    ## è‡ªåŠ¨è®¾ç½®æŸ¥æ‰¾æ¡ä»¶
+    print ("è‡ªåŠ¨æ¡ä»¶æŸ¥æ‰¾å†å²Kçº¿ï¼š")
+    
     isConsiderVOlume=0 
     
-    kDays=1 ##ĞèÒª·ÖÎöµÄKÏßÌìÊı
+    kDays=2 ##éœ€è¦åˆ†æçš„Kçº¿å¤©æ•°
     for i in range(kDays):
-            weekDay=convertDateStr2Date(curStock.dateStrList[-kDays+i]).weekday()+1 ##ÀÏÍâµÄweekDay±ÈÎÒÃÇÉÙÒ»Ìì£¬ÖÜÒ»ÊÇ0
-            print(curStock.dateStrList[-kDays+i],"weekDay_"+str(weekDay),",rate",curStock.riseRateFList[-kDays+i],"turnOver",curStock.riseOfTurnOverFList[-kDays+i])
-    bias=0.5 ##ÕÇ·ùÈ¡Öµ·¶Î§£¬¸ö¹ÉÓÃ1£¬´óÅÌÖ¸ÊıÓÃ0.5
+            weekDay=convertDateStr2Date(curStock.dateStrList[-kDays+i]).weekday()+1 ##è€å¤–çš„weekDayæ¯”æˆ‘ä»¬å°‘ä¸€å¤©ï¼Œå‘¨ä¸€æ˜¯0
+            print(curStock.dateStrList[-kDays+i],"weekDay_"+str(weekDay),"rate="+str(curStock.riseRateFList[-kDays+i]),"turnOverRate="+str(curStock.riseOfTurnOverFList[-kDays+i]))
+    bias=0.5 ##æ¶¨å¹…å–å€¼èŒƒå›´ï¼Œä¸ªè‚¡ç”¨1ï¼Œå¤§ç›˜æŒ‡æ•°ç”¨0.5
     
     if stockID!="999999":
-        bias=1.0 
+        bias=1.0
     for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
 	    bSelect=True
@@ -65,14 +80,14 @@ if __name__=="__main__":
 		    valueRate=math.floor(curStock.riseRateFList[-iCount-1]/bias)*bias
 		    if not valueRate<=curStock.riseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
-		    ##³É½»Á¿ÒªÍ¬²½Ôö¼Ó»òÕß¼õÉÙ,Ìõ¼şÊÇ¿¼ÂÇ³É½»Á¿É¸Ñ¡£¬³É½»Á¿´óÓÚ0£¬Í¬Ê± ³É½»Á¿ÕÇ·ùÍ¬Ê±Ôö¼Ó»òÕßÍ¬Ê±¼õÉÙ£¬ÓÃ³ı·¨±íÊ¾Í¬²½
+		    ##æˆäº¤é‡è¦åŒæ­¥å¢åŠ æˆ–è€…å‡å°‘,æ¡ä»¶æ˜¯è€ƒè™‘æˆäº¤é‡ç­›é€‰ï¼Œæˆäº¤é‡å¤§äº0ï¼ŒåŒæ—¶ æˆäº¤é‡æ¶¨å¹…åŒæ—¶å¢åŠ æˆ–è€…åŒæ—¶å‡å°‘ï¼Œç”¨é™¤æ³•è¡¨ç¤ºåŒæ­¥
 		    if isConsiderVOlume==1 and curStock.riseOfTradeVolumeFList[i-iCount]>0 and \
                         curStock.riseOfTradeVolumeFList[-iCount-1]/curStock.riseOfTradeVolumeFList[i-iCount]<0: 
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-                    weekDay=convertDateStr2Date(curStock.dateStrList[i]).weekday()+1 ##ÀÏÍâµÄweekDay±ÈÎÒÃÇÉÙÒ»Ìì£¬ÖÜÒ»ÊÇ0
-                    print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
+                weekDay=convertDateStr2Date(curStock.dateStrList[i]).weekday()+1 ##è€å¤–çš„weekDayæ¯”æˆ‘ä»¬å°‘ä¸€å¤©ï¼Œå‘¨ä¸€æ˜¯0
+                print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
                           "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
     for line in lineWrited:
         fileWrited.write(line+'\n')
