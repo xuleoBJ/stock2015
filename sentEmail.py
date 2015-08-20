@@ -2,7 +2,8 @@
 import datetime
 import smtplib
 import socket
-from email.mime.text import MIMEText 
+from email.mime.text import MIMEText
+import socket
 
 #========================================== 
 # send_mail no proxy 
@@ -119,7 +120,10 @@ if __name__ == '__main__':
 
   nowStr=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
   news="hello,world"
-  isProxy=0   ##代理用1 非代理用0
+  isProxy=0
+  ip = socket.gethostbyname(socket.gethostname())
+  if ip=="10.122.105.83":
+    isProxy=1
   proxy_host = "10.22.96.29"
   proxy_port = "8080"
   if isProxy==0:
@@ -141,7 +145,7 @@ if __name__ == '__main__':
 	print('Login reply: %s' % r)
 
 	sender = "38643987@qq.com"
-	receivers = ["27119752@qq.com"]
+	receivers = ["787687312@qq.com"]
 
 	message = """From: From Person <from@fromdomain.com>
 	To: To Person <to@todomain.com>

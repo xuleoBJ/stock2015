@@ -90,7 +90,7 @@ def event_func_xhs():
                     startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
                     endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
                     if startTime<=now<=endTime:
-                        ctypes.windll.user32.MessageBoxA(0,"new news!!", currentTimeStr, 1)
+                        ctypes.windll.user32.MessageBoxA(0,"xhs_new news!!", currentTimeStr, 1)
                 num=num+1
             for elem in parsed_html.xpath("//p[@class='ywzy']/a"):
                 newOne=elem.text_content()
