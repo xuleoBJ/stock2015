@@ -12,7 +12,7 @@ dirData="C:\\new_dxzq_v6\\T0002\\export\\"
 class Stock:
     dateStrList=[]
     priceOpeningFList=[]
-    priceCloseingFList=[]
+    priceClosedFList=[]
     priceHighestFList=[]
     priceLowestFList=[]
     tradeVolumeFList=[] ##成交量
@@ -37,26 +37,28 @@ class Stock:
                     self.priceOpeningFList.append(float(splitLine[1]))
                     self.priceHighestFList.append(float(splitLine[2]))
                     self.priceLowestFList.append(float(splitLine[3]))
-                    self.priceCloseingFList.append(float(splitLine[4]))
+                    self.priceClosedFList.append(float(splitLine[4]))
                     self.tradeVolumeFList.append(float(splitLine[5]))
                     self.turnOverFList.append(float(splitLine[6]))
-                    ##计算涨幅
-                    if len(self.priceCloseingFList)>=2 and self.priceCloseingFList[-1]>0:
-                        self.riseRateFList.append(round(100*(self.priceCloseingFList[-1]-self.priceCloseingFList[-2])/self.priceCloseingFList[-1],2))
-                        self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-2])/self.priceCloseingFList[-1],2))
+                    ##计算涨幅和振幅
+                    if len(self.priceClosedFList)>=2 and self.priceClosedFList[-1]>0:
+			##(当日收盘-上日收盘)/上一日收盘
+                        self.riseRateFList.append(round(100*(self.priceClosedFList[-1]-self.priceClosedFList[-2])/self.priceClosedFList[-2],2))
+			##(当日最高-当日最低)/上一日收盘
+                        self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-1])/self.priceClosedFList[-2],2))
                     else:
-                        self.riseRateFList.append(0)
-                        self.waveRateFList.append(0)
+                        self.riseRateFList.append(-999)
+                        self.waveRateFList.append(-999)
                     ##计算成交量涨幅
                     if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
-                        self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-1],2))
+                        self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-2],2))
                     else:
-                        self.riseOfTradeVolumeFList.append(0)
+                        self.riseOfTradeVolumeFList.append(-999)
                         
                     if len(self.turnOverFList)>=2 and self.turnOverFList[-1]>0:
-                        self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-1],2))
+                        self.riseOfTurnOverFList.append(round(100*(self.turnOverFList[-1]-self.turnOverFList[-2])/self.turnOverFList[-2],2))
                     else:
-                        self.riseOfTurnOverFList.append(0)
+                        self.riseOfTurnOverFList.append(-999)
             fileOpened.close()
             print("数据读取完毕,数据开始日：\t"+self.dateStrList[0]+"\t数据结束日：\t"+self.dateStrList[-1])
         else:
@@ -101,7 +103,13 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    a=Stock('999999') 
+    curStock=Stock('999999')
+    print curStock.dateStrList[-10:]
+    print curStock.priceClosedFList[-10:]
+    print curStock.priceHighestFList[-10:]
+    print curStock.priceLowestFList[-10:]
+    print curStock.riseRateFList[-10:]
+    print curStock.waveRateFList[-10:]
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
