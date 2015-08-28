@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import datetime
 import lxml.etree as etree
 import lxml.html
@@ -35,7 +36,7 @@ print "starting:"
 
 storeDir=datetime.date.today().strftime("%Y%m%d")
 
-def event_func():
+def event_func_gwy():
     num=1
     urlLink="http://www.gov.cn/xinwen/"
     lineList=[]
@@ -48,7 +49,8 @@ def event_func():
         if response.code==200:
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
-            for elem in parsed_html.xpath("//div/ul/ul/li"):
+            ##修改xpath，得到相关新闻对应的xpath语法
+            for elem in parsed_html.xpath("//div/div/ul/li/a"):
                 newOne=elem.text_content()
                 if not newOne in newsList:
                     newsList.append(elem.text_content())
@@ -153,7 +155,7 @@ def event_func_fgw():
 
 def perform(inc):
     s.enter(inc,0,perform,(inc,))
-    event_func()
+    event_func_gwy()
     event_func_xhs()
     event_func_fgw()
 

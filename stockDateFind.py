@@ -8,8 +8,7 @@ import Cstock
 import sys
 import Ccomfunc
 
-#reload(sys)
-#sys.setdefaultencoding('gbk')
+
 
 lineWrited=[]
 
@@ -66,12 +65,15 @@ if __name__=="__main__":
     ##需要添加日期选择，
 
     ## 手动设置查找条件
-    print ("-"*8+u"手动条件查找历史K线：")
+    print ("-"*8+u"手动设置条件查找历史K线：")
     riseRate_i=int(curStock.riseRateFList[-1])
     riseRate_i_1=int(curStock.riseRateFList[-2])
     for i in range(-iDaysPeriodUser+2,-1):
         bSelect=False
-        if  riseRate_i_1<=curStock.riseRateFList[i-1]<=1+riseRate_i_1 and riseRate_i<=curStock.riseRateFList[i]<=1+riseRate_i:
+		##自动设置条件，用最后两个交易日做基准
+#        if  riseRate_i_1<=curStock.riseRateFList[i-1]<=1+riseRate_i_1 and riseRate_i<=curStock.riseRateFList[i]<=1+riseRate_i:
+		##手工设置if条件
+        if  curStock.riseRateFList[i-1]<=0 and 5<=curStock.riseRateFList[i]<=7:
             bSelect=True
         if  bSelect==True:
             weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[i]).isoweekday() 
@@ -81,11 +83,11 @@ if __name__=="__main__":
     
     
     ## 自动设置查找条件
-    print ("-"*8+u"根据涨幅，自动条件查找历史K线：")
+    print ("-"*8+u"根据涨幅，自动设置条件查找历史K线：")
      ## 是否考虑成交量增加或者减少，1考虑 0 不考虑
     isConsiderVOlume=0 
     
-    kDays=3 ##需要分析的K线天数
+    kDays=2 ##需要分析的K线天数
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
     if stockID!="999999":
         bias=1.0
@@ -114,10 +116,10 @@ if __name__=="__main__":
                       "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
     
     ##增加振幅，选择历史K线 
-    print ("-"*8+u"根据震动幅度，自动条件查找历史K线：")
+    print ("-"*8+u"根据震动幅度，自动设置条件查找历史K线：")
     for i in range(kDays):
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[-kDays+i]).isoweekday() 
-        print(curStock.dateStrList[-kDays+i],"weekDay_",str(weekDay),"waveRate="+str(curStock.waveRateFList[-kDays+i]),"turnOverRate="+str(curStock.riseOfTurnOverFList[-kDays+i]))
+        print(curStock.dateStrList[-kDays+i],"weekDay_"+str(weekDay),"waveRate="+str(curStock.waveRateFList[-kDays+i]),"turnOverRate="+str(curStock.riseOfTurnOverFList[-kDays+i]))
 	for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
 	    bSelect=True
@@ -128,7 +130,6 @@ if __name__=="__main__":
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-		numOfFinddays=numOfFinddays+1
 		weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[i]).isoweekday() 
 		print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.waveRateFList[i-2],curStock.waveRateFList[i-1],curStock.waveRateFList[i],\
 		      "turnOverRate=",curStock.riseOfTurnOverFList[i-2],curStock.riseOfTurnOverFList[i-1],curStock.riseOfTurnOverFList[i-1],\
