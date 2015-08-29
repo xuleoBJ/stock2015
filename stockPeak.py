@@ -207,19 +207,19 @@ if __name__=="__main__":
     
 
     ##设置分析周期
-    iDaysPeriodUser=300
+    iDaysPeriodUser=800
     ##起始分析日期 dateStrStart
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser-1]
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
 
     print ("正在进行现状分析：")
-    for days in [5,10,20,30]:
+    for days in [3,5,10,20,30]:
 	 Ccomfunc.printCalTrend(curStock,days)
 	   
 
     print ("正在进行历史时空分析：")
-    for days in [10,20,30,60,90,120,180,300]:
+    for days in [5,10,20,30,60,90,120,180,300]:
         resultDir="resultDir"
         if not os.path.exists(resultDir):
             os.makedirs(resultDir)
