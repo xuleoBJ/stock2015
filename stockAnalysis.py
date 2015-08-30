@@ -26,7 +26,7 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
 
     ##读取股票代码，存储在curStock里
-    stockID="999999"
+    stockID="600270"
     curStock=Cstock.Stock(stockID)
 
     ##输出文件名
@@ -48,7 +48,22 @@ if __name__=="__main__":
         fileWrited.write(headLine+"\n")
         for i in range(-10,11):
             _line=""
-            _num=len(filter(lambda x:i<=x<i+1,curStock.riseRateFList[-days:]))
+            _num=len(filter(lambda x:i==int(x),curStock.riseRateFList[-days:]))
+            if i==10:
+                _line="涨停版\t"+str(_num)
+            else :
+                _line=str(i)+"到"+str(i+1)+"\t"+str(_num)
+            print _line
+            fileWrited.write(_line+'\n')
+    
+    ##分析不同交易周期内，统计最低值的个数频率
+    for days in [300,150,90,60,30,20,10,5]:
+        headLine=str(days)+"个交易日内统计：\n最低值区间个数:\t"
+        print(headLine)
+        fileWrited.write(headLine+"\n")
+        for i in range(-10,11):
+            _line=""
+            _num=len(filter(lambda x:i==int(x),map(lambda x,y:100*(x-y)/y,curStock.priceLowestFList[-days:],curStock.priceClosedFList[-days-1:-1])))
             if i==10:
                 _line="涨停版\t"+str(_num)
             else :
@@ -58,10 +73,10 @@ if __name__=="__main__":
 
     ##分析涨停版，第二天高开的频率
     print("根据第一天的涨幅，对次日数据进行分析预测：")
-    for i in range(-10,10):
+    for i in range(-10,11):
         print("当日涨幅{}%-{}%,次日高开分布：".format(i,i+1))
         countTrend(curStock,curStock.openRateFList,i-0.1,i+0.1)
-    for i in range(-10,10):
+    for i in range(-10,11):
         print("当日涨幅{}%-{}%，次日涨幅分布：".format(i,i+1))
         countTrend(curStock,curStock.riseRateFList,i-0.1,i+0.1)
 #    for i in range(-10,11):

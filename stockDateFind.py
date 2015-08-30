@@ -64,9 +64,8 @@ if __name__=="__main__":
     ##需要添加日期选择，
 
     
-    
     ## 自动设置查找条件
-     ## 是否考虑成交量增加或者减少，1考虑 0 不考虑
+    ## 是否考虑成交量增加或者减少，1考虑 0 不考虑
     isConsiderVOlume=0 
     
     kDays=2 ##需要分析的K线天数
@@ -96,8 +95,8 @@ if __name__=="__main__":
             print("_"*30+"riseRate",curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i])
             print("_"*30+"turnOverRate=",curStock.riseOfTurnOverFList[i-2],curStock.riseOfTurnOverFList[i-1],curStock.riseOfTurnOverFList[i-1])
     
-    ##根据涨幅选择历史K线
-    print ("-"*8+u"根据涨幅，自动设置条件查找历史K线：")
+    ##根据涨幅进行历史K线模式识别
+    print ("-"*8+u"根据涨幅，自动设置条件，历史K线模式识别：")
     for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
 	    bSelect=True
@@ -117,7 +116,7 @@ if __name__=="__main__":
                       "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
     
     ##增加振幅，选择历史K线 
-    print ("-"*8+u"根据震动幅度，自动设置条件查找历史K线：")
+    print ("-"*8+u"根据震动幅度，自动设置条件，线模式识别：：")
     for i in range(kDays):
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[-kDays+i]).isoweekday() 
         print(curStock.dateStrList[-kDays+i],"weekDay_"+str(weekDay),"waveRate="+str(curStock.waveRateFList[-kDays+i]),"turnOverRate="+str(curStock.riseOfTurnOverFList[-kDays+i]))

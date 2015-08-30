@@ -52,3 +52,4 @@ Temporary Items
 .apdisk
 config.ini
 ~$帮助文件.docx
+*.pyc
