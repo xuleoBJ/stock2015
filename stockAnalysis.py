@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
 import os
-import numpy as np
 import shutil
 import time
 import datetime
+import sys
 import Cstock
 import Ccomfunc
 
-##计算按周期计算涨停幅度
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 lineWrited=[]
 
-def convertDateStr2Date(dateStr):
-    split1=dateStr.split('/')
-    return datetime.date(int(split1[0]),int(split1[1]),int(split1[2]))
+##fList是需要分析的数据list，比如涨幅，或者高开数据，flow是数据区间的下限值，fHigh是数据区间的上限值
+def countTrend(curStock,fList,fLow,fHigh):
+    fSelectList=[] 
+    for k in range(0,len(curStock.riseRateFList)-1):
+        if fLow<=curStock.riseRateFList[k]<=fHigh:
+            fSelectList.append(fList[k+1])
+    print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
 
 if __name__=="__main__":
     Ccomfunc.printInfor()
@@ -21,11 +26,9 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
 
     ##读取股票代码，存储在curStock里
-    stockID="002673"
+    stockID="999999"
     curStock=Cstock.Stock(stockID)
 
-
-    
     ##输出文件名
     goalFilePath='result.txt'
     fileWrited=open(goalFilePath,'w')
@@ -37,10 +40,12 @@ if __name__=="__main__":
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
+    
+    ##分析不同交易周期内，统计不同涨幅的个数频率
     for days in [300,150,90,60,30,20,10,5]:
         headLine=str(days)+"个交易日内统计：\n涨幅区间个数:\t"
         print(headLine)
-        fileWrited.write(headLine)
+        fileWrited.write(headLine+"\n")
         for i in range(-10,11):
             _line=""
             _num=len(filter(lambda x:i<=x<i+1,curStock.riseRateFList[-days:]))
@@ -50,6 +55,22 @@ if __name__=="__main__":
                 _line=str(i)+"到"+str(i+1)+"\t"+str(_num)
             print _line
             fileWrited.write(_line+'\n')
+
+    ##分析涨停版，第二天高开的频率
+    print("根据第一天的涨幅，对次日数据进行分析预测：")
+    for i in range(-10,10):
+        print("当日涨幅{}%-{}%,次日高开分布：".format(i,i+1))
+        countTrend(curStock,curStock.openRateFList,i-0.1,i+0.1)
+    for i in range(-10,10):
+        print("当日涨幅{}%-{}%，次日涨幅分布：".format(i,i+1))
+        countTrend(curStock,curStock.riseRateFList,i-0.1,i+0.1)
+#    for i in range(-10,11):
+#        headLine=str(len(fList))+"个前一日涨幅区间："+str(j)+"到"+str(j+1)+",次日开盘幅度区间：" if i!=10 else "前一日涨停板,次日开盘幅度区间："
+#        headLine=headLine+str(i)+"到"+str(i+1)+"个数：" if i!=10 else headLine+"涨停板"
+#        _num=len(filter(lambda x:i<=x<i+1,fList))
+#        _line=headLine+"\t"+str(_num)
+#        print _line
+#        fileWrited.write(_line+'\n')
     ##计算周期内涨的频率并绘直方图
     ##分析高开低走，低开高走，高开高走，低开低走的个数
     ##计算每天振幅的幅度分布并绘图

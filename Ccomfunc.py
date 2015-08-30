@@ -45,7 +45,7 @@ def calTrend(curStock,intervalDay):
 		return -999
 ##输出交易日的差额
 def printCalTrend(curStock,intervalDay):
-	print(str(intervalDay)+" days riseRate",str(round(calTrend(curStock,intervalDay),2))+"%")
+    print(str(intervalDay)+u"日累计涨幅:"+str(round(calTrend(curStock,intervalDay),2))+"%")
 
 
 def printInfor():

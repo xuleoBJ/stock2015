@@ -19,6 +19,8 @@ class Stock:
     turnOverFList=[]        ##成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
     riseRateFList=[]        ##价格涨幅
     waveRateFList=[]        ##波动涨幅
+    openRateFList=[]		##开盘较前一日收盘幅度，主要分析高开、低开等
+    openCloseRateFList=[]	##收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
     riseOfTradeVolumeFList=[]  ##成交量涨幅
     riseOfTurnOverFList=[]  ##成交额涨幅
     def __init__(self,stockID):
@@ -42,13 +44,19 @@ class Stock:
                     self.turnOverFList.append(float(splitLine[6]))
                     ##计算涨幅和振幅
                     if len(self.priceClosedFList)>=2 and self.priceClosedFList[-1]>0:
-			##(当日收盘-上日收盘)/上一日收盘
+						##(当日收盘-上日收盘)/上一日收盘
                         self.riseRateFList.append(round(100*(self.priceClosedFList[-1]-self.priceClosedFList[-2])/self.priceClosedFList[-2],2))
-			##(当日最高-当日最低)/上一日收盘
+						##(当日最高-当日最低)/上一日收盘
                         self.waveRateFList.append(round(100*(self.priceHighestFList[-1]-self.priceLowestFList[-1])/self.priceClosedFList[-2],2))
+						##(当日开盘-上日收盘)/上一日收盘
+                        self.openRateFList.append(round(100*(self.priceOpeningFList[-1]-self.priceClosedFList[-2])/self.priceClosedFList[-2],2))
+						##(当日收盘-当日开盘)/上一日收盘
+                        self.openCloseRateFList.append(round(100*(self.priceClosedFList[-1]-self.priceOpeningFList[-1])/self.priceClosedFList[-2],2))
                     else:
                         self.riseRateFList.append(-999)
                         self.waveRateFList.append(-999)
+                        self.openRateFList.append(-999)
+                        self.openCloseRateFList.append(-999)
                     ##计算成交量涨幅
                     if len(self.tradeVolumeFList)>=2 and self.tradeVolumeFList[-1]>0:
                         self.riseOfTradeVolumeFList.append(round(100*(self.tradeVolumeFList[-1]-self.tradeVolumeFList[-2])/self.tradeVolumeFList[-2],2))
@@ -78,6 +86,8 @@ if __name__=="__main__":
     print curStock.priceLowestFList[-10:]
     print curStock.riseRateFList[-10:]
     print curStock.waveRateFList[-10:]
+    print curStock.openRateFList[-10:]
+    print curStock.openCloseRateFList[-10:]
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
