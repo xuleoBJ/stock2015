@@ -42,9 +42,10 @@ if __name__=="__main__":
 
 
     print (u"正在进行趋势分析：")
-    for days in [3,5,10,20,30,60]:
+    for days in [3,5,8,13,21,34,55,89,144]:
 	 Ccomfunc.printCalTrend(curStock,days)
     
+    print (u"去年同期10个交易日走势：")
     ##根据趋势涨幅寻找历史K线    
     print (u"根据交易日涨幅查找历史K：")
     bSelect=True

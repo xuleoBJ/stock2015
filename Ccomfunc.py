@@ -45,14 +45,14 @@ def calTrend(curStock,intervalDay):
 		return -999
 ##输出交易日的差额
 def printCalTrend(curStock,intervalDay):
-    print(str(intervalDay)+u"日累计涨幅:"+str(round(calTrend(curStock,intervalDay),2))+"%")
+    print(str(intervalDay)+u"个交易日日累计涨幅:"+str(round(calTrend(curStock,intervalDay),2))+"%")
 
 
 def printInfor():
     print("\n"+"#"*80)
-    print(u"1.股市有风险，股市有无穷的机会，股市需要耐心，股市态度要认真。")
+    print(u"1.股市需要耐心，股市态度要认真。")
     print(u"2.每次交易前要提醒自己，目前的市场环境是什么，牛市越早越好，熊市越晚买越好，最好是下午2:45以后再买。")
-    print(u"3.万不可盘中频繁的把一只票扔了，马上去买另一只票！这是非常不好的行为，因为，你扔的票你觉得跌了，去追涨的，要么涨的会跌 要么跌的会涨，必须有时间差。")
+    print(u"3.买卖交易之间必须有时间差！！！万不可盘中频繁的把一只票扔了，马上去买另一只票！")
     print("\n"+"#"*80)
     
 if __name__=="__main__":

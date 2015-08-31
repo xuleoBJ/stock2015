@@ -12,10 +12,20 @@ sys.setdefaultencoding('utf-8')
 
 lineWrited=[]
 
+##根据涨幅，第二天趋势分析
 ##fList是需要分析的数据list，比如涨幅，或者高开数据，flow是数据区间的下限值，fHigh是数据区间的上限值
-def countTrend(curStock,fList,fLow,fHigh):
+def countTrendByRiseRate(curStock,fList,fLow,fHigh):
     fSelectList=[] 
     for k in range(0,len(curStock.riseRateFList)-1):
+        if fLow<=curStock.riseRateFList[k]<=fHigh:
+            fSelectList.append(fList[k+1])
+    print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
+
+##根据第一天的走势，第二天趋势分析
+##fList是需要分析的数据list，比如涨幅，或者高开数据，flow是数据区间的下限值，fHigh是数据区间的上限值
+def countTrendByOpenCloseRate(curStock,fList,fLow,fHigh):
+    fSelectList=[] 
+    for k in range(0,len(curStock.openCloseRateFList)-1):
         if fLow<=curStock.riseRateFList[k]<=fHigh:
             fSelectList.append(fList[k+1])
     print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
@@ -71,14 +81,20 @@ if __name__=="__main__":
             print _line
             fileWrited.write(_line+'\n')
 
+    ##分析不同交易周期内,高开低走，第二天的涨跌
+    for i in range(-10,11):
+        print("当日走势{}%-{}%，次日涨幅分布：".format(i,i+1))
+        countTrendByOpenCloseRate(curStock,curStock.riseRateFList,i-0.1,i+0.1)
     ##分析涨停版，第二天高开的频率
-    print("根据第一天的涨幅，对次日数据进行分析预测：")
+
+
+    print("根据头天的涨幅，对次日数据进行分析预测：")
     for i in range(-10,11):
         print("当日涨幅{}%-{}%,次日高开分布：".format(i,i+1))
-        countTrend(curStock,curStock.openRateFList,i-0.1,i+0.1)
+        countTrendByRiseRate(curStock,curStock.openRateFList,i-0.1,i+0.1)
     for i in range(-10,11):
         print("当日涨幅{}%-{}%，次日涨幅分布：".format(i,i+1))
-        countTrend(curStock,curStock.riseRateFList,i-0.1,i+0.1)
+        countTrendByRiseRate(curStock,curStock.riseRateFList,i-0.1,i+0.1)
 #    for i in range(-10,11):
 #        headLine=str(len(fList))+"个前一日涨幅区间："+str(j)+"到"+str(j+1)+",次日开盘幅度区间：" if i!=10 else "前一日涨停板,次日开盘幅度区间："
 #        headLine=headLine+str(i)+"到"+str(i+1)+"个数：" if i!=10 else headLine+"涨停板"

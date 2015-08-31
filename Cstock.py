@@ -19,7 +19,7 @@ class Stock:
     turnOverFList=[]        ##成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
     riseRateFList=[]        ##价格涨幅
     waveRateFList=[]        ##波动涨幅
-    openRateFList=[]		##开盘较前一日收盘幅度，主要分析高开、低开等
+    openRateFList=[]		##开盘幅度，主要分析高开、低开等
     openCloseRateFList=[]	##收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
     riseOfTradeVolumeFList=[]  ##成交量涨幅
     riseOfTurnOverFList=[]  ##成交额涨幅
