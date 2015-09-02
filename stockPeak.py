@@ -211,8 +211,8 @@ if __name__=="__main__":
     curStock=Cstock.Stock(stockID)
     
 
-    ##设置分析周期
-    iDaysPeriodUser=1000
+    ##设置分析周期,如果日期大于1000（4年就取1000），否则取最大
+    iDaysPeriodUser=len(dateStrList) if len(dateStrList)<=1000 else 1000
     ##起始分析日期 dateStrStart
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser-1]
     ##终了分析日期 dateStrEnd

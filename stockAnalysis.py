@@ -50,7 +50,9 @@ if __name__=="__main__":
     dateStrStart=curStock.dateStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dateStrList[-1]
-    
+   
+    ##增加时间点统计，可以有趋势的效果
+
     ##分析不同交易周期内，统计不同涨幅的个数频率
     for days in [300,150,90,60,30,20,10,5]:
         headLine=str(days)+"个交易日内统计：\n涨幅区间个数:\t"
@@ -102,6 +104,10 @@ if __name__=="__main__":
 #        _line=headLine+"\t"+str(_num)
 #        print _line
 #        fileWrited.write(_line+'\n')
+    ##计算周期内涨的频率并绘直方图
+    ##统计分析 近期大盘开盘点位和最低点的差额,这个只能近期有效，长期无效
+    ##最近10个交易日的浮动是对做t最好的参考资料。而不能凭感觉说 低了，或者高了！！！！
+    ##计算周期内涨的频率并绘直方图
     ##计算周期内涨的频率并绘直方图
     ##分析高开低走，低开高走，高开高走，低开低走的个数
     ##计算每天振幅的幅度分布并绘图
