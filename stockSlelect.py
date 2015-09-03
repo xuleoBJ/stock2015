@@ -1,42 +1,35 @@
-## -*- coding: GBK -*-  
 # -*- coding: utf-8 -*-
 import os
 import shutil
 import time
 import datetime
 import Cstock
-
+import Ccomfunc
 
 ##计算按周期计算涨停幅度
 
 lineWrited=[]
 
-def convertDateStr2Date(dateStr):
-    split1=dateStr.split('/')
-    return datetime.date(int(split1[0]),int(split1[1]),int(split1[2]))
-
 if __name__=="__main__":
-    print("\n"+"#"*80)
-    print ("控制风险，保持耐心，态度认真。")
-    print ("下跌过程永远不买票！企稳后再买卖！最好是尾盘15分钟买卖！要么就挂相对的低价单钓鱼。")
-    print ("在历史K线中寻找有类似特征信息的日期，因为历史是重复的，错误也是循环的。")
-    print("\n"+"#"*80)
-    
+   
     startClock=time.clock() ##记录程序开始计算时间
    
 
     stockIDList=[]
-    sourceDirPath="export"
-    fileNames=os.listdir(sourceDirPath)
+    
+    fileNames=os.listdir(Ccomfunc.dirData)
     for fileItem in fileNames:
-        stockIDList.append(os.path.splitext(fileItem)[0])
+        ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
+        if os.path.basename(fileItem).startswith("8"):
+            stockIDList.append(os.path.splitext(fileItem)[0])
     
     ##输出文件名
     goalFilePath='result.txt'
     fileWrited=open(goalFilePath,'w')
     
     print ("正在根据条件筛选股票：")
-    
+    ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
+
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
