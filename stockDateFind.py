@@ -34,11 +34,11 @@ if __name__=="__main__":
     ##设置分析周期,缺省为1000，是4年的行情
     iDaysPeriodUser=1000
     if stockID=="999999":
-        iDaysPeriodUser=len(curStock.dateStrList)
+        iDaysPeriodUser=len(curStock.dayStrList)
     ##起始分析日期 dateStrStart
-    dateStrStart=curStock.dateStrList[-iDaysPeriodUser]
+    dateStrStart=curStock.dayStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
-    dateStrEnd=curStock.dateStrList[-1]
+    dateStrEnd=curStock.dayStrList[-1]
 
 
     print (u"正在进行趋势分析：")
@@ -55,10 +55,10 @@ if __name__=="__main__":
             if  _riseRate<=Ccomfunc.calRiseRateInterval(curStock,i,days)<=1+_riseRate:
                 bSelect=False
     if  bSelect==True:
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[i]).isoweekday()
-        print(curStock.dateStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
-        print("_"*30+"riseRate",curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i])
-        print("_"*30+"turnOverRate=",curStock.riseOfTurnOverFList[i-2],curStock.riseOfTurnOverFList[i-1],curStock.riseOfTurnOverFList[i-1])
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday()
+        print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
+        print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
+        print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
 
 
     print ("-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现：")
@@ -76,27 +76,27 @@ if __name__=="__main__":
     
     print ("-"*8+u"最近交易日的相关数据：")
     for i in range(-kDays,0):
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[-i]).isoweekday() 
-        print(curStock.dateStrList[-i],"weekDay_"+str(weekDay),"rate="+str(curStock.riseRateFList[-i]))
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[-i]).isoweekday() 
+        print(curStock.dayStrList[-i],"weekDay_"+str(weekDay),"rate="+str(curStock.dayRiseRateFList[-i]))
 
     ## 手动设置查找条件
     bUseHand=0
     if bUseHand==1:
         print ("-"*8+u"手动设置条件查找历史K线：")
-        riseRate_i=int(curStock.riseRateFList[-1])
-        riseRate_i_1=int(curStock.riseRateFList[-2])
+        riseRate_i=int(curStock.dayRiseRateFList[-1])
+        riseRate_i_1=int(curStock.dayRiseRateFList[-2])
         for i in range(-iDaysPeriodUser+2,-1):
             bSelect=False
             ##自动设置条件，用最后两个交易日做基准
-            if  riseRate_i_1<=curStock.riseRateFList[i-1]<=1+riseRate_i_1 and riseRate_i<=curStock.riseRateFList[i]<=1+riseRate_i:
+            if  riseRate_i_1<=curStock.dayRiseRateFList[i-1]<=1+riseRate_i_1 and riseRate_i<=curStock.dayRiseRateFList[i]<=1+riseRate_i:
             ##手工设置if条件
-    #        if  curStock.riseRateFList[i-1]<=0 and 5<=curStock.riseRateFList[i]<=7:
+    #        if  curStock.dayRiseRateFList[i-1]<=0 and 5<=curStock.dayRiseRateFList[i]<=7:
                 bSelect=True
             if  bSelect==True:
-                weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[i]).isoweekday() 
-                print(curStock.dateStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
-                print("_"*30+"riseRate",curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i])
-                print("_"*30+"turnOverRate=",curStock.riseOfTurnOverFList[i-2],curStock.riseOfTurnOverFList[i-1],curStock.riseOfTurnOverFList[i-1])
+                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+                print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
+                print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
+                print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
         
     ##根据涨幅进行历史K线模式识别
     print ("-"*8+u"根据涨幅，自动设置条件，历史K线模式识别：")
@@ -104,39 +104,39 @@ if __name__=="__main__":
 	    iCount=0
 	    bSelect=True
 	    while iCount<=kDays-1 and bSelect==True:
-		    valueRate=math.floor(curStock.riseRateFList[-iCount-1]/bias)*bias
-		    if not valueRate<=curStock.riseRateFList[i-iCount]<=valueRate+bias:
+		    valueRate=math.floor(curStock.dayRiseRateFList[-iCount-1]/bias)*bias
+		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
-		    if isConsiderVOlume==1 and curStock.riseOfTradeVolumeFList[i-iCount]>0 and \
-                        curStock.riseOfTradeVolumeFList[-iCount-1]/curStock.riseOfTradeVolumeFList[i-iCount]<0: 
+		    if isConsiderVOlume==1 and curStock.dayRiseOfTradeVolumeFList[i-iCount]>0 and \
+                        curStock.dayRiseOfTradeVolumeFList[-iCount-1]/curStock.dayRiseOfTradeVolumeFList[i-iCount]<0: 
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-                weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[i]).isoweekday() 
-                print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.riseRateFList[i-2],curStock.riseRateFList[i-1],curStock.riseRateFList[i],\
-                      "turnOverRate=",curStock.riseOfTurnOverFList[i-2],curStock.riseOfTurnOverFList[i-1],curStock.riseOfTurnOverFList[i-1],\
-                      "RiseRateofNextTradeDay: "+str(curStock.riseRateFList[i+1]))
+                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+                print(curStock.dayStrList[i],"weekDay_"+str(weekDay),curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
+                      "turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1],\
+                      "RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
     
     ##增加振幅，选择历史K线 
     print ("-"*8+u"根据震动幅度，自动设置条件，线模式识别：：")
     for i in range(kDays):
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[-kDays+i]).isoweekday() 
-        print(curStock.dateStrList[-kDays+i],"weekDay_"+str(weekDay),"waveRate="+str(curStock.waveRateFList[-kDays+i]))
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[-kDays+i]).isoweekday() 
+        print(curStock.dayStrList[-kDays+i],"weekDay_"+str(weekDay),"waveRate="+str(curStock.dayWaveRateFList[-kDays+i]))
 	for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
 	    bSelect=True
 	    while iCount<=kDays-1 and bSelect==True:
 		    ##用系数放缩找形态
-		    valueRate=math.floor(curStock.waveRateFList[-iCount-1]/bias)*bias
-		    if not valueRate<=curStock.waveRateFList[i-iCount]<=valueRate+bias:
+		    valueRate=math.floor(curStock.dayWaveRateFList[-iCount-1]/bias)*bias
+		    if not valueRate<=curStock.dayWaveRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-		weekDay=Ccomfunc.convertDateStr2Date(curStock.dateStrList[i]).isoweekday() 
-		print(curStock.dateStrList[i],"weekDay_"+str(weekDay),curStock.waveRateFList[i-2],curStock.waveRateFList[i-1],curStock.waveRateFList[i],\
-		      "turnOverRate=",curStock.riseOfTurnOverFList[i-2],curStock.riseOfTurnOverFList[i-1],curStock.riseOfTurnOverFList[i-1],\
-		      "RiseRateofNextTradeDay: "+str(curStock.waveRateFList[i+1]))
+		weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+		print(curStock.dayStrList[i],"weekDay_"+str(weekDay),curStock.dayWaveRateFList[i-2],curStock.dayWaveRateFList[i-1],curStock.dayWaveRateFList[i],\
+		      "turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1],\
+		      "RiseRateofNextTradeDay: "+str(curStock.dayWaveRateFList[i+1]))
 				
     for line in lineWrited:
         fileWrited.write(line+'\n')

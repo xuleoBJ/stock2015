@@ -11,18 +11,18 @@ from scipy.stats.stats import pearsonr
 
 ##分析股票与大盘走势的同步性
 def analysisSynchronization(numOfTradeDays,curStock,shStock):
-    dateStrStart=curStock.dateStrList[-numOfTradeDays]
-    dateStrEnd=curStock.dateStrList[-1]
-## get analysis indexStartDay and indexEndDay by dateStrList
-    indexStart=curStock.dateStrList.index(dateStrStart)
-    indexEnd=curStock.dateStrList.index(dateStrEnd)
+    dateStrStart=curStock.dayStrList[-numOfTradeDays]
+    dateStrEnd=curStock.dayStrList[-1]
+## get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart=curStock.dayStrList.index(dateStrStart)
+    indexEnd=curStock.dayStrList.index(dateStrEnd)
     print("-"*50)
     print (str(numOfTradeDays)+"个交易日与大盘同步性分析:开始日："+dateStrStart+"至"+dateStrEnd)
     waveSHFList=[]
     waveStockFList=[]
 ## 通过日期找到大盘同期index
     for i in range(indexStart,indexEnd):
-        dateStrSH=curStock.dateStrList[i]
+        dateStrSH=curStock.dayStrList[i]
         indexSH=shStock.shDateStrList.index(dateStrSH)
         r1=round(100*(curStock.priceCloseingFList[i]-curStock.priceCloseingFList[i-1])/curStock.priceCloseingFList[i-1],2)
         waveStockFList.append(r1)

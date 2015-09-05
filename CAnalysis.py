@@ -21,7 +21,7 @@ if __name__=="__main__":
    
     
     numTradeDay=200
-    print("分析最近"+str(numTradeDay)+"交易日:"+ curStock.dateStrList[-numTradeDay]+"-" +curStock.dateStrList[-1])
+    print("分析最近"+str(numTradeDay)+"交易日:"+ curStock.dayStrList[-numTradeDay]+"-" +curStock.dayStrList[-1])
     
     numOfRiseDay=3
     mumOfRiseVolume=3
@@ -37,7 +37,7 @@ if __name__=="__main__":
     up=0
     down=0
     for i in range(-numTradeDay,-1):
-        if curStock.tradeVolumeFList[i]>=curStock.tradeVolumeFList[i-1]>=curStock.tradeVolumeFList[i-2] :
+        if curStock.dayTradeVolumeFList[i]>=curStock.dayTradeVolumeFList[i-1]>=curStock.dayTradeVolumeFList[i-2] :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]>curStock.priceCloseingFList[i]:
                     up=up+1
@@ -48,7 +48,7 @@ if __name__=="__main__":
 ## 连续上涨交易日，次日上涨概率
     for i in range(-numTradeDay,-1):
         if curStock.priceCloseingFList[i]>=curStock.priceCloseingFList[i-1]>=curStock.priceCloseingFList[i-2] \
-                and curStock.tradeVolumeFList[i]<=curStock.tradeVolumeFList[i-1]<=curStock.tradeVolumeFList[i-2]:
+                and curStock.dayTradeVolumeFList[i]<=curStock.dayTradeVolumeFList[i-1]<=curStock.dayTradeVolumeFList[i-2]:
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]>curStock.priceCloseingFList[i]:
                     up=up+1
@@ -62,8 +62,8 @@ if __name__=="__main__":
         up=0
         down=0
         for i in range(-numTradeDay,-1):
-            ##curStock.tradeVolumeFList[i]<=curStock.tradeVolumeFList[i-1]
-            if curStock.riseRateFList[i]<=scale :
+            ##curStock.dayTradeVolumeFList[i]<=curStock.dayTradeVolumeFList[i-1]
+            if curStock.dayRiseRateFList[i]<=scale :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]>curStock.priceCloseingFList[i]:
                     up=up+1
@@ -76,8 +76,8 @@ if __name__=="__main__":
         up=0
         down=0
         for i in range(-numTradeDay,-1):
-            ##  curStock.tradeVolumeFList[i]>= curStock.tradeVolumeFList[i-1]
-            if curStock.riseRateFList[i]>=scale  :
+            ##  curStock.dayTradeVolumeFList[i]>= curStock.dayTradeVolumeFList[i-1]
+            if curStock.dayRiseRateFList[i]>=scale  :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]> curStock.priceCloseingFList[i]:
                     up=up+1
@@ -91,7 +91,7 @@ if __name__=="__main__":
         up=0
         down=0
         for i in range(-numTradeDay,-1):
-            if scale<= (curStock.priceHighestFList[i]-curStock.priceCloseingFList[i])*100/curStock.priceOpeningFList[i]<scale+1 :
+            if scale<= (curStock.dayPriceHighestFList[i]-curStock.priceCloseingFList[i])*100/curStock.dayPriceOpenFList[i]<scale+1 :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]>curStock.priceCloseingFList[i]:
                     up=up+1
@@ -105,7 +105,7 @@ if __name__=="__main__":
         up=0
         down=0
         for i in range(-numTradeDay,-1):
-            if scale<= (curStock.priceCloseingFList[i]-curStock.priceLowestFList[i])*100/curStock.priceOpeningFList[i]<scale+1 :
+            if scale<= (curStock.priceCloseingFList[i]-curStock.dayPriceLowestFList[i])*100/curStock.dayPriceOpenFList[i]<scale+1 :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]>curStock.priceCloseingFList[i]:
                     up=up+1

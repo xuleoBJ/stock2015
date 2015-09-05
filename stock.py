@@ -43,15 +43,15 @@ def readStockSH999999():
 
 ##读取指定代码List
 lineList=[]
-dateStrList=[]
-priceOpeningFList=[]
+dayStrList=[]
+dayPriceOpenFList=[]
 priceCloseingFList=[]
-priceHighestFList=[]
-priceLowestFList=[]
-tradeVolumeFList=[] ##成交量
+dayPriceHighestFList=[]
+dayPriceLowestFList=[]
+dayTradeVolumeFList=[] ##成交量
 turnoverFList=[]  ##成交额
-riseRateFList=[]  ##涨幅
-waveRateFList=[] ##波动涨幅
+dayRiseRateFList=[]  ##涨幅
+dayWaveRateFList=[] ##波动涨幅
 
 def readStockByID(stockID):
     print("\n"+"#"*80)
@@ -69,20 +69,20 @@ def readStockByID(stockID):
             print(line)
         if line!="" and lineIndex>=3 and len(splitLine)>=5:
             lineList.append(line)
-            dateStrList.append(splitLine[0])
-            priceOpeningFList.append(float(splitLine[1]))
-            priceHighestFList.append(float(splitLine[2]))
-            priceLowestFList.append(float(splitLine[3]))
+            dayStrList.append(splitLine[0])
+            dayPriceOpenFList.append(float(splitLine[1]))
+            dayPriceHighestFList.append(float(splitLine[2]))
+            dayPriceLowestFList.append(float(splitLine[3]))
             priceCloseingFList.append(float(splitLine[4]))
-            tradeVolumeFList.append(float(splitLine[5]))
+            dayTradeVolumeFList.append(float(splitLine[5]))
             if len(priceCloseingFList)>=2:
-                riseRateFList.append(round(100*(priceCloseingFList[-1]-priceCloseingFList[-2])/priceCloseingFList[-1],2))
-                waveRateFList.append(round(100*(priceHighestFList[-1]-priceLowestFList[-2])/priceCloseingFList[-1],2))
+                dayRiseRateFList.append(round(100*(priceCloseingFList[-1]-priceCloseingFList[-2])/priceCloseingFList[-1],2))
+                dayWaveRateFList.append(round(100*(dayPriceHighestFList[-1]-dayPriceLowestFList[-2])/priceCloseingFList[-1],2))
             else:
-                riseRateFList.append(0)
-                waveRateFList.append(0)
+                dayRiseRateFList.append(0)
+                dayWaveRateFList.append(0)
     fileOpened.close()
-    print("数据读取完毕,数据开始日：\t"+dateStrList[0]+"\t数据结束日：\t"+dateStrList[-1])
+    print("数据读取完毕,数据开始日：\t"+dayStrList[0]+"\t数据结束日：\t"+dayStrList[-1])
 
 
 ##计算按周期计算涨停幅度
@@ -98,9 +98,9 @@ def calNatureDays(dateStr1,dateStr2):
     d2= convertDateStr2Date(dateStr2)
     return (d1-d2).days
 
-def getDateOfPrice(price,priceFList,dateStrList):
+def getDateOfPrice(price,priceFList,dayStrList):
     indexPrice=priceFList.index(price)
-    return dateStrList[indexPrice]
+    return dayStrList[indexPrice]
 
 
 def findPeak(days,curDateStrList,curPriceOpeningFList,curPriceHighestFList,curPriceLowestFList,curPriceCloseingFList):
@@ -156,7 +156,7 @@ def contiveTradeDaysAnalysis(numDays,curDateStrList,curRiseRateFList):
 
 
 def analysisDate(dateStrStart,dateStrEnd,curDateStrList,curPriceOpeningFList,curPriceHighestFList,curPriceLowestFList,curPriceCloseingFList):
-## get analysis indexStartDay and indexEndDay by dateStrList
+## get analysis indexStartDay and indexEndDay by dayStrList
     indexStart=curDateStrList.index(dateStrStart)
     indexEnd=curDateStrList.index(dateStrEnd)
     print("-"*50)
@@ -182,36 +182,36 @@ def analysisDate(dateStrStart,dateStrEnd,curDateStrList,curPriceOpeningFList,cur
     print("最高点/最低点:\t"+str(round(curPriceHighest/curPriceLowest,2)))
 
 def analysisScale(stockID,dateStrStart,dateStrEnd):
-## get analysis indexStartDay and indexEndDay by dateStrList
-    indexStart=dateStrList.index(dateStrStart)
-    indexEnd=dateStrList.index(dateStrEnd)
+## get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart=dayStrList.index(dateStrStart)
+    indexEnd=dayStrList.index(dateStrEnd)
     print("-"*50)
     print("分析价差和涨幅")
     
     zhenfuFList=[] ## 波动幅度
     zhangdiefuFList=[]  ##涨跌幅
     for i in range(indexStart,indexEnd):
-        priceDelta1=(priceCloseingFList[i]-priceOpeningFList[i])/priceCloseingFList[i-1]
-        priceDelta2=(priceHighestFList[i]-priceLowestFList[i])/priceCloseingFList[i-1]
+        priceDelta1=(priceCloseingFList[i]-dayPriceOpenFList[i])/priceCloseingFList[i-1]
+        priceDelta2=(dayPriceHighestFList[i]-dayPriceLowestFList[i])/priceCloseingFList[i-1]
         if priceDelta1>=0.05:
             zhenfuFList.append(i)
         if abs(priceDelta2)>=0.05:
             zhangdiefuFList.append(i)
     strDate=""
     for item in zhenfuFList:
-        strDate=strDate+dateStrList[item]+"\t"
+        strDate=strDate+dayStrList[item]+"\t"
     print("振幅超过5%天数:\t"+str(len(zhenfuFList))+"\t起始日期是："+strDate)
     strDate=""
     for item in zhangdiefuFList:
-        strDate=strDate+dateStrList[item]+"\t"
+        strDate=strDate+dayStrList[item]+"\t"
     print("涨跌幅超过5%:\t"+str(len(zhangdiefuFList))+"\t起始日期是："+strDate)
 
 
 ###连续交易日幅度###
 def analysisConsecutive(stockID,dateStrStart,dateStrEnd,numConsecutiveTradeDays,fScale):
-## get analysis indexStartDay and indexEndDay by dateStrList
-    indexStart=dateStrList.index(dateStrStart)
-    indexEnd=dateStrList.index(dateStrEnd)
+## get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart=dayStrList.index(dateStrStart)
+    indexEnd=dayStrList.index(dateStrEnd)
     print("-"*50)
     print("连续"+str(numConsecutiveTradeDays)+"个交易日幅度超过"+str(fScale))
     
@@ -222,14 +222,14 @@ def analysisConsecutive(stockID,dateStrStart,dateStrEnd,numConsecutiveTradeDays,
             waveFList.append(i)
     strDate=""
     for item in waveFList:
-        strDate=strDate+dateStrList[item]+"\t"
+        strDate=strDate+dayStrList[item]+"\t"
     print("振幅超过比例天数:\t"+str(len(waveFList))+"\t起始日期是："+strDate)
 
 ##分析股票与大盘走势的同步性
 def analysisSynchronization(stockID,dateStrStart,dateStrEnd):
-## get analysis indexStartDay and indexEndDay by dateStrList
-    indexStart=dateStrList.index(dateStrStart)
-    indexEnd=dateStrList.index(dateStrEnd)
+## get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart=dayStrList.index(dateStrStart)
+    indexEnd=dayStrList.index(dateStrEnd)
     print("-"*50)
     synFile=stockID+"syn.txt"
     fileWrited=open(synFile,'w')
@@ -238,7 +238,7 @@ def analysisSynchronization(stockID,dateStrStart,dateStrEnd):
 ## 通过日期找到大盘同期index
     fileWrited.write("日期"+"\t"+"大盘涨幅"+"\t"+"股票涨幅"+"\t"+ '同步比例\n')
     for i in range(indexStart,indexEnd):
-        dateStrSH=dateStrList[i]
+        dateStrSH=dayStrList[i]
         indexSH=shDateStrList.index(dateStrSH)
         r1=round(100*(priceCloseingFList[i]-priceCloseingFList[i-1])/priceCloseingFList[i-1],2)
         waveStockFList.append(r1)
@@ -282,10 +282,10 @@ if __name__=="__main__":
 
   ##  highAndlowPrice(stockID,[iDaysPeriodUser,30,60,120])
     for item in [iDaysPeriodUser,30,60,120]:
-        dateStrStart=dateStrList[-item-1]
-        dateStrEnd=dateStrList[-1]
+        dateStrStart=dayStrList[-item-1]
+        dateStrEnd=dayStrList[-1]
         print("\n"+"$"*80)
-        analysisDate(dateStrStart,dateStrEnd,dateStrList,priceOpeningFList,priceHighestFList,priceLowestFList,priceCloseingFList)
+        analysisDate(dateStrStart,dateStrEnd,dayStrList,dayPriceOpenFList,dayPriceHighestFList,dayPriceLowestFList,priceCloseingFList)
         ##分析单个交易日的波动幅度和振动
         analysisScale(stockID,dateStrStart,dateStrEnd)
         numConsecutiveTradeDays=5
@@ -294,14 +294,14 @@ if __name__=="__main__":
         analysisConsecutive(stockID,dateStrStart,dateStrEnd,numConsecutiveTradeDays,fScale)
     
     print ("正在进行时空分析：")
-    findPeak(30,dateStrList,priceOpeningFList,priceHighestFList,priceLowestFList,priceCloseingFList)
-    findPeak(60,dateStrList,priceOpeningFList,priceHighestFList,priceLowestFList,priceCloseingFList)
-    findPeak(90,dateStrList,priceOpeningFList,priceHighestFList,priceLowestFList,priceCloseingFList)
-    findPeak(120,dateStrList,priceOpeningFList,priceHighestFList,priceLowestFList,priceCloseingFList)
-    findPeak(180,dateStrList,priceOpeningFList,priceHighestFList,priceLowestFList,priceCloseingFList)
+    findPeak(30,dayStrList,dayPriceOpenFList,dayPriceHighestFList,dayPriceLowestFList,priceCloseingFList)
+    findPeak(60,dayStrList,dayPriceOpenFList,dayPriceHighestFList,dayPriceLowestFList,priceCloseingFList)
+    findPeak(90,dayStrList,dayPriceOpenFList,dayPriceHighestFList,dayPriceLowestFList,priceCloseingFList)
+    findPeak(120,dayStrList,dayPriceOpenFList,dayPriceHighestFList,dayPriceLowestFList,priceCloseingFList)
+    findPeak(180,dayStrList,dayPriceOpenFList,dayPriceHighestFList,dayPriceLowestFList,priceCloseingFList)
 
     print ("分析连续交易日情况：")
-    contiveTradeDaysAnalysis(5,dateStrList,riseRateFList)
+    contiveTradeDaysAnalysis(5,dayStrList,dayRiseRateFList)
 
 
     ##分析连续上涨交易日和连续下跌交易日的成交量对比
@@ -314,7 +314,7 @@ if __name__=="__main__":
     ##与大盘同步性分析
     print("与大盘同步性分析")
     numOfTradeDays=200
-    analysisSynchronization(stockID,dateStrList[-numOfTradeDays],dateStrList[-1])
+    analysisSynchronization(stockID,dayStrList[-numOfTradeDays],dayStrList[-1])
 
 
     print ("分析近期走势：")
