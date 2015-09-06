@@ -40,12 +40,20 @@ if __name__=="__main__":
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
-
     print (u"正在进行趋势分析：")
     for days in [3,5,8,13,21,34,55,89,144]:
 	 Ccomfunc.printCalTrend(curStock,days)
     
-    print (u"去年同期10个交易日走势：")
+    print (u"过去3年同期20个交易日走势：")
+    today=datetime.date.today()
+    for i in [1,2,3]:
+        todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
+        print u"{}年同期涨幅：".format(todayLastYear.year)
+        for item in curStock.dateList:
+            if todayLastYear-datetime.timedelta(days=10)<=item<=todayLastYear+datetime.timedelta(days=10):
+                _index=curStock.dateList.index(item)
+                print curStock.dayStrList[_index],curStock.dayRiseRateFList[_index]
+   
     ##根据趋势涨幅寻找历史K线    
     print (u"根据交易日涨幅查找历史K：")
     bSelect=True
@@ -75,9 +83,9 @@ if __name__=="__main__":
         bias=1.0
     
     print ("-"*8+u"最近交易日的相关数据：")
-    for i in range(-kDays,0):
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[-i]).isoweekday() 
-        print(curStock.dayStrList[-i],"weekDay_"+str(weekDay),"rate="+str(curStock.dayRiseRateFList[-i]))
+    for i in range(-kDays,0): ##注意用的负指数
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+        print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"rate="+str(curStock.dayRiseRateFList[i]))
 
     ## 手动设置查找条件
     bUseHand=0

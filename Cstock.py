@@ -176,8 +176,11 @@ class Stock:
                     self.monthWaveRateFList.append(-999)
                     self.monthOpenRateFList.append(-999)
                     self.monthOpenCloseRateFList.append(-999)
+            if len(self.dayStrList)>0:
+                print("数据读取完毕,数据开始日：\t"+self.dayStrList[0]+"\t数据结束日：\t"+self.dayStrList[-1])
+            else:
+                print("数据列为空")
 
-            print("数据读取完毕,数据开始日：\t"+self.dayStrList[0]+"\t数据结束日：\t"+self.dayStrList[-1])
         else:
             print(stockID+"数据不存在")
 
@@ -188,7 +191,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    curStock=Stock('880566')
+    curStock=Stock('880855')
     print curStock.monthStrList[-10:]
     print curStock.monthPriceOpenFList[-10:]
     print curStock.monthPriceClosedFList[-10:]

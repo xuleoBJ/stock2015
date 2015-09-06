@@ -28,13 +28,21 @@ if __name__=="__main__":
     print ("正在根据条件筛选股票：")
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     lineWritedList=[]
+    monthStrList=["201109","201209","201309","201409"]
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
-        sMonth="201212"
-        for i in range(len(curStock.monthStrList)):
-            if curStock.monthStrList[i].endswith(sMonth):
-                lineWritedList.append(curStock.stockID+"\t"+curStock.stockName+"\t"+sMonth+"\t"+str(curStock.monthRiseRateFList[i]))
+        sList=[]
+        sList.append(curStock.stockID)
+        sList.append(curStock.stockName)
+        for sMonth in monthStrList:
+            sList.append(sMonth)
+            _riseRateMonth="-999"
+            for i in range(len(curStock.monthStrList)):
+                if curStock.monthStrList[i].endswith(sMonth):
+                    _riseRateMonth=str(curStock.monthRiseRateFList[i])
+            sList.append(_riseRateMonth)
+        lineWritedList.append("\t".join(sList))
     ##输出文件名
     goalFilePath='result.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)

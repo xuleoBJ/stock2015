@@ -31,6 +31,7 @@ def countTrendByOpenCloseRate(curStock,fList,fLow,fHigh):
     print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
 
 if __name__=="__main__":
+   
     Ccomfunc.printInfor()
     
     startClock=time.clock() ##记录程序开始计算时间
@@ -53,79 +54,72 @@ if __name__=="__main__":
    
     ##增加时间点统计，可以有趋势的效果
 
-    ##分析不同交易周期内，统计不同涨幅的个数频率
-    for days in [300,150,90,60,30,20,10,5]:
-        headLine=str(days)+"个交易日内统计：\n涨幅区间个数:\t"
+    ##统计分析最近不同交易周期内，不同涨幅的个数分布频率
+    print("##统计分析最近不同交易周期内，不同涨幅的个数分布频率")
+    for dayPeriod in [300,150,90,60,30,20,10,5]:
+        headLine=str(dayPeriod)+"个交易日内统计：\n涨幅区间个数:\t"
         print(headLine)
         fileWrited.write(headLine+"\n")
         for i in range(-10,11):
             _line=""
-            _num=len(filter(lambda x:i==int(x),curStock.dayRiseRateFList[-days:]))
+            _num=len(filter(lambda x:i==int(x),curStock.dayRiseRateFList[-dayPeriod:]))
             if i==10:
                 _line="涨停版\t"+str(_num)
             else :
                 _line=str(i)+"到"+str(i+1)+"\t"+str(_num)
-            print _line
             fileWrited.write(_line+'\n')
     
     ##分析不同交易周期内，统计不同波动幅度的个数频率
-    for days in [300,150,90,60,30,20,10,5]:
-        headLine=str(days)+"个交易日内统计：\n振幅区间个数:\t"
-        print(headLine)
+    print("##分析不同交易周期内，统计不同波动幅度的个数频率")
+    for dayPeriod in [300,150,90,60,30,20,10,5]:
+        headLine=str(dayPeriod)+"个交易日内统计：\n振幅区间个数:\t"
         fileWrited.write(headLine+"\n")
         for i in range(0,21):
             _line=""
-            _num=len(filter(lambda x:i==int(x),curStock.dayWaveRateFList[-days:]))
+            _num=len(filter(lambda x:i==int(x),curStock.dayWaveRateFList[-dayPeriod:]))
             _line=str(i)+"到"+str(i+1)+"\t"+str(_num)
-            print _line
             fileWrited.write(_line+'\n')
     
-    ##分析不同交易周期内，统计最低值的个数频率
-    for days in [300,150,90,60,30,20,10,5]:
-        headLine=str(days)+"个交易日内统计：\n最低值区间个数:\t"
-        print(headLine)
+    ##分析不同交易周期内，统计开盘高开，低开的频率
+    print("##分析不同交易周期内，统计开盘高开，低开的频率")
+    for dayPeriod in [30,20,10,5]:
+        headLine=str(dayPeriod)+"个交易日内统计：\n开盘的涨幅频率分布:\t"
         fileWrited.write(headLine+"\n")
         for i in range(-10,11):
             _line=""
-            _num=len(filter(lambda x:i==int(x),map(lambda x,y:100*(x-y)/y,curStock.dayPriceLowestFList[-days:],curStock.dayPriceClosedFList[-days-1:-1])))
-            if i==10:
-                _line="涨停版\t"+str(_num)
+            _num=len(filter(lambda x:i==int(x),curStock.dayOpenRateFList[-dayPeriod:]))
+            _line=str(i)+"到"+str(i+1)+"\t"+str(_num)
+            fileWrited.write(_line+'\n')
+    
+    print("##分析不同交易周期内，统计最低值与开盘值频率分布")
+    for dayPeriod in [300,150,90,60,30,20,10,5]:
+        ##分析开盘价与最低价 差额相对于昨日价格的百分比分布
+        ##如果开盘价就是最低价，差额就是0，如果开盘价比最低价差额不大，代表市场比较强
+        ##如果开盘价与最低价差额比较大，代表空方力量比较大
+        headLine=str(dayPeriod)+"个交易日内统计：\n分析开盘价与最低价 差额相对于昨日价格的百分比频率分布:\t \
+        ##如果开盘价就是最低价，差额就是0，如果开盘价比最低价差额不大，代表市场比较强  \
+        ##如果开盘价与最低价差额比较大，代表空方力量比较大 "
+        fileWrited.write(headLine+"\n")
+        for i in range(-20,1):
+            _line=""
+            _num=len(filter(lambda x:i==int(x),map(lambda x,y,z:100*(x-y)/z, \
+                    curStock.dayPriceLowestFList[-dayPeriod:],curStock.dayPriceOpenFList[-dayPeriod:],curStock.dayPriceClosedFList[-dayPeriod-1:-1])))
+            if i==0:
+                _line="开盘价就是最低价\t"+str(_num)
             else :
                 _line=str(i)+"到"+str(i+1)+"\t"+str(_num)
-            print _line
             fileWrited.write(_line+'\n')
 
     ##分析不同交易周期内,高开低走，第二天的涨跌
     for i in range(-10,11):
         print("当日走势{}%-{}%，次日涨幅分布：".format(i,i+1))
         countTrendByOpenCloseRate(curStock,curStock.dayRiseRateFList,i-0.1,i+0.1)
-    ##分析涨停版，第二天高开的频率
-
-
-    print("根据头天的涨幅，对次日数据进行分析预测：")
-    for i in range(-10,11):
-        print("当日涨幅{}%-{}%,次日高开分布：".format(i,i+1))
-        countTrendByRiseRate(curStock,curStock.dayOpenRateFList,i-0.1,i+0.1)
-    for i in range(-10,11):
-        print("当日涨幅{}%-{}%，次日涨幅分布：".format(i,i+1))
-        countTrendByRiseRate(curStock,curStock.dayRiseRateFList,i-0.1,i+0.1)
-#    for i in range(-10,11):
-#        headLine=str(len(fList))+"个前一日涨幅区间："+str(j)+"到"+str(j+1)+",次日开盘幅度区间：" if i!=10 else "前一日涨停板,次日开盘幅度区间："
-#        headLine=headLine+str(i)+"到"+str(i+1)+"个数：" if i!=10 else headLine+"涨停板"
-#        _num=len(filter(lambda x:i<=x<i+1,fList))
-#        _line=headLine+"\t"+str(_num)
-#        print _line
-#        fileWrited.write(_line+'\n')
-    ##计算周期内涨的频率并绘直方图
+  
     ##统计分析 近期大盘开盘点位和最低点的差额,这个只能近期有效，长期无效
     ##最近10个交易日的浮动是对做t最好的参考资料。而不能凭感觉说 低了，或者高了！！！！
-    ##计算周期内涨的频率并绘直方图
-    ##计算周期内涨的频率并绘直方图
     ##分析高开低走，低开高走，高开高走，低开低走的个数
-    ##计算每天振幅的幅度分布并绘图
-    ##涨停或者跌停出现的个数
     ##高开的天数，低开的天数
-    ##设置分析周期
+    
     ##成交量变动分析
 #    print ("正在分析成交量变动：")
 #    for i in range(-20,-1):
@@ -143,6 +137,5 @@ if __name__=="__main__":
     fileWrited.close()
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
-  ##  raw_input()
 
 
