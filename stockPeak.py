@@ -213,7 +213,7 @@ if __name__=="__main__":
     
 
     ##读取股票代码，存储在curStock里
-    stockID="999999"
+    stockID="399001"
     curStock=Cstock.Stock(stockID)
     
 
@@ -236,7 +236,7 @@ if __name__=="__main__":
             os.makedirs(resultDir)
        
         findPeakPrice(dayPeriod,curStock.dayStrList,curStock.dayPriceOpenFList,curStock.dayPriceHighestFList,curStock.dayPriceLowestFList,curStock.dayPriceClosedFList)
-        findPeakVolume(dayPeriod,curStock.dayStrList,curStock.dayTradeVolumeFList)
+#        findPeakVolume(dayPeriod,curStock.dayStrList,curStock.dayTradeVolumeFList)
 #        findPeakTurnover(dayPeriod,curStock.dayStrList,curStock.dayTurnOverFList)
         
     

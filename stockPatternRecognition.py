@@ -85,7 +85,7 @@ if __name__=="__main__":
     print ("-"*8+u"最近交易日的相关数据：")
     for i in range(-kDays,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"rate="+str(curStock.dayRiseRateFList[i]))
+        print(u"{},星期{},涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i]))
 
     ## 手动设置查找条件
     bUseHand=0
@@ -103,6 +103,7 @@ if __name__=="__main__":
             if  bSelect==True:
                 weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
                 print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
+                print(u"{},星期{},次日涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i+1]))
                 print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
                 print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
         
@@ -127,10 +128,10 @@ if __name__=="__main__":
                       "RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
     
     ##增加振幅，选择历史K线 
-    print ("-"*8+u"根据震动幅度，自动设置条件，线模式识别：：")
-    for i in range(kDays):
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[-kDays+i]).isoweekday() 
-        print(curStock.dayStrList[-kDays+i],"weekDay_"+str(weekDay),"waveRate="+str(curStock.dayWaveRateFList[-kDays+i]))
+    print ("-"*8+u"根据波动动幅度，自动设置条件，线模式识别：：")
+    for i in range(-kDays,0): ##注意用的负指数
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+        print(u"{},星期{},波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayWaveRateFList[i]))
 	for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
 	    bSelect=True

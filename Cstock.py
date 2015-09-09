@@ -111,12 +111,12 @@ class Stock:
                         self.dayOpenRateFList.append(-999)
                         self.dayOpenCloseRateFList.append(-999)
                     ##计算成交量涨幅
-                    if len(self.dayTradeVolumeFList)>=2 and self.dayTradeVolumeFList[-1]>0:
+                    if len(self.dayTradeVolumeFList)>=2 and self.dayTradeVolumeFList[-2]>0:
                         self.dayRiseOfTradeVolumeFList.append(round(100*(self.dayTradeVolumeFList[-1]-self.dayTradeVolumeFList[-2])/self.dayTradeVolumeFList[-2],2))
                     else:
                         self.dayRiseOfTradeVolumeFList.append(-999)
                         
-                    if len(self.dayTurnOverFList)>=2 and self.dayTurnOverFList[-1]>100:
+                    if len(self.dayTurnOverFList)>=2 and self.dayTurnOverFList[-2]>100:
                         self.dayRiseOfTurnOverFList.append(round(100*(self.dayTurnOverFList[-1]-self.dayTurnOverFList[-2])/self.dayTurnOverFList[-2],2))
                     else:
                         self.dayRiseOfTurnOverFList.append(-999)
@@ -191,7 +191,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    curStock=Stock('880855')
+    curStock=Stock('399001')
     print curStock.monthStrList[-10:]
     print curStock.monthPriceOpenFList[-10:]
     print curStock.monthPriceClosedFList[-10:]
