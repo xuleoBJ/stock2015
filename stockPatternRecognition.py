@@ -8,28 +8,24 @@ import Cstock
 import sys
 import Ccomfunc
 
-lineWrited=[]
-
+stockID="999999"
 
 if __name__=="__main__":
+    
     Ccomfunc.printInfor()
-
+    
+    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     print (u"在历史K线中寻找有类似特征信息的日期，因为历史是重复的，错误也是循环的。")
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
    
-    ##读取上证指数数据
-    ##shStock=Cstock.StockSH()
     
     ##读取股票代码，存储在curStock里
-    stockID="999999"
     curStock=Cstock.Stock(stockID)
 
-    ##输出文件名
-    goalFilePath='result.txt'
-    fileWrited=open(goalFilePath,'w')
-    fileWrited.write(stockID+'\n')
+    lineWritedList=[]
+    lineWritedList.append(stockID)
 
     ##设置分析周期,缺省为1000，是4年的行情
     iDaysPeriodUser=1000
@@ -123,16 +119,18 @@ if __name__=="__main__":
 		    iCount=iCount+1
 	    if bSelect==True:
                 weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print(curStock.dayStrList[i],"weekDay_"+str(weekDay),curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
-                      "turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1],\
-                      "RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
+                print u"{},星期{},三日涨幅{},{},{},量幅{},{},{},次日涨幅{}".format(curStock.dayStrList[i],weekDay,\
+                        curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
+                        curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
+                        curStock.dayRiseRateFList[i+1])
     
     ##增加振幅，选择历史K线 
-    print ("-"*8+u"根据波动动幅度，自动设置条件，线模式识别：：")
+    print ("-"*8+u"根据波动动幅度，自动设置条件，K线模式识别：")
     for i in range(-kDays,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
         print(u"{},星期{},波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayWaveRateFList[i]))
-	for i in range(-iDaysPeriodUser+kDays,-1):
+	
+    for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
 	    bSelect=True
 	    while iCount<=kDays-1 and bSelect==True:
@@ -142,14 +140,16 @@ if __name__=="__main__":
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
-		weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-		print(curStock.dayStrList[i],"weekDay_"+str(weekDay),curStock.dayWaveRateFList[i-2],curStock.dayWaveRateFList[i-1],curStock.dayWaveRateFList[i],\
-		      "turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1],\
-		      "RiseRateofNextTradeDay: "+str(curStock.dayWaveRateFList[i+1]))
-				
-    for line in lineWrited:
-        fileWrited.write(line+'\n')
-    fileWrited.close()
+                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+                print u"{},星期{},三日波动{},{},{},量幅{},{},{}，涨幅{},{},{},次日涨幅{}".format(curStock.dayStrList[i],weekDay, \
+                    curStock.dayWaveRateFList[i-2],curStock.dayWaveRateFList[i-1],curStock.dayWaveRateFList[i], \
+                    curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
+                    curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
+                  curStock.dayRiseRateFList[i+1])
+    ##输出文件名
+    goalFilePath='result.txt'
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()
