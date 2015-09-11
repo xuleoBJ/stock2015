@@ -96,7 +96,7 @@ class Stock:
                     ##根据日数据，得到月数据
                     
                     ##计算涨幅和振幅
-                    if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-1]>0:
+                    if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-2]>0:
 						##(当日收盘-上日收盘)/上一日收盘
                         self.dayRiseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
 						##(当日最高-当日最低)/上一日收盘

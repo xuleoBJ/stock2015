@@ -7,6 +7,9 @@ import sys
 import Cstock
 import Ccomfunc
 
+
+stockID="002008"
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -213,7 +216,6 @@ if __name__=="__main__":
     
 
     ##读取股票代码，存储在curStock里
-    stockID="399001"
     curStock=Cstock.Stock(stockID)
     
 

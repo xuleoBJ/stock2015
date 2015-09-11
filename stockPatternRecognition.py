@@ -8,7 +8,7 @@ import Cstock
 import sys
 import Ccomfunc
 
-stockID="999999"
+stockID="399001"
 
 if __name__=="__main__":
     
