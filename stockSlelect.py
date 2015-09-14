@@ -21,7 +21,7 @@ if __name__=="__main__":
         fileNames=os.listdir(Ccomfunc.dirData)
         for fileItem in fileNames:
             ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
-            if os.path.basename(fileItem).startswith("8"):
+            if os.path.basename(fileItem).startswith("8") or os.path.basename(fileItem).startswith("9") :
                 stockIDList.append(os.path.splitext(fileItem)[0])
     
    

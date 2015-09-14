@@ -8,7 +8,7 @@ import Cstock
 import sys
 import Ccomfunc
 
-stockID="399001"
+stockID="999999"
 
 if __name__=="__main__":
     
@@ -128,7 +128,7 @@ if __name__=="__main__":
     print ("-"*8+u"根据波动动幅度，自动设置条件，K线模式识别：")
     for i in range(-kDays,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        print(u"{},星期{},波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayWaveRateFList[i]))
+        print(u"{},星期{},波动幅度:{},涨幅：{}".format(curStock.dayStrList[i],weekDay,curStock.dayWaveRateFList[i],curStock.dayRiseRateFList[i]))
 	
     for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
