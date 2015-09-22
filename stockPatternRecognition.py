@@ -25,7 +25,7 @@ def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
 		    iCount=iCount+1
 	    if bSelect==True:
                 weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print u"{},星期{},前3日涨幅{},{},{},量幅{},{},{},次日涨幅{},3日涨幅{:.3},5日涨幅{:.3},".format(curStock.dayStrList[i],weekDay,\
+                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},3日涨幅{9:.2f},5日涨幅{10:.2f},".format(curStock.dayStrList[i],weekDay,\
                         curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
                         curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
                         curStock.dayRiseRateFList[i+1],Ccomfunc.calRiseRateInterval(curStock,i,3),Ccomfunc.calRiseRateInterval(curStock,i,5))
@@ -70,7 +70,7 @@ def patterRecByHandSet(curStock,iDaysPeriodUser,kDays):
             print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
             print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
 
-stockID="399001"
+stockID="999999"
 
 if __name__=="__main__":
     
@@ -141,7 +141,7 @@ if __name__=="__main__":
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
         print(u"{},星期{},涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i]))
 
-    patternRecByRiseRate(curStock,iDaysPeriodUser,kDays-1)
+    patternRecByRiseRate(curStock,iDaysPeriodUser,kDays)
 
     for i in range(-kDays,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
