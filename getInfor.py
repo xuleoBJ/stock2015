@@ -116,8 +116,8 @@ def event_func_xhs():
 def event_func_fgw():
     num=1
     webs=[]
-    urlLink="http://www.sdpc.gov.cn/gzdt/"
-    webs.append(urlLink)
+#    urlLink="http://www.sdpc.gov.cn/gzdt/"
+#    webs.append(urlLink)
     urlLink="http://www.sdpc.gov.cn/govszyw/"
     webs.append(urlLink)
     lineList=[]
@@ -132,13 +132,13 @@ def event_func_fgw():
                 html=response.read()
                 parsed_html = lxml.html.fromstring(html)
         ##        print type(parsed_html)
-                for elem in parsed_html.xpath("//div/div/div/div/ul/li/a"):
+                for elem in parsed_html.xpath("//div/div/div/ul/li/a"):
                     newOne=elem.text_content()
                     if not newOne in newsList:
                         newsList.append(elem.text_content())
                         print num,newOne
                         now = datetime.datetime.now()
-                        startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
+                        startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
                         endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
                         if startTime<=now<=endTime:
                             ctypes.windll.user32.MessageBoxA(0,"fgw_have new news!!", currentTimeStr, 1)

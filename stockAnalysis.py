@@ -1,4 +1,4 @@
-# coding = utf-8   
+# -*- coding: utf-8 -*-  
 import os
 import shutil
 import time
@@ -7,7 +7,7 @@ import sys
 import Cstock
 import Ccomfunc
 
-stockID="002707"
+stockID="601336"
 lineWrited=[]
 
 ##根据涨幅，第二天趋势分析
@@ -17,7 +17,7 @@ def countTrendByRiseRate(curStock,fList,fLow,fHigh):
     for k in range(0,len(curStock.dayRiseRateFList)-1):
         if fLow<=curStock.dayRiseRateFList[k]<=fHigh:
             fSelectList.append(fList[k+1])
-    print(u"满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
+    print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
 
 ##根据第一天的走势，第二天趋势分析
 ##fList是需要分析的数据list，比如涨幅，或者高开数据，flow是数据区间的下限值，fHigh是数据区间的上限值
@@ -26,7 +26,7 @@ def countTrendByOpenCloseRate(curStock,fList,fLow,fHigh):
     for k in range(0,len(curStock.dayOpenCloseRateFList)-1):
         if fLow<=curStock.dayRiseRateFList[k]<=fHigh:
             fSelectList.append(fList[k+1])
-    print(u"满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
+    print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
 
 if __name__=="__main__":
    
@@ -39,11 +39,11 @@ if __name__=="__main__":
     
     ##过去三年同期的涨幅，当月涨幅大的3个独立交易日，涨幅最大的三个连续交易日，同样，分析最小的
 
-    print (u"过去3年同期20个交易日走势：")
+    print ("过去3年同期20个交易日走势：")
     today=datetime.date.today()
     for i in [1,2,3]:
         todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
-        print u"{}年同期涨幅：".format(todayLastYear.year)
+        print "{}年同期涨幅：".format(todayLastYear.year)
         for item in curStock.dateList:
             if todayLastYear-datetime.timedelta(days=1)<=item<=todayLastYear+datetime.timedelta(days=10):
                 _index=curStock.dateList.index(item)

@@ -13,7 +13,6 @@ lineWrited=[]
 if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
-   
 
     stockIDList=[]
     
@@ -28,7 +27,7 @@ if __name__=="__main__":
     print ("正在根据条件筛选股票：")
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     lineWritedList=[]
-    monthStrList=["201109","201209","201309","201409"]
+    monthStrList=["201109","201209","201309","201409","201509"]
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
