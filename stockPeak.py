@@ -8,7 +8,7 @@ import Cstock
 import Ccomfunc
 
 
-stockID="002008"
+stockID="600085"
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -222,13 +222,13 @@ if __name__=="__main__":
     ##设置分析周期,如果日期大于1000（4年就取1000），否则取最大
     iDaysPeriodUser=len(curStock.dayStrList) if len(curStock.dayStrList)<=1000 else 1000
     ##起始分析日期 dateStrStart
-    dateStrStart=curStock.dayStrList[-iDaysPeriodUser-1]
+    dateStrStart=curStock.dayStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
     print ("正在进行趋势分析：")
     for dayPeriod in [3,5,10,20,30,60,90,120]:
-	 Ccomfunc.printCalTrend(curStock,dayPeriod)
+	 Ccomfunc.printCalTrend(curStock,-dayPeriod)
 	   
 
     print ("正在进行历史时空分析：")

@@ -115,19 +115,6 @@ if __name__=="__main__":
                 _index=curStock.dateList.index(item)
                 print curStock.dayStrList[_index],curStock.dayRiseRateFList[_index]
    
-    print (u"根据交易日涨幅查找历史K：")
-    bSelect=True
-    for days in [3]:
-        _riseRate= int(Ccomfunc.calTrend(curStock,days))
-        for i in range(-iDaysPeriodUser+days,-1):
-            if  _riseRate<=Ccomfunc.calRiseRateInterval(curStock,i,days)<=1+_riseRate:
-                bSelect=False
-    if  bSelect==True:
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday()
-        print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
-        print("riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
-        print("turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
-
 
     print("-"*72)
     print ("-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现：")
