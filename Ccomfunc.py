@@ -25,13 +25,13 @@ def calNatureDays(dateStr1,dateStr2):
     d2= convertDateStr2Date(dateStr2)
     return (d1-d2).days
 
-##计算两个交易日直接的涨幅indexDay是指数，例如-1就是最后一个交易日，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
-def calRiseRateInterval(curStock,indexDay,intervalDay):
-	if curStock.dayPriceClosedFList[indexDay+intervalDay]>0:
+##计算两个交易日直接的涨幅indexOfDate是指数，例如-1就是最后一个交易日，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
+def calRiseRateInterval(curStock,indexOfDate,intervalDay):
+	if curStock.dayPriceClosedFList[indexOfDate+intervalDay]>0:
             if intervalDay>=0:
-                return 100*(curStock.dayPriceClosedFList[indexDay+intervalDay]-curStock.dayPriceClosedFList[indexDay])/curStock.dayPriceClosedFList[indexDay]
+                return 100*(curStock.dayPriceClosedFList[indexOfDate+intervalDay]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
             else:    
-                return 100*(curStock.dayPriceClosedFList[indexDay]-curStock.dayPriceClosedFList[indexDay+intervalDay])/curStock.dayPriceClosedFList[indexDay+intervalDay]
+                return 100*(curStock.dayPriceClosedFList[indexOfDate]-curStock.dayPriceClosedFList[indexOfDate+intervalDay])/curStock.dayPriceClosedFList[indexOfDate+intervalDay]
 	else:
 		return -999
 	    

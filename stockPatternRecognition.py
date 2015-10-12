@@ -105,16 +105,20 @@ if __name__=="__main__":
     for days in [3,5,8,13,21,34,55,89,144]:
 	 Ccomfunc.printCalTrend(curStock,-days)
     
-    print (u"过去3年同期20个交易日走势：")
+    print (u"过去3年同期当月剩余交易日涨幅：")
+    print (u"过去3年同期3个交易日走势：")
     today=datetime.date.today()
     for i in [1,2,3]:
         todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
-        print u"{}年同期涨幅：".format(todayLastYear.year)
+        wordsPrint=[]
         for item in curStock.dateList:
-            if todayLastYear-datetime.timedelta(days=1)<=item<=todayLastYear+datetime.timedelta(days=10):
+            if todayLastYear-datetime.timedelta(days=1)<=item:
                 _index=curStock.dateList.index(item)
-                print curStock.dayStrList[_index],curStock.dayRiseRateFList[_index]
+                wordsPrint.append(curStock.dayStrList[_index])
+                wordsPrint.append(str(curStock.dayRiseRateFList[_index]))
+                break
    
+        print u"{}年同期涨幅:{}".format(todayLastYear.year,"\t".join(wordsPrint))
 
     print("-"*72)
     print ("-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现：")
@@ -134,7 +138,7 @@ if __name__=="__main__":
         print(u"{},星期{},涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i]))
 
     if patternRecByRiseRate(curStock,iDaysPeriodUser,kDays)<1:
-        print(u"交易日个数减少为2个")
+        print(u"三个交易日识别无参照，交易日个数减少为2个识别：")
         patternRecByRiseRate(curStock,iDaysPeriodUser,kDays-1)
 
     print("-"*72)
