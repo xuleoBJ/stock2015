@@ -19,7 +19,7 @@ def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice):
 		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
-	    if bSelect==True and valueOpenPrice-0.25<=curStock.dayPriceOpenFList[i+1]<=valueOpenPrice+0.25:
+	    if bSelect==True and valueOpenPrice-0.25<=curStock.dayOpenRateFList[i+1]<=valueOpenPrice+0.25:
                 print curStock.dayStrList[i+1]
 
 def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
@@ -41,107 +41,16 @@ def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
 	    if bSelect==True:
                 numSelect=numSelect+1
                 weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},3日涨幅{9:.2f},5日涨幅{10:.2f},".format(curStock.dayStrList[i],weekDay,\
+                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[i],weekDay,\
                         curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
                         curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
-                        curStock.dayRiseRateFList[i+1],Ccomfunc.calRiseRateInterval(curStock,i,3),Ccomfunc.calRiseRateInterval(curStock,i,5))
+                        curStock.dayRiseRateFList[i+1],curStock.dayOpenRateFList[i+1])
+                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89,-144]:
+                    print u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay)) ##注意这里用的是负指数
+                for intervalDay in [3,5,8]:
+                    print u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay))
     return numSelect
-def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
-    ##根据涨幅进行历史K线模式识别
-    numSelect=0
-    print ("-"*8+u"根据涨幅，自动设置条件，历史K线模式识别：")
-    for i in range(-iDaysPeriodUser+kDays,-1):
-	    iCount=0
-	    bSelect=True
-	    while iCount<=kDays-1 and bSelect==True:
-		    valueRate=math.floor(curStock.dayRiseRateFList[-iCount-1]/bias)*bias
-		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
-			    bSelect=False
-		    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
-		    if isConsiderVOlume==1 and curStock.dayRiseOfTradeVolumeFList[i-iCount]>0 and \
-                        curStock.dayRiseOfTradeVolumeFList[-iCount-1]/curStock.dayRiseOfTradeVolumeFList[i-iCount]<0: 
-			    bSelect=False
-		    iCount=iCount+1
-	    if bSelect==True:
-                numSelect=numSelect+1
-                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},3日涨幅{9:.2f},5日涨幅{10:.2f},".format(curStock.dayStrList[i],weekDay,\
-                        curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
-                        curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
-                        curStock.dayRiseRateFList[i+1],Ccomfunc.calRiseRateInterval(curStock,i,3),Ccomfunc.calRiseRateInterval(curStock,i,5))
-    return numSelect
-def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
-    ##根据涨幅进行历史K线模式识别
-    numSelect=0
-    print ("-"*8+u"根据涨幅，自动设置条件，历史K线模式识别：")
-    for i in range(-iDaysPeriodUser+kDays,-1):
-	    iCount=0
-	    bSelect=True
-	    while iCount<=kDays-1 and bSelect==True:
-		    valueRate=math.floor(curStock.dayRiseRateFList[-iCount-1]/bias)*bias
-		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
-			    bSelect=False
-		    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
-		    if isConsiderVOlume==1 and curStock.dayRiseOfTradeVolumeFList[i-iCount]>0 and \
-                        curStock.dayRiseOfTradeVolumeFList[-iCount-1]/curStock.dayRiseOfTradeVolumeFList[i-iCount]<0: 
-			    bSelect=False
-		    iCount=iCount+1
-	    if bSelect==True:
-                numSelect=numSelect+1
-                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},3日涨幅{9:.2f},5日涨幅{10:.2f},".format(curStock.dayStrList[i],weekDay,\
-                        curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
-                        curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
-                        curStock.dayRiseRateFList[i+1],Ccomfunc.calRiseRateInterval(curStock,i,3),Ccomfunc.calRiseRateInterval(curStock,i,5))
-    return numSelect
-def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
-    ##根据涨幅进行历史K线模式识别
-    numSelect=0
-    print ("-"*8+u"根据涨幅，自动设置条件，历史K线模式识别：")
-    for i in range(-iDaysPeriodUser+kDays,-1):
-	    iCount=0
-	    bSelect=True
-	    while iCount<=kDays-1 and bSelect==True:
-		    valueRate=math.floor(curStock.dayRiseRateFList[-iCount-1]/bias)*bias
-		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
-			    bSelect=False
-		    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
-		    if isConsiderVOlume==1 and curStock.dayRiseOfTradeVolumeFList[i-iCount]>0 and \
-                        curStock.dayRiseOfTradeVolumeFList[-iCount-1]/curStock.dayRiseOfTradeVolumeFList[i-iCount]<0: 
-			    bSelect=False
-		    iCount=iCount+1
-	    if bSelect==True:
-                numSelect=numSelect+1
-                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},3日涨幅{9:.2f},5日涨幅{10:.2f},".format(curStock.dayStrList[i],weekDay,\
-                        curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
-                        curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
-                        curStock.dayRiseRateFList[i+1],Ccomfunc.calRiseRateInterval(curStock,i,3),Ccomfunc.calRiseRateInterval(curStock,i,5))
-    return numSelect
-def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
-    ##根据涨幅进行历史K线模式识别
-    numSelect=0
-    print ("-"*8+u"根据涨幅，自动设置条件，历史K线模式识别：")
-    for i in range(-iDaysPeriodUser+kDays,-1):
-	    iCount=0
-	    bSelect=True
-	    while iCount<=kDays-1 and bSelect==True:
-		    valueRate=math.floor(curStock.dayRiseRateFList[-iCount-1]/bias)*bias
-		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
-			    bSelect=False
-		    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
-		    if isConsiderVOlume==1 and curStock.dayRiseOfTradeVolumeFList[i-iCount]>0 and \
-                        curStock.dayRiseOfTradeVolumeFList[-iCount-1]/curStock.dayRiseOfTradeVolumeFList[i-iCount]<0: 
-			    bSelect=False
-		    iCount=iCount+1
-	    if bSelect==True:
-                numSelect=numSelect+1
-                weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-                print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},3日涨幅{9:.2f},5日涨幅{10:.2f},".format(curStock.dayStrList[i],weekDay,\
-                        curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
-                        curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
-                        curStock.dayRiseRateFList[i+1],Ccomfunc.calRiseRateInterval(curStock,i,3),Ccomfunc.calRiseRateInterval(curStock,i,5))
-    return numSelect
+
 
 def patternRecByRiseWave(curStock,iDaysPeriodUser,kDays):
     ##增加振幅，选择历史K线 
@@ -150,7 +59,6 @@ def patternRecByRiseWave(curStock,iDaysPeriodUser,kDays):
 	    iCount=0
 	    bSelect=True
 	    while iCount<=kDays-1 and bSelect==True:
-		    ##用系数放缩找形态
 		    valueRate=math.floor(curStock.dayWaveRateFList[-iCount-1]/bias)*bias
 		    if not valueRate<=curStock.dayWaveRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
@@ -254,7 +162,7 @@ if __name__=="__main__":
 
     print("$"*72)
     print ("-"*8+u"K线+开盘价识别系统：")
-    valueOpenPrice=-0.20
+    valueOpenPrice=-0.40
     patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays-1,valueOpenPrice)
     
     print("$"*72)

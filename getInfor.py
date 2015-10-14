@@ -116,8 +116,8 @@ def event_func_xhs():
 def event_func_fgw():
     num=1
     webs=[]
-#    urlLink="http://www.sdpc.gov.cn/gzdt/"
-#    webs.append(urlLink)
+    urlLink="http://www.sdpc.gov.cn/gzdt/"
+    webs.append(urlLink)
     urlLink="http://www.sdpc.gov.cn/govszyw/"
     webs.append(urlLink)
     lineList=[]
