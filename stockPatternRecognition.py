@@ -8,7 +8,7 @@ import Cstock
 import sys
 import Ccomfunc
 
-def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice):
+def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.1):
     ##根据涨幅及开盘价进行历史K线模式识别：
     print ("-"*8+u"根据前{}涨幅及当日开盘价模式识别：".format(kDays))
     for i in range(-iDaysPeriodUser+kDays,-1):
@@ -19,7 +19,7 @@ def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice):
 		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
-	    if bSelect==True and valueOpenPrice-0.25<=curStock.dayOpenRateFList[i+1]<=valueOpenPrice+0.25:
+	    if bSelect==True and valueOpenPrice-bias<=curStock.dayOpenRateFList[i+1]<=valueOpenPrice+bias:
                 print curStock.dayStrList[i+1]
 
 def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
@@ -45,7 +45,7 @@ def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
                         curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
                         curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
                         curStock.dayRiseRateFList[i+1],curStock.dayOpenRateFList[i+1])
-                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89,-144]:
+                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
                     print u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay)) ##注意这里用的是负指数
                 for intervalDay in [3,5,8]:
                     print u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay))
@@ -123,8 +123,7 @@ if __name__=="__main__":
     for days in [3,5,8,13,21,34,55,89,144]:
 	 Ccomfunc.printCalTrend(curStock,-days)
     
-    print (u"过去3年同期当月剩余交易日涨幅：")
-    print (u"过去3年同期3个交易日走势：")
+    print (u"过去3年同期交易日走势,近期走势：")
     today=datetime.date.today()
     for i in [1,2,3]:
         todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
@@ -133,7 +132,8 @@ if __name__=="__main__":
             if todayLastYear-datetime.timedelta(days=1)<=item:
                 _index=curStock.dateList.index(item)
                 wordsPrint.append(curStock.dayStrList[_index])
-                wordsPrint.append(str(curStock.dayRiseRateFList[_index]))
+                for days in [3,5,8,13]:
+                    wordsPrint.append("{}日涨幅{:.2f}".format(days,Ccomfunc.calRiseRateInterval(curStock,_index,days)))
                 break
    
         print u"{}年同期涨幅:{}".format(todayLastYear.year,"\t".join(wordsPrint))
@@ -162,7 +162,7 @@ if __name__=="__main__":
 
     print("$"*72)
     print ("-"*8+u"K线+开盘价识别系统：")
-    valueOpenPrice=-0.40
+    valueOpenPrice=-0.23
     patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays-1,valueOpenPrice)
     
     print("$"*72)
