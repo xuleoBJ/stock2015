@@ -27,6 +27,11 @@ class Stock:
     dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
     dayRiseOfTradeVolumeFList=[]  ##day成交量涨幅
     dayRiseOfTurnOverFList=[]  ##day成交额涨幅
+
+    dayPriceAverageFList=[]     ##日均价
+    day3PriceAverageFList=[]     ##3日均价
+    day5PriceAverageFList=[]     ##5日均价
+    day10PriceAverageFList=[]     ##10日均价
     
     monthStrList=[]          ##月，string
     monthPriceOpenFList=[]    ##month开盘价
@@ -87,12 +92,16 @@ class Stock:
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
                     self.dateList.append(Ccomfunc.convertDateStr2Date(splitLine[0]))
+                    
                     self.dayPriceOpenFList.append(float(splitLine[1]))
                     self.dayPriceHighestFList.append(float(splitLine[2]))
                     self.dayPriceLowestFList.append(float(splitLine[3]))
                     self.dayPriceClosedFList.append(float(splitLine[4]))
-                    self.dayTradeVolumeFList.append(float(splitLine[5]))
-                    self.dayTurnOverFList.append(float(splitLine[6]))
+                    tradeVolume=float(splitLine[5])
+                    self.dayTradeVolumeFList.append(tradeVolume)
+                    turnOver=float(splitLine[6])
+                    self.dayTurnOverFList.append(turnOver)
+                    self.dayPriceAverageFList.append(round(turnOver/tradeVolume,2))
                     ##根据日数据，得到月数据
                     
                     ##计算涨幅和振幅
@@ -191,7 +200,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    curStock=Stock('399001')
+    curStock=Stock('601818')
     print curStock.monthStrList[-10:]
     print curStock.monthPriceOpenFList[-10:]
     print curStock.monthPriceClosedFList[-10:]
@@ -207,6 +216,7 @@ if __name__=="__main__":
     print curStock.dayWaveRateFList[-10:]
     print curStock.dayOpenRateFList[-10:]
     print curStock.dayOpenCloseRateFList[-10:]
+    print curStock.dayPriceAverageFList[-10:]
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

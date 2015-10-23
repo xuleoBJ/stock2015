@@ -162,7 +162,7 @@ if __name__=="__main__":
 
     print("$"*72)
     print ("-"*8+u"K线+开盘价识别系统：")
-    valueOpenPrice=-0.23
+    valueOpenPrice=-0.27
     patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays-1,valueOpenPrice)
     
     print("$"*72)

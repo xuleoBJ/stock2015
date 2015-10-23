@@ -8,7 +8,7 @@ import Cstock
 import Ccomfunc
 
 
-stockID="999999"
+stockID="510300"
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
