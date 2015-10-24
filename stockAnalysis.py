@@ -28,6 +28,17 @@ def countTrendByOpenCloseRate(curStock,fList,fLow,fHigh):
             fSelectList.append(fList[k+1])
     print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
 
+def trend(curStock):
+    print ("过去3年同期20个交易日走势：")
+    today=datetime.date.today()
+    for i in [1,2,3]:
+        todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
+        print "{}年同期涨幅：".format(todayLastYear.year)
+        for item in curStock.dateList:
+            if todayLastYear-datetime.timedelta(days=1)<=item<=todayLastYear+datetime.timedelta(days=10):
+                _index=curStock.dateList.index(item)
+                print curStock.dayStrList[_index],curStock.dayRiseRateFList[_index]
+
 if __name__=="__main__":
    
     Ccomfunc.printInfor()
@@ -38,16 +49,8 @@ if __name__=="__main__":
     curStock=Cstock.Stock(stockID)
     
     ##过去三年同期的涨幅，当月涨幅大的3个独立交易日，涨幅最大的三个连续交易日，同样，分析最小的
-
-    print ("过去3年同期20个交易日走势：")
-    today=datetime.date.today()
-    for i in [1,2,3]:
-        todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
-        print "{}年同期涨幅：".format(todayLastYear.year)
-        for item in curStock.dateList:
-            if todayLastYear-datetime.timedelta(days=1)<=item<=todayLastYear+datetime.timedelta(days=10):
-                _index=curStock.dateList.index(item)
-                print curStock.dayStrList[_index],curStock.dayRiseRateFList[_index]
+    trend(curStock)
+  
     ##输出文件名
     goalFilePath='result.txt'
     fileWrited=open(goalFilePath,'w')

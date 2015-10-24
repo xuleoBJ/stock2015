@@ -8,7 +8,7 @@ import Cstock
 import Ccomfunc
 
 
-stockID="510300"
+stockID="999999"
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -28,13 +28,14 @@ def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFLis
     lineWritedList.append('-'*50)
     lineWritedList.append('价格峰值分析分析周期(天):'+str(dayPeriod))
     lineWritedList.append("日期"+"\t距上次峰值交易日个数\t"+"\t距上次峰值自然日个数\t"+"\t局部高点/低点\t"+"浮动幅度%:\t")
-    ##
+   
+    ##变量 用于计算交易日间隔
     d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     standValue=100
     daySpanLast=10 ## record last span dayPeriod
     indexLast=1
-    dayPeriod=dayPeriod/2
+    dayPeriod=dayPeriod/2 ##周期内最值 用半周期前后算，i循环时 比较当日是否是前后半周期的极值
     for i in range(dayPeriod,len(curDateStrList)):
         ##如果i前后的dayPeriod满足周期 ,i后面的交易日不满足半周期 就用else的
         max_value = -999
@@ -78,7 +79,7 @@ def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFLis
     ## deal the last day
     d2=Ccomfunc.convertDateStr2Date(curDateStrList[-1])
     daysSpan=(d2-d1).days
-    daySpanLast=days if daySpanLast==0 else daySpanLast
+    daySpanLast=dayPeriod if daySpanLast==0 else daySpanLast
     lineWritedList.append(curDateStrList[-1]+"\t" +str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t" \
             +str(curPriceClosedFList[-1])+"\t"+str(round((curPriceClosedFList[-1]-standValue)/standValue,3)*100))
     Ccomfunc.write2Text(goalFilePath,lineWritedList) 
