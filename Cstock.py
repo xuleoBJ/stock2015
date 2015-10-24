@@ -101,8 +101,13 @@ class Stock:
                     self.dayTradeVolumeFList.append(tradeVolume)
                     turnOver=float(splitLine[6])
                     self.dayTurnOverFList.append(turnOver)
-                    self.dayPriceAverageFList.append(round(turnOver/tradeVolume,2))
-                    ##根据日数据，得到月数据
+                    
+                    ##计算均价
+                    if(tradeVolume>0):
+                        self.dayPriceAverageFList.append(round(turnOver/tradeVolume,2))
+                    else:
+                        self.dayPriceAverageFList.append(-999)
+
                     
                     ##计算涨幅和振幅
                     if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-2]>0:

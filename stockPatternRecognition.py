@@ -95,15 +95,9 @@ stockID="999999"
 
 if __name__=="__main__":
     
-    Ccomfunc.printInfor()
-    
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
-    print (u"在历史K线中寻找有类似特征信息的日期，因为历史是重复的，错误也是循环的。")
-    print("\n"+"#"*80)
-    
     startClock=time.clock() ##记录程序开始计算时间
    
-    
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
 
@@ -119,10 +113,6 @@ if __name__=="__main__":
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
-    print (u"正在进行趋势分析：")
-    for days in [3,5,8,13,21,34,55,89,144]:
-	 Ccomfunc.printCalTrend(curStock,-days)
-    
     print (u"过去3年同期交易日走势,近期走势：")
     today=datetime.date.today()
     for i in [1,2,3]:
