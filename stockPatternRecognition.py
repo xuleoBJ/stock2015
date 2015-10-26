@@ -8,8 +8,8 @@ import Cstock
 import sys
 import Ccomfunc
 
-def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.1):
-    ##根据涨幅及开盘价进行历史K线模式识别：
+def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.5,biasOpen=0.2):
+    ##根据前几日涨幅及开盘价进行历史K线模式识别：
     print ("-"*8+u"根据前{}涨幅及当日开盘价模式识别：".format(kDays))
     for i in range(-iDaysPeriodUser+kDays,-1):
 	    iCount=0
@@ -19,10 +19,10 @@ def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.1
 		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
-	    if bSelect==True and valueOpenPrice-bias<=curStock.dayOpenRateFList[i+1]<=valueOpenPrice+bias:
+	    if bSelect==True and valueOpenPrice-biasOpen<=curStock.dayOpenRateFList[i+1]<=valueOpenPrice+biasOpen:
                 print curStock.dayStrList[i+1]
 
-def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays):
+def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays,bias,isConsiderVOlume=0):
     ##根据涨幅进行历史K线模式识别
     numSelect=0
     print ("-"*8+u"根据前{}涨幅，自动设置条件，模式识别：".format(kDays))
@@ -113,21 +113,6 @@ if __name__=="__main__":
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
-    print (u"过去3年同期交易日走势,近期走势：")
-    today=datetime.date.today()
-    for i in [1,2,3]:
-        todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
-        wordsPrint=[]
-        for item in curStock.dateList:
-            if todayLastYear-datetime.timedelta(days=1)<=item:
-                _index=curStock.dateList.index(item)
-                wordsPrint.append(curStock.dayStrList[_index])
-                for days in [3,5,8,13]:
-                    wordsPrint.append("{}日涨幅{:.2f}".format(days,Ccomfunc.calRiseRateInterval(curStock,_index,days)))
-                break
-   
-        print u"{}年同期涨幅:{}".format(todayLastYear.year,"\t".join(wordsPrint))
-
     print("-"*72)
     print ("-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现：")
     
@@ -146,13 +131,11 @@ if __name__=="__main__":
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
         print(u"{},星期{},涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i]))
 
-    if patternRecByRiseRate(curStock,iDaysPeriodUser,kDays)<1:
-        print(u"三个交易日识别无参照，交易日个数减少为2个识别：")
-        patternRecByRiseRate(curStock,iDaysPeriodUser,kDays-1)
+    patternRecByRiseRate(curStock,iDaysPeriodUser,kDays,bias)
 
     print("$"*72)
     print ("-"*8+u"K线+开盘价识别系统：")
-    valueOpenPrice=-0.27
+    valueOpenPrice=curStock.dayPriceOpenFList[-1]
     patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays-1,valueOpenPrice)
     
     print("$"*72)
@@ -160,7 +143,7 @@ if __name__=="__main__":
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
         print(u"{},星期{},波动幅度:{},涨幅：{}".format(curStock.dayStrList[i],weekDay,curStock.dayWaveRateFList[i],curStock.dayRiseRateFList[i]))
 	
-    patternRecByRiseWave(curStock,iDaysPeriodUser,kDays)
+#    patternRecByRiseWave(curStock,iDaysPeriodUser,kDays)
     
     ##输出文件名
     goalFilePath='result.txt'

@@ -7,7 +7,7 @@ import sys
 import Cstock
 import Ccomfunc
 
-stockID="601336"
+stockID="002484"
 lineWrited=[]
 
 ##根据涨幅，第二天趋势分析

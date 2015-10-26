@@ -36,21 +36,21 @@ print "starting:"
 
 storeDir=datetime.date.today().strftime("%Y%m%d")
 
-def event_func_gwy():
+def event_func_globleMarket():
     num=1
-    urlLink="http://www.gov.cn/xinwen/"
+    urlLink="http://quote.eastmoney.com/gb/zsNKY.html"
     lineList=[]
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
         print currentTimeStr
-        print "gwyNEWS start:"+urlLink
+        print "global market start:"+urlLink
         req=urllib2.Request(urlLink)
         response=urllib2.urlopen(req)
         if response.code==200:
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
             ##修改xpath，得到相关新闻对应的xpath语法
-            for elem in parsed_html.xpath("//div/div/ul/li/a"):
+            for elem in parsed_html.xpath("//id('NKY7')/td[2]/span"):
                 newOne=elem.text_content()
                 if not newOne in newsList:
                     newsList.append(elem.text_content())
@@ -60,50 +60,6 @@ def event_func_gwy():
                     endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
                     if startTime<=now<=endTime:
                         ctypes.windll.user32.MessageBoxA(0,"gwy_new news!!", currentTimeStr, 1)
-                num=num+1
-               ## fileWrited.write(elem.text_content())
-    except urllib2.HTTPError,e:
-        print "server error"
-        print e.code
-    except urllib2.URLError,e:
-        print "URLError:"
-        print e.reason
-
-def event_func_xhs():
-    num=1
-    urlLink="http://www.news.cn/fortune/"
-    lineList=[]
-    try:
-        currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
-        print currentTimeStr
-        print "xhsNEWS start:"+urlLink
-        req=urllib2.Request(urlLink)
-        response=urllib2.urlopen(req)
-        if response.code==200:
-            html=response.read()
-            parsed_html = lxml.html.fromstring(html)
-    ##        print type(parsed_html)
-            for elem in parsed_html.xpath("//div[@class='headNews']/h2"):
-                newOne=elem.text_content()
-                if not newOne in newsList:
-                    newsList.append(elem.text_content())
-                    print num,newOne
-                    now = datetime.datetime.now()
-                    startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
-                    endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
-                    if startTime<=now<=endTime:
-                        ctypes.windll.user32.MessageBoxA(0,"xhs_new news!!", currentTimeStr, 1)
-                num=num+1
-            for elem in parsed_html.xpath("//p[@class='ywzy']/a"):
-                newOne=elem.text_content()
-                if not newOne in newsList:
-                    newsList.append(elem.text_content())
-                    print num,newOne
-                    now = datetime.datetime.now()
-                    startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
-                    endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
-                    if startTime<=now<=endTime:
-                        ctypes.windll.user32.MessageBoxA(0,"xhs_new news!!", currentTimeStr, 1)
                 num=num+1
                ## fileWrited.write(elem.text_content())
     except urllib2.HTTPError,e:
@@ -155,11 +111,9 @@ def event_func_fgw():
 
 def perform(inc):
     s.enter(inc,0,perform,(inc,))
-    event_func_gwy()
-    event_func_xhs()
-    event_func_fgw()
+    event_func_globleMarket()
 
-def mymain(inc=90):
+def mymain(inc=900):
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
     s.enter(0,0,perform,(inc,))

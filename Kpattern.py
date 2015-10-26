@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os,math
+import Cstock
 #print "hello,world"
 ### engulfing pattern 确定趋势中的大阴包大阳，算法是第二天收盘价小于第一天的开盘价并且两根长柱子
 #if curStock.dayRiseRateFList[i-1]>=2 and curStock.dayRiseRateFList[i]<=-2 and curStock.priceCloseingFList[i]<curStock.dayPriceOpenFList[i-1] and  curStock.priceCloseingFList[i-1]<curStock.dayPriceOpenFList[i]:
@@ -26,3 +27,55 @@ def patternHammer(openPrice,closePrice,highPrice,lowPrice):
 # 2 two candle sticks compise the engulfing pattern. The second real body must engulf the prior body(it need not engulf the shadows)
 # 3 the second real body of the engulfing pattern should be the opposite color of the first real body
 
+def patternEngulfBull(curstock,index):
+    if curstock.dayRiseRateFList[index-1]<=-2 and curstock.dayRiseRateFList[index]>=3 and curstock.daysPriceOpenFList[index]>= curstock.daysPriceClosedFList[index-1]:
+        return True
+    else:
+        return False
+
+def patternEngulfBear(curstock,index):
+    if 0.5<=curstock.dayRiseRateFList[index-1]<=1 and curstock.dayRiseRateFList[index]<=-3 and curstock.daysPriceOpenFList[index] >= curstock.daysPriceClosedFList[index-1]:
+        return True
+    else:
+        return False
+
+#Dark-cloud cover
+def patternDarkCloudCover(curstock,index):
+    if curstock.dayRiseRateFList[index-1]>=3 and curstock.dayRiseRateFList[index]<=-3 and curstock.daysPriceClosedFList[index]< curstock.daysPriceClosedFList[index-1]:
+        return True
+    else:
+        return False
+
+#GraveStone
+def patternDarkCloudCover(curstock,index):
+    if curstock.dayWaveRateFList[index]>=3 and curstock.daysPriceClosedFList[index]== curstock.daysPriceOpenFList[index]:
+        return True
+    else:
+        return False
+
+#DOJI
+def patternDOJIBull(curstock,index):
+    if curstock.dayRiseRateFList[index-1]<=-2 and curstock.daysPriceOpenFList[index] <= curstock.daysPriceClosedFList[index-1] and curstock.daysPriceOpenFList[index]== curstock.daysPriceClosedFList[index]:
+        return True
+    else:
+        return False
+
+def patternDOJIBear(curstock,index):
+    if curstock.dayRiseRateFList[index-1]>=2 and curstock.daysPriceOpenFList[index] >= curstock.daysPriceClosedFList[index-1] and curstock.daysPriceOpenFList[index]== curstock.daysPriceClosedFList[index]:
+        return True
+    else:
+        return False
+
+#Evening star
+def patternEveningStar(curstock,index):
+    if patternDOJIBear(curstock,index-1)==True and curstock.dayRiseRateFList[index]<=2:
+        return True
+    else:
+        return False
+
+#Piercing Pattern
+def patternPiercingPattern(curstock,index):
+    if curstock.dayRiseRateFList[index-1]<=-2 and curstock.daysPriceOpenFList[index] <= curstock.daysPriceClosedFList[index-1] and curstock.daysPriceClosedFList[index]>0.5*(curstock.daysPriceClosedFList[index-1]+ curstock.daysPriceOpenFList[index-1]):
+        return True
+    else:
+        return False
