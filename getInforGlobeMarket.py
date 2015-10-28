@@ -5,6 +5,8 @@ import lxml.html
 import ConfigParser
 import time,sched,os,urllib2,re,string
 import ctypes
+import pandas as pd
+from bs4 import BeautifulSoup
 
 resultDir="resultDir"
 s = sched.scheduler(time.time,time.sleep)
@@ -36,9 +38,11 @@ print "starting:"
 
 storeDir=datetime.date.today().strftime("%Y%m%d")
 
+def text(elt):
+    return elt.text_content().replace(u'\xa0', u' ')
+
 def event_func_globleMarket():
-    num=1
-    urlLink="http://quote.eastmoney.com/gb/zsNKY.html"
+    urlLink="http://quote.eastmoney.com/center/global.html#global_3"
     lineList=[]
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
@@ -48,65 +52,38 @@ def event_func_globleMarket():
         response=urllib2.urlopen(req)
         if response.code==200:
             html=response.read()
-            parsed_html = lxml.html.fromstring(html)
-            ##修改xpath，得到相关新闻对应的xpath语法
-            for elem in parsed_html.xpath("//id('NKY7')/td[2]/span"):
-                newOne=elem.text_content()
-                if not newOne in newsList:
-                    newsList.append(elem.text_content())
-                    print num,newOne
-                    now = datetime.datetime.now()
-                    startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
-                    endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
-                    if startTime<=now<=endTime:
-                        ctypes.windll.user32.MessageBoxA(0,"gwy_new news!!", currentTimeStr, 1)
-                num=num+1
-               ## fileWrited.write(elem.text_content())
+            soup= BeautifulSoup(html,from_encoding="gb18030")
+            table = soup.find("table", attrs={"id":"Asia"})
+#            print(table.encode('gb18030'))
+            
+            NKY7 = table.find('tr',attrs={"id":"NKY7"}) 
+            for tr in NKY7.findAll('td'):  
+                print tr.text.encode("gb18030")  
+    
+  
+#            parsed_html = lxml.html.fromstring(html)
+#            ##修改xpath，得到相关新闻对应的xpath语法
+#            for table in parsed_html.xpath("//table[@id='Asia']"):
+#                header = [text(th) for th in table.xpath('//th')]        # 1
+#                data = [[text(td) for td in tr.xpath('td')]  for tr in table.xpath('//tr')]                   # 2
+#                data = [row for row in data if len(row)==len(header)]    # 3
+#                data = pd.DataFrame(data, columns=header)                # 4
+#                print(data)
+#                newOne=elem.text_content()
+#                print newOne
+#                if not newOne in newsList:
+#                    newsList.append(elem.text_content())
+#                    now = datetime.datetime.now()
+#                    startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
+#                    endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
+#                    if startTime<=now<=endTime:
+#                        ctypes.windll.user32.MessageBoxA(0,"gwy_new news!!", currentTimeStr, 1)
     except urllib2.HTTPError,e:
         print "server error"
         print e.code
     except urllib2.URLError,e:
         print "URLError:"
         print e.reason
-
-def event_func_fgw():
-    num=1
-    webs=[]
-    urlLink="http://www.sdpc.gov.cn/gzdt/"
-    webs.append(urlLink)
-    urlLink="http://www.sdpc.gov.cn/govszyw/"
-    webs.append(urlLink)
-    lineList=[]
-    for linkWeb in webs :
-        try:
-            currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
-            print currentTimeStr
-            print "fgwNEWS start:"+linkWeb
-            req=urllib2.Request(linkWeb)
-            response=urllib2.urlopen(req)
-            if response.code==200:
-                html=response.read()
-                parsed_html = lxml.html.fromstring(html)
-        ##        print type(parsed_html)
-                for elem in parsed_html.xpath("//div/div/div/div/ul/li/a"):
-                    newOne=elem.text_content()
-                    if not newOne in newsList:
-                        newsList.append(elem.text_content())
-                        print num,newOne
-                        now = datetime.datetime.now()
-                        startTime = now.replace(hour=8, minute=30, second=0, microsecond=0)
-                        endTime= now.replace(hour=15, minute=0, second=0, microsecond=0)
-                        if startTime<=now<=endTime:
-                            ctypes.windll.user32.MessageBoxA(0,"fgw_have new news!!", currentTimeStr, 1)
-                    num=num+1
-                
-                   ## fileWrited.write(elem.text_content())
-        except urllib2.HTTPError,e:
-            print "server error"
-            print e.code
-        except urllib2.URLError,e:
-            print "URLError:"
-            print e.reason
 
 
 def perform(inc):

@@ -8,7 +8,7 @@ import Cstock
 import sys
 import Ccomfunc
 
-def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.5,biasOpen=0.2):
+def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.5,biasOpen=0.5):
     ##根据前几日涨幅及开盘价进行历史K线模式识别：
     print ("-"*8+u"根据前{}涨幅及当日开盘价模式识别：".format(kDays))
     for i in range(-iDaysPeriodUser+kDays,-1):
@@ -24,6 +24,7 @@ def patternRecByPriceOpen(curStock,iDaysPeriodUser,kDays,valueOpenPrice,bias=0.5
 
 def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays,bias,isConsiderVOlume=0):
     ##根据涨幅进行历史K线模式识别
+    ##需要增加从某一天开始的模式
     numSelect=0
     print ("-"*8+u"根据前{}涨幅，自动设置条件，模式识别：".format(kDays))
     for i in range(-iDaysPeriodUser+kDays,-1):
@@ -45,10 +46,10 @@ def patternRecByRiseRate(curStock,iDaysPeriodUser,kDays,bias,isConsiderVOlume=0)
                         curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i],\
                         curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i],\
                         curStock.dayRiseRateFList[i+1],curStock.dayOpenRateFList[i+1])
-                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
-                    print u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay)) ##注意这里用的是负指数
+#                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
+#                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
                 for intervalDay in [3,5,8]:
-                    print u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay))
+                    print (u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay)))
     return numSelect
 
 
