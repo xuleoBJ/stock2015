@@ -1,4 +1,3 @@
-## -*- coding: GBK -*-  
 # -*- coding: utf-8 -*-
 import os
 import shutil
@@ -191,7 +190,8 @@ class Stock:
                     self.monthOpenRateFList.append(-999)
                     self.monthOpenCloseRateFList.append(-999)
             if len(self.dayStrList)>0:
-                print("数据读取完毕,数据开始日：\t"+self.dayStrList[0]+"\t数据结束日：\t"+self.dayStrList[-1])
+                print("数据读取完毕,数据开始日：\t"+self.dayStrList[0]+"\t数据结束日：\t"+self.dayStrList[-1]+ \
+                       "\t收盘价：\t"+str(self.dayPriceClosedFList[-1]))
             else:
                 print("数据列为空")
 
@@ -205,7 +205,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    curStock=Stock('601818')
+    curStock=Stock('999999')
     print curStock.monthStrList[-10:]
     print curStock.monthPriceOpenFList[-10:]
     print curStock.monthPriceClosedFList[-10:]

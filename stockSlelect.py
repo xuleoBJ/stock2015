@@ -43,6 +43,11 @@ if __name__=="__main__":
             sList.append(_riseRateMonth)
         lineWritedList.append("\t".join(sList))
     ##输出文件名
+    
+    ##分析寻找涨幅最大板块中，当月涨幅最大的个数
+    
+    ##分析寻找涨幅最大板块中，连续3-5个交易日涨幅最大的个股
+    
     goalFilePath='result.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
     timeSpan=time.clock()-startClock

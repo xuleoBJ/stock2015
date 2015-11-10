@@ -7,7 +7,7 @@ import sys
 import Cstock
 import Ccomfunc
 
-stockID="002484"
+stockID="999999"
 lineWrited=[]
 
 ##根据涨幅，第二天趋势分析
@@ -48,8 +48,7 @@ if __name__=="__main__":
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
     
-    ##过去三年同期的涨幅，当月涨幅大的3个独立交易日，涨幅最大的三个连续交易日，同样，分析最小的
-    trend(curStock)
+    ##过去三年同期的涨幅，涨幅最大的三个连续交易日，同样，分析最小的
   
     ##输出文件名
     goalFilePath='result.txt'
