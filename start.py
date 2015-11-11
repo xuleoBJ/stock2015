@@ -4,7 +4,6 @@ import datetime,time
 import ConfigParser
 import Cstock
 import Ccomfunc
-import stockAnalysis
 import stockPatternRecognition
 
 def mymain():
@@ -81,8 +80,8 @@ if __name__ == "__main__":
     print (u"\n"+"#"*80+"关键时间点分析：")
    
     for period in [10,20,30,60,120]:
-        indexHighPoint=curStock.dayPriceHighestFList.index(max(curStock.dayPriceHighestFList[-period:-1]))
-        indexLowPoint=curStock.dayPriceLowestFList.index(min(curStock.dayPriceLowestFList[-period:-1]))
+        indexHighPoint=curStock.dayPriceHighestFList.index(max(curStock.dayPriceHighestFList[-period:]))
+        indexLowPoint=curStock.dayPriceLowestFList.index(min(curStock.dayPriceLowestFList[-period:]))
         print(u"{}日最高点{}，出现日期{}，距今日{}个交易日".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
                 curStock.dayStrList[indexHighPoint],len(curStock.dayStrList)-1-indexHighPoint))
         print(u"{}日最低点{}，出现日期{}，距今日{}个交易日".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
