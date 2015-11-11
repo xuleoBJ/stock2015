@@ -6,8 +6,8 @@ import Cstock
 import Ccomfunc
 import stockPatternRecognition
 
-def mymain():
-    pass
+def tradePlan():
+    print(u"20151112日提示：绝对不买票！！！计划中储卖600，新和成卖400，东安卖1500 高开不动，等到10:20时 把不是强势的股票清掉，尾盘接回。明天的钱不赚。")
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
 def calResistLine(cyclePeriod,keyPoint):
@@ -36,8 +36,8 @@ if __name__ == "__main__":
     print(u"1.1-分析两市总市值和GDP的关系")
     gdp2014=float(config.get("GDP","2014"))
     ##此处应该设计必须成输入！
-    AB_SH=29.0
-    AB_SZ=20.6
+    AB_SH=30.0
+    AB_SZ=21.7
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
 ##  分析近期走势
@@ -123,6 +123,6 @@ if __name__ == "__main__":
 ##  均线买入价设计
 
 ##  止损位设计
-    mymain()
+    tradePlan()
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
