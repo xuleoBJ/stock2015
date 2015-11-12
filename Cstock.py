@@ -10,71 +10,41 @@ dirData="C:\\new_dxzq_v6\\T0002\\export\\"
 
 ##读取指定代码List
 class Stock:
-    stockID=""
-    stockName=""
-    dayStrList=[]          ##day日期，string
-    dateList=[]             ##date日期，date格式
-    dayPriceOpenFList=[]    ##day开盘价
-    dayPriceClosedFList=[]     ##day收盘价
-    dayPriceHighestFList=[]    ##day最高价
-    dayPriceLowestFList=[]     ##day最低价
-    dayTradeVolumeFList=[]     ##day成交量
-    dayTurnOverFList=[]        ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
-    dayRiseRateFList=[]        ##day价格涨幅
-    dayWaveRateFList=[]        ##day波动涨幅
-    dayOpenRateFList=[]	       ##day开盘幅度，主要分析高开、低开等
-    dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
-    dayRiseOfTradeVolumeFList=[]  ##day成交量涨幅
-    dayRiseOfTurnOverFList=[]  ##day成交额涨幅
-
-    dayPriceAverageFList=[]     ##日均价
-    day3PriceAverageFList=[]     ##3日均价
-    day5PriceAverageFList=[]     ##5日均价
-    day10PriceAverageFList=[]     ##10日均价
-    
-    monthStrList=[]          ##月，string
-    monthPriceOpenFList=[]    ##month开盘价
-    monthPriceClosedFList=[]     ##month收盘价
-    monthPriceHighestFList=[]    ##month最高价
-    monthPriceLowestFList=[]     ##month最低价
-    monthTradeVolumeFList=[]     ##month成交量
-    monthTurnOverFList=[]        ##month成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
-    monthRiseRateFList=[]        ##month价格涨幅
-    monthWaveRateFList=[]        ##month波动涨幅
-    monthOpenRateFList=[]		##month开盘幅度，主要分析高开、低开等
-    monthOpenCloseRateFList=[]	##month收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
-    monthRiseOfTradeVolumeFList=[]  ##month成交量涨幅
-    monthRiseOfTurnOverFList=[]  ##month成交额涨幅
     def __init__(self,stockID):
+        self.stockName=""
+        self.stockID=stockID
         print("#"*80)
-        del self.dayStrList[:]
-        del self.dateList[:]
-        del self.dayPriceOpenFList[:]
-        del self.dayPriceClosedFList[:]
-        del self.dayPriceHighestFList[:]
-        del self.dayPriceLowestFList[:]
-        del self.dayTradeVolumeFList[:]
-        del self.dayTurnOverFList[:]
-        del self.dayRiseRateFList[:]
-        del self.dayWaveRateFList[:]
-        del self.dayOpenRateFList[:]
-        del self.dayOpenCloseRateFList[:]
-        del self.dayRiseOfTradeVolumeFList[:]
-        del self.dayRiseOfTurnOverFList[:]
-        
-        del self.monthStrList[:]
-        del self.monthPriceOpenFList[:]
-        del self.monthPriceClosedFList[:]
-        del self.monthPriceHighestFList[:]
-        del self.monthPriceLowestFList[:]
-        del self.monthTradeVolumeFList[:]
-        del self.monthTurnOverFList[:]
-        del self.monthRiseRateFList[:]
-        del self.monthWaveRateFList[:]
-        del self.monthOpenRateFList[:]
-        del self.monthOpenCloseRateFList[:]
-        del self.monthRiseOfTradeVolumeFList[:]
-        del self.monthRiseOfTurnOverFList[:]
+        self.dayStrList=[]          ##day日期，string
+        self.dateList=[]             ##date日期，date格式
+        self.dayPriceOpenFList=[]    ##day开盘价
+        self.dayPriceClosedFList=[]     ##day收盘价
+        self.dayPriceHighestFList=[]    ##day最高价
+        self.dayPriceLowestFList=[]     ##day最低价
+        self.dayTradeVolumeFList=[]     ##day成交量
+        self.dayTurnOverFList=[]        ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
+        self.dayRiseRateFList=[]        ##day价格涨幅
+        self.dayWaveRateFList=[]        ##day波动涨幅
+        self.dayOpenRateFList=[]	       ##day开盘幅度，主要分析高开、低开等
+        self.dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
+        self.dayRadioLinkOfTradeVolumeFList=[]  ##day成交量倍数
+        self.dayRiseOfTurnOverFList=[]  ##day成交额倍数
+        self.dayPriceAverageFList=[]     ##日均价
+        self.day3PriceAverageFList=[]     ##3日均价
+        self.day5PriceAverageFList=[]     ##5日均价
+        self.day10PriceAverageFList=[]     ##10日均价
+        self.monthStrList=[]          ##月，string
+        self.monthPriceOpenFList=[]    ##month开盘价
+        self.monthPriceClosedFList=[]     ##month收盘价
+        self.monthPriceHighestFList=[]    ##month最高价
+        self.monthPriceLowestFList=[]     ##month最低价
+        self.monthTradeVolumeFList=[]     ##month成交量
+        self.monthTurnOverFList=[]        ##month成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
+        self.monthRiseRateFList=[]        ##month价格涨幅
+        self.monthWaveRateFList=[]        ##month波动涨幅
+        self.monthOpenRateFList=[]		##month开盘幅度，主要分析高开、低开等
+        self.monthOpenCloseRateFList=[]	##month收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
+        self.monthRiseOfTradeVolumeFList=[]  ##month成交量涨幅
+        self.monthRiseOfTurnOverFList=[]  ##month成交额涨幅
         
         stockDataFile=os.path.join(dirData,stockID+'.txt')
         if os.path.exists(stockDataFile):
@@ -85,8 +55,7 @@ class Stock:
                 lineIndex=lineIndex+1
                 splitLine=line.split()
                 if lineIndex==1:
-                    self.stockID=splitLine[0]
-                    self.stockName=splitLine[1]
+                    self.stockName=splitLine[0]
                     print(line)
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
@@ -125,9 +94,9 @@ class Stock:
                         self.dayOpenCloseRateFList.append(-999)
                     ##计算成交量涨幅
                     if len(self.dayTradeVolumeFList)>=2 and self.dayTradeVolumeFList[-2]>0:
-                        self.dayRiseOfTradeVolumeFList.append(round(100*(self.dayTradeVolumeFList[-1]-self.dayTradeVolumeFList[-2])/self.dayTradeVolumeFList[-2],2))
+                        self.dayRadioLinkOfTradeVolumeFList.append(round(self.dayTradeVolumeFList[-1]/self.dayTradeVolumeFList[-2],2))
                     else:
-                        self.dayRiseOfTradeVolumeFList.append(-999)
+                        self.dayRadioLinkOfTradeVolumeFList.append(-999)
                         
                     if len(self.dayTurnOverFList)>=2 and self.dayTurnOverFList[-2]>100:
                         self.dayRiseOfTurnOverFList.append(round(100*(self.dayTurnOverFList[-1]-self.dayTurnOverFList[-2])/self.dayTurnOverFList[-2],2))
@@ -204,23 +173,11 @@ if __name__=="__main__":
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
+    shStock=Stock('999999')
     
-    curStock=Stock('999999')
-    print curStock.monthStrList[-10:]
-    print curStock.monthPriceOpenFList[-10:]
-    print curStock.monthPriceClosedFList[-10:]
-    print curStock.monthRiseRateFList[-10:]
-    print curStock.monthPriceHighestFList[-10:]
-    print curStock.monthPriceLowestFList[-10:]
-    print curStock.dayStrList[-10:]
-    print curStock.dateList[-10:]
-    print curStock.dayPriceClosedFList[-10:]
-    print curStock.dayPriceHighestFList[-10:]
-    print curStock.dayPriceLowestFList[-10:]
-    print curStock.dayRiseRateFList[-10:]
-    print curStock.dayWaveRateFList[-10:]
-    print curStock.dayOpenRateFList[-10:]
-    print curStock.dayOpenCloseRateFList[-10:]
+    curStock=Stock('600178')
+    print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
+    print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
     print curStock.dayPriceAverageFList[-10:]
     
     timeSpan=time.clock()-startClock

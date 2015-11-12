@@ -76,9 +76,17 @@ def patternRecByRiseWave(curStock,kMatchIndexList,kNum,bias=0.3):
 
 def patterRecByVolume(curStock,iTradeDay,kNum):
     ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
+    selectList=[]
+    for index in kMatchIndexList:
+	    iCount=0
+	    valueRate=math.floor(curStock.dayWaveRateFList[-iCount-1]/bias)*bias
+	    if  valueRate<=curStock.dayWaveRateFList[index-iCount]<=valueRate+bias: 
+		     selectList.append(index)
+	    iCount=iCount+1
+    return selectList
     pass
-#		    if isConsiderVOlume==1 and curStock.dayRiseOfTradeVolumeFList[i-iCount]>0 and \
-#                        curStock.dayRiseOfTradeVolumeFList[-iCount-1]/curStock.dayRiseOfTradeVolumeFList[i-iCount]<0: 
+#		    if isConsiderVOlume==1 and curStock.dayRadioLinkOfTradeVolumeFList[i-iCount]>0 and \
+#                        curStock.dayRadioLinkOfTradeVolumeFList[-iCount-1]/curStock.dayRadioLinkOfTradeVolumeFList[i-iCount]<0: 
 #			    bSelect=False
 
 def patterRecByHandSet(curStock,iTradeDay,kNum):
