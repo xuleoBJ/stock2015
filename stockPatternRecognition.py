@@ -8,8 +8,8 @@ import Cstock
 import sys
 import Ccomfunc
 
-def printResult(curStock,indexList):
-    for index in indexList: 
+def printResult(curStock,kMatchIndexList):
+    for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
         print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
@@ -34,60 +34,44 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,bias=0.3):
 		    valueRate=math.floor(curStock.dayRiseRateFList[-iCount-1]/bias)*bias
 		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
-            ##考虑成交量
 		    iCount=iCount+1
 	    if bSelect==True:
 		    kMatchIndexList.append(i)
     return kMatchIndexList
 
 ## 在利用K线组合的匹配的结果中，用开盘价进行过滤 
-def patternRecByPriceOpen(curStock,kMatchIndexList,kNum,bias=0.3):
+def patternRecByPriceOpen(curStock,kMatchIndexList,bias=0.3):
     ##根据前几日涨幅及开盘价进行历史K线模式识别：
-    selectList=[]
+    selectFromKmatchList=[]
     for index in kMatchIndexList:
 	    iCount=0
 	    valueRate=math.floor(curStock.dayPriceOpenFList[-iCount-1]/bias)*bias
 	    if  valueRate<=curStock.dayPriceClosedFList[index-iCount]<=valueRate+bias: 
-		     selectList.append(index)
-	    iCount=iCount+1
-    return selectList
+		     selectFromKmatchList.append(index)
+    return selectFromKmatchList
 
-## 在利用K线组合的匹配的结果中，用收盘价进行过滤 
-def patterRecByPriceClose(curStock,kMatchIndexList,kNum,bias=0.3):
-    selectList=[]
-    for index in kMatchIndexList:
-	    iCount=0
-	    valueRate=math.floor(curStock.dayPriceClosedFList[-iCount-1]/bias)*bias
-	    if  valueRate<=curStock.dayPriceClosedFList[index-iCount]<=valueRate+bias: 
-		     selectList.append(index)
-	    iCount=iCount+1
-    return selectList
 
 ## 在利用K线组合的匹配的结果中，用波动幅度进行过滤 
-def patternRecByRiseWave(curStock,kMatchIndexList,kNum,bias=0.3):
-    selectList=[]
+def patternRecByRiseWave(curStock,kMatchIndexList,bias=0.5):
+    selectFromKmatchList=[]
     for index in kMatchIndexList:
 	    iCount=0
 	    valueRate=math.floor(curStock.dayWaveRateFList[-iCount-1]/bias)*bias
+	    print valueRate
 	    if  valueRate<=curStock.dayWaveRateFList[index-iCount]<=valueRate+bias: 
-		     selectList.append(index)
-	    iCount=iCount+1
-    return selectList
+		     selectFromKmatchList.append(index)
+    return selectFromKmatchList
 
-def patterRecByVolume(curStock,iTradeDay,kNum):
-    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量大于0，同时 成交量涨幅同时增加或者同时减少，用除法表示同步
-    selectList=[]
+def patterRecByVolume(curStock,kMatchIndexList,kNum):
+    selectFromKmatchList=[]
     for index in kMatchIndexList:
 	    iCount=0
-	    valueRate=math.floor(curStock.dayWaveRateFList[-iCount-1]/bias)*bias
-	    if  valueRate<=curStock.dayWaveRateFList[index-iCount]<=valueRate+bias: 
-		     selectList.append(index)
-	    iCount=iCount+1
-    return selectList
-    pass
-#		    if isConsiderVOlume==1 and curStock.dayRadioLinkOfTradeVolumeFList[i-iCount]>0 and \
-#                        curStock.dayRadioLinkOfTradeVolumeFList[-iCount-1]/curStock.dayRadioLinkOfTradeVolumeFList[i-iCount]<0: 
-#			    bSelect=False
+    ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量量比同时大于1 同真或者同假
+	    while iCount<kNum:
+		        if  (curStock.dayRadioLinkOfTradeVolumeFList[index-iCount]>=1) == (curStock.dayRadioLinkOfTradeVolumeFList[-iCount-1]>=1):
+			            selectFromKmatchList.append(index)
+		        iCount=iCount+1
+    return selectFromKmatchList
 
 def patterRecByHandSet(curStock,iTradeDay,kNum):
     ## 手动设置查找条件
@@ -141,35 +125,29 @@ if __name__=="__main__":
     if stockID!="999999":
         bias=1.0
     
-    print("$"*72)
-    print ("-"*8+u"涨幅组合识别，三日K线组合识别系统：")
+    print("-"*72)
     print ("-"*8+u"最近交易日的相关数据：")
     for i in range(-kNum,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        print(u"{},星期{},涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i]))
+        print(u"{},星期{}\t涨幅:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],curStock.dayWaveRateFList[i]))
     
-    indexList=patternRecByRiseRate(curStock,iTradeDay,kNum,bias)
-    printResult(curStock,indexList)
+    print("-"*72)
+    kPatternList=patternRecByRiseRate(curStock,iTradeDay,kNum,bias)
+    printResult(curStock,kPatternList)
     
-    print("$"*72)
-    print ("-"*8+u"增加收盘价匹配条件：")
-    indexList=patterRecByPriceClose(curStock,indexList,kNum)
-    printResult(curStock,indexList)
 
-    print("$"*72)
-    print ("-"*8+u"增加收盘价开盘价匹配条件：")
-    patternRecByPriceOpen(curStock,indexList,kNum)
+    print("-"*72)
+    print ("-"*8+u"增加收盘价开盘价涨幅匹配条件：")
+    patternRecByPriceOpen(curStock,kPatternList)
     
-    print("$"*72)
+    print("-"*72)
     print ("-"*8+u"增加振幅匹配条件：")
-    patternRecByRiseWave(curStock,indexList,kNum)
+    patternRecByRiseWave(curStock,kPatternList)
     
-    print("$"*72)
+    print("-"*72)
     print ("-"*8+u"增加成交量匹配条件：")
-    print("$"*72)
-    for i in range(-kNum,0): ##注意用的负指数
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        print(u"{},星期{},波动幅度:{},涨幅：{}".format(curStock.dayStrList[i],weekDay,curStock.dayWaveRateFList[i],curStock.dayRiseRateFList[i]))
+    patterRecByVolume(curStock,kPatternList,kNum)
+    print("-"*72)
 	
     
     ##输出文件名
