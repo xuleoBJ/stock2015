@@ -13,11 +13,12 @@ def printResult(curStock,kMatchIndexList):
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
         print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
-                        curStock.dayRiseOfTurnOverFList[index-2],curStock.dayRiseOfTurnOverFList[index-1],curStock.dayRiseOfTurnOverFList[index],\
+                        curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
+                        curStock.dayRadioLinkOfTradeVolumeFList[index],\
                         curStock.dayRiseRateFList[index+1],curStock.dayOpenRateFList[index+1])
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
-        for intervalDay in [3,5,8]:
+        for intervalDay in [-60,-30,-10,-5,3,5,8,13,21,44]:
             print (u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,index,intervalDay)))
 
 
@@ -92,13 +93,8 @@ def patterRecByHandSet(curStock,iTradeDay,kNum):
             print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
             print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
 
-stockID="999999"
 
-if __name__=="__main__":
-    
-    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
-    startClock=time.clock() ##记录程序开始计算时间
-   
+def main(stockID):
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
 
@@ -129,7 +125,8 @@ if __name__=="__main__":
     print ("-"*8+u"最近交易日的相关数据：")
     for i in range(-kNum,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        print(u"{},星期{}\t涨幅:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],curStock.dayWaveRateFList[i]))
+        print(u"{},星期{}\t涨幅:{}\t量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i]))
     
     print("-"*72)
     kPatternList=patternRecByRiseRate(curStock,iTradeDay,kNum,bias)
@@ -148,11 +145,20 @@ if __name__=="__main__":
     print ("-"*8+u"增加成交量匹配条件：")
     patterRecByVolume(curStock,kPatternList,kNum)
     print("-"*72)
-	
-    
     ##输出文件名
     goalFilePath='result.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
+	
+
+if __name__=="__main__":
+    
+    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
+    startClock=time.clock() ##记录程序开始计算时间
+    
+    stockIDList=["999999"]
+    stockIDList.append("399001")
+    for stockID in stockIDList: 
+        main(stockID)
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

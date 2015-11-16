@@ -4,52 +4,66 @@ import shutil
 import time
 import datetime
 import Ccomfunc
+import numpy as np
 
-##Êı¾İÄ¿Â¼
+##æ•°æ®ç›®å½•
 dirData="C:\\new_dxzq_v6\\T0002\\export\\" 
 
-##¶ÁÈ¡Ö¸¶¨´úÂëList
+##è¯»å–æŒ‡å®šä»£ç List
 class Stock:
+    def list2array(self):
+        self.dayPriceOpenArray=np.array(self.dayPriceOpenFList)    ##dayå¼€ç›˜ä»·array
+        self.dayPriceClosedArray=np.array(self.dayPriceClosedFList)    ##dayæ”¶ç›˜ä»·array
+        self.dayPriceHighestArray=np.array(self.dayPriceHighestFList)    ##dayæœ€é«˜ä»·array
+        self.dayPriceLowestArray=np.array(self.dayPriceLowestFList)     ##dayæœ€ä½array
+        self.dayTradeVolumeArray=np.array(self.dayTradeVolumeFList)     ##dayæˆäº¤é‡array
+        self.dayTurnOverArray=np.array(self.dayTurnOverFList)       ##dayæˆäº¤é¢  æ³¨æ„æœ‰çš„æ•°æ®æ²¡æœ‰æˆäº¤é‡‘é¢ æˆäº¤é‡åˆæœ‰é€è‚¡é™¤æƒçš„é—®é¢˜array
+        self.dayRiseRateArray=np.array(self.dayRiseRateFList)        ##dayä»·æ ¼æ¶¨å¹…array
+        self.dayWaveRateArray=np.array(self.dayWaveRateFList)       ##dayæ³¢åŠ¨æ¶¨å¹…array
+        self.dayOpenRateArray=np.array(self.dayOpenRateFList)       ##dayå¼€ç›˜å¹…åº¦ï¼Œä¸»è¦åˆ†æé«˜å¼€ã€ä½å¼€ç­‰array
+        self.dayOpenCloseRateArray=np.array(self.dayOpenCloseRateFList)	##dayæ”¶ç›˜ä»·å’Œå¼€ç›˜ä»·çš„æ³¢åŠ¨å¹…åº¦ï¼Œä¸»è¦åˆ†æé«˜å¼€ä½èµ°ï¼Œä½å¼€é«˜èµ°ç­‰è¶‹åŠ¿array
+        self.dayRadioLinkOfTradeVolumeArray=np.array(self.dayRadioLinkOfTradeVolumeFList)  ##dayæˆäº¤é‡å€æ•°ä»·array
+
     def __init__(self,stockID):
         self.stockName=""
         self.stockID=stockID
         print("#"*80)
-        self.dayStrList=[]          ##dayÈÕÆÚ£¬string
-        self.dateList=[]             ##dateÈÕÆÚ£¬date¸ñÊ½
-        self.dayPriceOpenFList=[]    ##day¿ªÅÌ¼Û
-        self.dayPriceClosedFList=[]     ##dayÊÕÅÌ¼Û
-        self.dayPriceHighestFList=[]    ##day×î¸ß¼Û
-        self.dayPriceLowestFList=[]     ##day×îµÍ¼Û
-        self.dayTradeVolumeFList=[]     ##day³É½»Á¿
-        self.dayTurnOverFList=[]        ##day³É½»¶î  ×¢ÒâÓĞµÄÊı¾İÃ»ÓĞ³É½»½ğ¶î ³É½»Á¿ÓÖÓĞËÍ¹É³ıÈ¨µÄÎÊÌâ
-        self.dayRiseRateFList=[]        ##day¼Û¸ñÕÇ·ù
-        self.dayWaveRateFList=[]        ##day²¨¶¯ÕÇ·ù
-        self.dayOpenRateFList=[]	       ##day¿ªÅÌ·ù¶È£¬Ö÷Òª·ÖÎö¸ß¿ª¡¢µÍ¿ªµÈ
-        self.dayOpenCloseRateFList=[]	##dayÊÕÅÌ¼ÛºÍ¿ªÅÌ¼ÛµÄ²¨¶¯·ù¶È£¬Ö÷Òª·ÖÎö¸ß¿ªµÍ×ß£¬µÍ¿ª¸ß×ßµÈÇ÷ÊÆ
-        self.dayRadioLinkOfTradeVolumeFList=[]  ##day³É½»Á¿±¶Êı
-        self.dayRiseOfTurnOverFList=[]  ##day³É½»¶î±¶Êı
-        self.dayPriceAverageFList=[]     ##ÈÕ¾ù¼Û
-        self.day3PriceAverageFList=[]     ##3ÈÕ¾ù¼Û
-        self.day5PriceAverageFList=[]     ##5ÈÕ¾ù¼Û
-        self.day10PriceAverageFList=[]     ##10ÈÕ¾ù¼Û
-        self.monthStrList=[]          ##ÔÂ£¬string
-        self.monthPriceOpenFList=[]    ##month¿ªÅÌ¼Û
-        self.monthPriceClosedFList=[]     ##monthÊÕÅÌ¼Û
-        self.monthPriceHighestFList=[]    ##month×î¸ß¼Û
-        self.monthPriceLowestFList=[]     ##month×îµÍ¼Û
-        self.monthTradeVolumeFList=[]     ##month³É½»Á¿
-        self.monthTurnOverFList=[]        ##month³É½»¶î  ×¢ÒâÓĞµÄÊı¾İÃ»ÓĞ³É½»½ğ¶î ³É½»Á¿ÓÖÓĞËÍ¹É³ıÈ¨µÄÎÊÌâ
-        self.monthRiseRateFList=[]        ##month¼Û¸ñÕÇ·ù
-        self.monthWaveRateFList=[]        ##month²¨¶¯ÕÇ·ù
-        self.monthOpenRateFList=[]		##month¿ªÅÌ·ù¶È£¬Ö÷Òª·ÖÎö¸ß¿ª¡¢µÍ¿ªµÈ
-        self.monthOpenCloseRateFList=[]	##monthÊÕÅÌ¼ÛºÍ¿ªÅÌ¼ÛµÄ²¨¶¯·ù¶È£¬Ö÷Òª·ÖÎö¸ß¿ªµÍ×ß£¬µÍ¿ª¸ß×ßµÈÇ÷ÊÆ
-        self.monthRiseOfTradeVolumeFList=[]  ##month³É½»Á¿ÕÇ·ù
-        self.monthRiseOfTurnOverFList=[]  ##month³É½»¶îÕÇ·ù
-        
+        self.dayStrList=[]          ##dayæ—¥æœŸï¼Œstring
+        self.dateList=[]             ##dateæ—¥æœŸï¼Œdateæ ¼å¼
+        self.dayPriceOpenFList=[]    ##dayå¼€ç›˜ä»·
+        self.dayPriceClosedFList=[]     ##dayæ”¶ç›˜ä»·
+        self.dayPriceHighestFList=[]    ##dayæœ€é«˜ä»·
+        self.dayPriceLowestFList=[]     ##dayæœ€ä½ä»·
+        self.dayTradeVolumeFList=[]     ##dayæˆäº¤é‡
+        self.dayTurnOverFList=[]        ##dayæˆäº¤é¢  æ³¨æ„æœ‰çš„æ•°æ®æ²¡æœ‰æˆäº¤é‡‘é¢ æˆäº¤é‡åˆæœ‰é€è‚¡é™¤æƒçš„é—®é¢˜
+        self.dayRiseRateFList=[]        ##dayä»·æ ¼æ¶¨å¹…
+        self.dayWaveRateFList=[]        ##dayæ³¢åŠ¨æ¶¨å¹…
+        self.dayOpenRateFList=[]	       ##dayå¼€ç›˜å¹…åº¦ï¼Œä¸»è¦åˆ†æé«˜å¼€ã€ä½å¼€ç­‰
+        self.dayOpenCloseRateFList=[]	##dayæ”¶ç›˜ä»·å’Œå¼€ç›˜ä»·çš„æ³¢åŠ¨å¹…åº¦ï¼Œä¸»è¦åˆ†æé«˜å¼€ä½èµ°ï¼Œä½å¼€é«˜èµ°ç­‰è¶‹åŠ¿
+        self.dayRadioLinkOfTradeVolumeFList=[]  ##dayæˆäº¤é‡å€æ•°
+        self.dayRiseOfTurnOverFList=[]  ##dayæˆäº¤é¢å€æ•°
+        self.dayPriceAverageFList=[]     ##æ—¥å‡ä»·
+        self.day3PriceAverageFList=[]     ##3æ—¥å‡ä»·
+        self.day5PriceAverageFList=[]     ##5æ—¥å‡ä»·
+        self.day10PriceAverageFList=[]     ##10æ—¥å‡ä»·
+        self.monthStrList=[]          ##æœˆï¼Œstring
+        self.monthPriceOpenFList=[]    ##monthå¼€ç›˜ä»·
+        self.monthPriceClosedFList=[]     ##monthæ”¶ç›˜ä»·
+        self.monthPriceHighestFList=[]    ##monthæœ€é«˜ä»·
+        self.monthPriceLowestFList=[]     ##monthæœ€ä½ä»·
+        self.monthTradeVolumeFList=[]     ##monthæˆäº¤é‡
+        self.monthTurnOverFList=[]        ##monthæˆäº¤é¢  æ³¨æ„æœ‰çš„æ•°æ®æ²¡æœ‰æˆäº¤é‡‘é¢ æˆäº¤é‡åˆæœ‰é€è‚¡é™¤æƒçš„é—®é¢˜
+        self.monthRiseRateFList=[]        ##monthä»·æ ¼æ¶¨å¹…
+        self.monthWaveRateFList=[]        ##monthæ³¢åŠ¨æ¶¨å¹…
+        self.monthOpenRateFList=[]		##monthå¼€ç›˜å¹…åº¦ï¼Œä¸»è¦åˆ†æé«˜å¼€ã€ä½å¼€ç­‰
+        self.monthOpenCloseRateFList=[]	##monthæ”¶ç›˜ä»·å’Œå¼€ç›˜ä»·çš„æ³¢åŠ¨å¹…åº¦ï¼Œä¸»è¦åˆ†æé«˜å¼€ä½èµ°ï¼Œä½å¼€é«˜èµ°ç­‰è¶‹åŠ¿
+        self.monthRiseOfTradeVolumeFList=[]  ##monthæˆäº¤é‡æ¶¨å¹…
+        self.monthRiseOfTurnOverFList=[]  ##monthæˆäº¤é¢æ¶¨å¹…
+       
         stockDataFile=os.path.join(dirData,stockID+'.txt')
         if os.path.exists(stockDataFile):
             fileOpened=open(stockDataFile,'r')
-            ##´ÓÎÄ¼şÖĞ¶ÁÈ¡ÈÕÊı¾İ£¬²¢¼ÆËã¹¹ÔìÏà¹ØµÄÈÕÊı¾İ
+            ##ä»æ–‡ä»¶ä¸­è¯»å–æ—¥æ•°æ®ï¼Œå¹¶è®¡ç®—æ„é€ ç›¸å…³çš„æ—¥æ•°æ®
             lineIndex=0
             for line in fileOpened.readlines():
                 lineIndex=lineIndex+1
@@ -70,29 +84,29 @@ class Stock:
                     turnOver=float(splitLine[6])
                     self.dayTurnOverFList.append(turnOver)
                     
-                    ##¼ÆËã¾ù¼Û
+                    ##è®¡ç®—å‡ä»·
                     if(tradeVolume>0):
                         self.dayPriceAverageFList.append(round(turnOver/tradeVolume,2))
                     else:
                         self.dayPriceAverageFList.append(-999)
 
                     
-                    ##¼ÆËãÕÇ·ùºÍÕñ·ù
+                    ##è®¡ç®—æ¶¨å¹…å’ŒæŒ¯å¹…
                     if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-2]>0:
-						##(µ±ÈÕÊÕÅÌ-ÉÏÈÕÊÕÅÌ)/ÉÏÒ»ÈÕÊÕÅÌ
+						##(å½“æ—¥æ”¶ç›˜-ä¸Šæ—¥æ”¶ç›˜)/ä¸Šä¸€æ—¥æ”¶ç›˜
                         self.dayRiseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
-						##(µ±ÈÕ×î¸ß-µ±ÈÕ×îµÍ)/ÉÏÒ»ÈÕÊÕÅÌ
+						##(å½“æ—¥æœ€é«˜-å½“æ—¥æœ€ä½)/ä¸Šä¸€æ—¥æ”¶ç›˜
                         self.dayWaveRateFList.append(round(100*(self.dayPriceHighestFList[-1]-self.dayPriceLowestFList[-1])/self.dayPriceClosedFList[-2],2))
-						##(µ±ÈÕ¿ªÅÌ-ÉÏÈÕÊÕÅÌ)/ÉÏÒ»ÈÕÊÕÅÌ
+						##(å½“æ—¥å¼€ç›˜-ä¸Šæ—¥æ”¶ç›˜)/ä¸Šä¸€æ—¥æ”¶ç›˜
                         self.dayOpenRateFList.append(round(100*(self.dayPriceOpenFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
-						##(µ±ÈÕÊÕÅÌ-µ±ÈÕ¿ªÅÌ)/ÉÏÒ»ÈÕÊÕÅÌ
+						##(å½“æ—¥æ”¶ç›˜-å½“æ—¥å¼€ç›˜)/ä¸Šä¸€æ—¥æ”¶ç›˜
                         self.dayOpenCloseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceOpenFList[-1])/self.dayPriceClosedFList[-2],2))
                     else:
                         self.dayRiseRateFList.append(-999)
                         self.dayWaveRateFList.append(-999)
                         self.dayOpenRateFList.append(-999)
                         self.dayOpenCloseRateFList.append(-999)
-                    ##¼ÆËã³É½»Á¿ÕÇ·ù
+                    ##è®¡ç®—æˆäº¤é‡æ¶¨å¹…
                     if len(self.dayTradeVolumeFList)>=2 and self.dayTradeVolumeFList[-2]>0:
                         self.dayRadioLinkOfTradeVolumeFList.append(round(self.dayTradeVolumeFList[-1]/self.dayTradeVolumeFList[-2],2))
                     else:
@@ -104,9 +118,9 @@ class Stock:
                         self.dayRiseOfTurnOverFList.append(-999)
             fileOpened.close()
             
-            ##´ÓÈÕÊı¾İ¹¹ÔìÔÂ¶È·ÖÎöÊı¾İ
-            ##ÎªÁËµÃµ½ÔÂ¶ÈÊı¾İÍ³¼Æ½á¹û£¬°ÑdateList·ÖÆ¬µÄÖ¸Êı°´ÄêÔÂ´æ´¢ÔÚÔª×éÀï
-            indexYearMonthList=[]  ##¶¨ÒåÒ»¸öList ´æ´¢ °´ÔÂ¶È·ÖÀëµÄÖ¸Êı£¬´æÔª×é£¨Äê£¬ÔÂ£¬ÔÚdateListÆğÊ¼ÏÂ±ê£¬ÔÚdateList½áÊøÏÂ±ê£©
+            ##ä»æ—¥æ•°æ®æ„é€ æœˆåº¦åˆ†ææ•°æ®
+            ##ä¸ºäº†å¾—åˆ°æœˆåº¦æ•°æ®ç»Ÿè®¡ç»“æœï¼ŒæŠŠdateListåˆ†ç‰‡çš„æŒ‡æ•°æŒ‰å¹´æœˆå­˜å‚¨åœ¨å…ƒç»„é‡Œ
+            indexYearMonthList=[]  ##å®šä¹‰ä¸€ä¸ªList å­˜å‚¨ æŒ‰æœˆåº¦åˆ†ç¦»çš„æŒ‡æ•°ï¼Œå­˜å…ƒç»„ï¼ˆå¹´ï¼Œæœˆï¼Œåœ¨dateListèµ·å§‹ä¸‹æ ‡ï¼Œåœ¨dateListç»“æŸä¸‹æ ‡ï¼‰
             indexStart=0
             for i in range(1,len(self.dateList)):
                 itemCur = self.dateList[i]
@@ -132,7 +146,7 @@ class Stock:
                 self.monthStrList.append("{}{:02}".format(item["year"],item["month"]))
                 self.monthPriceOpenFList.append(self.dayPriceOpenFList[item["indexStart"]])
                 self.monthPriceClosedFList.append(self.dayPriceClosedFList[item["indexEnd"]])
-                if item["indexEnd"]>item["indexStart"]: ##´¦ÀíÒ»¸öÔÂÖ»ÓĞ1¸ö½»Ò×ÈÕ£¬µ¼ÖÂindexStart==indexEnd==0
+                if item["indexEnd"]>item["indexStart"]: ##å¤„ç†ä¸€ä¸ªæœˆåªæœ‰1ä¸ªäº¤æ˜“æ—¥ï¼Œå¯¼è‡´indexStart==indexEnd==0
                     self.monthPriceHighestFList.append(max(self.dayPriceHighestFList[item["indexStart"]:item["indexEnd"]]))
                     self.monthPriceLowestFList.append(min(self.dayPriceLowestFList[item["indexStart"]:item["indexEnd"]]))
                     self.monthTradeVolumeFList.append(sum(self.dayTradeVolumeFList[item["indexStart"]:item["indexEnd"]]))
@@ -143,36 +157,38 @@ class Stock:
                     self.monthTradeVolumeFList.append(self.dayTradeVolumeFList[item["indexEnd"]])
                     self.monthTurnOverFList.append(self.dayTurnOverFList[item["indexEnd"]])
 
-                ##¼ÆËãÔÂ¶ÈÕÇ·ùºÍÕñ·ù
+                ##è®¡ç®—æœˆåº¦æ¶¨å¹…å’ŒæŒ¯å¹…
                 if len(self.monthPriceClosedFList)>=2 and self.monthPriceClosedFList[-1]>0:
-                    ##(µ±ÈÕÊÕÅÌ-ÉÏÈÕÊÕÅÌ)/ÉÏÒ»ÈÕÊÕÅÌ
+                    ##(å½“æ—¥æ”¶ç›˜-ä¸Šæ—¥æ”¶ç›˜)/ä¸Šä¸€æ—¥æ”¶ç›˜
                     self.monthRiseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
-                    ##(µ±ÈÕ×î¸ß-µ±ÈÕ×îµÍ)/ÉÏÒ»ÈÕÊÕÅÌ
+                    ##(å½“æ—¥æœ€é«˜-å½“æ—¥æœ€ä½)/ä¸Šä¸€æ—¥æ”¶ç›˜
                     self.monthWaveRateFList.append(round(100*(self.monthPriceHighestFList[-1]-self.monthPriceLowestFList[-1])/self.monthPriceClosedFList[-2],2))
-                    ##(µ±ÈÕ¿ªÅÌ-ÉÏÈÕÊÕÅÌ)/ÉÏÒ»ÈÕÊÕÅÌ
+                    ##(å½“æ—¥å¼€ç›˜-ä¸Šæ—¥æ”¶ç›˜)/ä¸Šä¸€æ—¥æ”¶ç›˜
                     self.monthOpenRateFList.append(round(100*(self.monthPriceOpenFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
-                    ##(µ±ÈÕÊÕÅÌ-µ±ÈÕ¿ªÅÌ)/ÉÏÒ»ÈÕÊÕÅÌ
+                    ##(å½“æ—¥æ”¶ç›˜-å½“æ—¥å¼€ç›˜)/ä¸Šä¸€æ—¥æ”¶ç›˜
                     self.monthOpenCloseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceOpenFList[-1])/self.monthPriceClosedFList[-2],2))
                 else:
                     self.monthRiseRateFList.append(-999)
                     self.monthWaveRateFList.append(-999)
                     self.monthOpenRateFList.append(-999)
                     self.monthOpenCloseRateFList.append(-999)
+       
             if len(self.dayStrList)>0:
-                print("Êı¾İ¶ÁÈ¡Íê±Ï,Êı¾İ¿ªÊ¼ÈÕ£º\t"+self.dayStrList[0]+"\tÊı¾İ½áÊøÈÕ£º\t"+self.dayStrList[-1]+ \
-                       "\tÊÕÅÌ¼Û£º\t"+str(self.dayPriceClosedFList[-1]))
+                print(u"æ•°æ®è¯»å–å®Œæ¯•,æ•°æ®å¼€å§‹æ—¥ï¼š\t"+self.dayStrList[0]+"\tæ•°æ®ç»“æŸæ—¥ï¼š\t"+self.dayStrList[-1]+ \
+                       "\tæ”¶ç›˜ä»·ï¼š\t"+str(self.dayPriceClosedFList[-1]))
             else:
-                print("Êı¾İÁĞÎª¿Õ")
+                print("æ•°æ®åˆ—ä¸ºç©º")
 
         else:
-            print(stockID+"Êı¾İ²»´æÔÚ")
+            print(stockID+"æ•°æ®ä¸å­˜åœ¨")
+    
 
 if __name__=="__main__":
     print("\n"+"#"*80)
-    print ("¹ÉÊĞÓĞ·çÏÕ£¬¹ÉÊĞÓĞÎŞÇîµÄ»ú»á£¬¹ÉÊĞĞèÒªÄÍĞÄ£¬¹ÉÊĞÌ¬¶ÈÒªÈÏÕæ¡£")
+    print(u"è‚¡å¸‚æœ‰é£é™©ï¼Œè‚¡å¸‚æœ‰æ— ç©·çš„æœºä¼šï¼Œè‚¡å¸‚éœ€è¦è€å¿ƒï¼Œè‚¡å¸‚æ€åº¦è¦è®¤çœŸã€‚")
     print("\n"+"#"*80)
     
-    startClock=time.clock() ##¼ÇÂ¼³ÌĞò¿ªÊ¼¼ÆËãÊ±¼ä
+    startClock=time.clock() ##è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
     shStock=Stock('999999')
     
     curStock=Stock('600178')

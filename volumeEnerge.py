@@ -15,6 +15,8 @@ def mymain():
     print curStock.stockID,curStock.stockName,curStock.dayStrList[-5:],curStock.dayRadioLinkOfTradeVolumeFList[-5:]
 
 if __name__ == "__main__":
+    print (u"成交量反应了市场情绪。")
+    shStock=Stock('999999')
     mymain()
 
 
