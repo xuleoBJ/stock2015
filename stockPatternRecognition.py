@@ -8,18 +8,22 @@ import Cstock
 import sys
 import Ccomfunc
 
+
+lineWritedList=[]
 def printResult(curStock,kMatchIndexList):
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
-        print u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
+        resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index],\
                         curStock.dayRiseRateFList[index+1],curStock.dayOpenRateFList[index+1])
+        lineWritedList.append(resultLine)
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
         for intervalDay in [-60,-30,-10,-5,3,5,8,13,21,44]:
-            print (u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,index,intervalDay)))
+            resultLine=u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,index,intervalDay))
+            lineWritedList.append(resultLine)
 
 
 def patternRecByRiseRate(curStock,iTradeDay,kNum,bias=0.3):
@@ -47,9 +51,9 @@ def patternRecByPriceOpen(curStock,kMatchIndexList,bias=0.3):
     for index in kMatchIndexList:
 	    iCount=0
 	    valueRate=math.floor(curStock.dayPriceOpenFList[-iCount-1]/bias)*bias
-	    if  valueRate<=curStock.dayPriceClosedFList[index-iCount]<=valueRate+bias: 
+	    if  valueRate-bias<=curStock.dayPriceOpenFList[index-iCount]<=valueRate+bias: 
 		     selectFromKmatchList.append(index)
-    return selectFromKmatchList
+    printResult(curStock,selectFromKmatchList)
 
 
 ## 在利用K线组合的匹配的结果中，用波动幅度进行过滤 
@@ -58,10 +62,10 @@ def patternRecByRiseWave(curStock,kMatchIndexList,bias=0.5):
     for index in kMatchIndexList:
 	    iCount=0
 	    valueRate=math.floor(curStock.dayWaveRateFList[-iCount-1]/bias)*bias
-	    print valueRate
-	    if  valueRate<=curStock.dayWaveRateFList[index-iCount]<=valueRate+bias: 
+#	    print valueRate
+	    if  valueRate-bias<=curStock.dayWaveRateFList[index-iCount]<=valueRate+bias: 
 		     selectFromKmatchList.append(index)
-    return selectFromKmatchList
+    printResult(curStock,selectFromKmatchList)
 
 def patterRecByVolume(curStock,kMatchIndexList,kNum):
     selectFromKmatchList=[]
@@ -72,7 +76,7 @@ def patterRecByVolume(curStock,kMatchIndexList,kNum):
 		        if  (curStock.dayRadioLinkOfTradeVolumeFList[index-iCount]>=1) == (curStock.dayRadioLinkOfTradeVolumeFList[-iCount-1]>=1):
 			            selectFromKmatchList.append(index)
 		        iCount=iCount+1
-    return selectFromKmatchList
+    printResult(curStock,selectFromKmatchList)
 
 def patterRecByHandSet(curStock,iTradeDay,kNum):
     ## 手动设置查找条件
@@ -93,12 +97,15 @@ def patterRecByHandSet(curStock,iTradeDay,kNum):
             print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
             print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
 
+def addInforLine(inforLine):
+    lineWritedList.append("-"*72)
+    lineWritedList.append(inforLine)
 
 def main(stockID):
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
 
-    lineWritedList=[]
+    lineWritedList.append("-"*72)
     lineWritedList.append(stockID)
 
     ##设置分析周期,缺省为1000，是4年的行情
@@ -110,8 +117,8 @@ def main(stockID):
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
-    print("-"*72)
-    print ("-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现：")
+    inforLine= "-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现："
+    addInforLine(inforLine)
     
     ## 是否考虑成交量增加或者减少，1考虑 0 不考虑
     isConsiderVOlume=0 
@@ -121,33 +128,30 @@ def main(stockID):
     if stockID!="999999":
         bias=1.0
     
-    print("-"*72)
-    print ("-"*8+u"最近交易日的相关数据：")
+    inforLine="-"*8+u"最近交易日的相关数据："
+    addInforLine(inforLine)
+    
     for i in range(-kNum,0): ##注意用的负指数
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        print(u"{},星期{}\t涨幅:{}\t量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
-                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i]))
+        resultLine=u"{},星期{}\t涨幅:{}\t量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
+        lineWritedList.append(resultLine)
     
     print("-"*72)
     kPatternList=patternRecByRiseRate(curStock,iTradeDay,kNum,bias)
     printResult(curStock,kPatternList)
     
-
-    print("-"*72)
-    print ("-"*8+u"增加收盘价开盘价涨幅匹配条件：")
+    inforLine=u"增加收盘价开盘价涨幅匹配条件："
+    addInforLine(inforLine)
     patternRecByPriceOpen(curStock,kPatternList)
     
-    print("-"*72)
-    print ("-"*8+u"增加振幅匹配条件：")
+    inforLine=u"增加振幅匹配条件："
+    addInforLine(inforLine)
     patternRecByRiseWave(curStock,kPatternList)
     
-    print("-"*72)
-    print ("-"*8+u"增加成交量匹配条件：")
+    inforLine=u"增加成交量匹配条件："
+    addInforLine(inforLine)
     patterRecByVolume(curStock,kPatternList,kNum)
-    print("-"*72)
-    ##输出文件名
-    goalFilePath='result.txt'
-    Ccomfunc.write2Text(goalFilePath,lineWritedList)
 	
 
 if __name__=="__main__":
@@ -160,6 +164,10 @@ if __name__=="__main__":
     for stockID in stockIDList: 
         main(stockID)
     
+    for line in lineWritedList:
+        print line
+    goalFilePath="patternRec.txt" ##输出文件名
+    Ccomfunc.write2Text(goalFilePath,lineWritedList) 
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

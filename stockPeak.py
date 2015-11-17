@@ -19,7 +19,6 @@ def getDateOfPrice(price,priceFList,dayStrList):
     indexPrice=priceFList.index(price)
     return dayStrList[indexPrice]
 
-
 def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFList,curPriceLowestFList,curPriceClosedFList):
     print('进行价格峰值分析，分析周期(天):'+str(dayPeriod))
     goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisPrice.txt') ##输出文件名
