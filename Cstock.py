@@ -193,6 +193,7 @@ if __name__=="__main__":
     
     curStock=Stock('600178')
     print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
+    print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
     print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
     print curStock.dayPriceAverageFList[-10:]
     

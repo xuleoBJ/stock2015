@@ -72,10 +72,13 @@ def patterRecByVolume(curStock,kMatchIndexList,kNum):
     for index in kMatchIndexList:
 	    iCount=0
     ##成交量要同步增加或者减少,条件是考虑成交量筛选，成交量量比同时大于1 同真或者同假
+	    bSyn=True
 	    while iCount<kNum:
-		        if  (curStock.dayRadioLinkOfTradeVolumeFList[index-iCount]>=1) == (curStock.dayRadioLinkOfTradeVolumeFList[-iCount-1]>=1):
-			            selectFromKmatchList.append(index)
+		        if  (curStock.dayRadioLinkOfTradeVolumeFList[index-iCount]>=1) != (curStock.dayRadioLinkOfTradeVolumeFList[-iCount-1]>=1):
+			            bSyn=False
 		        iCount=iCount+1
+	    if bSyn==True:
+		        selectFromKmatchList.append(index)
     printResult(curStock,selectFromKmatchList)
 
 def patterRecByHandSet(curStock,iTradeDay,kNum):
