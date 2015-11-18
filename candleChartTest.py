@@ -1,48 +1,44 @@
-#!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import lines
-from Cstock import Stock
-import random
+import matplotlib.animation as animation
 
 
-curStock=Stock('999999')
-
-openings = curStock.dayPriceOpenFList[-10:] 
-closings = curStock.dayPriceClosedFList[-10:]
-
-# Box plot - violin plot comparison
-#
-# Note that although violin plots are closely related to Tukey's (1977) box plots,
-# they add useful information such as the distribution of the sample data (density trace).
-#
-# By default, box plots show data points outside 1.5 x the inter-quartile range as outliers
-# above or below the whiskers wheras violin plots show the whole range of the data.
-#
-# Violin plots require matplotlib >= 1.4.
+def data_gen(t=0):
+    cnt = 0
+    while cnt < 1000:
+        cnt += 1
+        t += 0.1
+        yield t, np.sin(2*np.pi*t) * np.exp(-t/10.)
 
 
-fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 5))
+def init():
+    ax.set_ylim(-1.1, 1.1)
+    ax.set_xlim(0, 10)
+    del xdata[:]
+    del ydata[:]
+    line.set_data(xdata, ydata)
+    return line,
 
-# generate some random test data
-all_data = [np.random.normal(0, std, 100) for std in range(6, 10)]
-print all_data
-# plot violin plot
-axes[0].boxplot(all_data)
-axes[0].set_title('violin plot')
+fig, ax = plt.subplots()
+line, = ax.plot([], [], lw=2)
+ax.grid()
+xdata, ydata = [], []
 
-# plot box plot
-axes[1].boxplot(all_data)
-axes[1].set_title('box plot')
 
-# adding horizontal grid lines
-for ax in axes:
-    ax.yaxis.grid(True)
-    ax.set_xticks([y+1 for y in range(len(all_data))])
-    ax.set_xlabel('xlabel')
-    ax.set_ylabel('ylabel')
+def run(data):
+    # update the data
+    t, y = data
+    xdata.append(t)
+    ydata.append(y)
+    xmin, xmax = ax.get_xlim()
 
-# add x-tick labels
-plt.setp(axes, xticks=[y+1 for y in range(len(all_data))],
-         xticklabels=['x1', 'x2', 'x3', 'x4'])
+    if t >= xmax:
+        ax.set_xlim(xmin, 2*xmax)
+        ax.figure.canvas.draw()
+    line.set_data(xdata, ydata)
+
+    return line,
+
+ani = animation.FuncAnimation(fig, run, data_gen, blit=False, interval=10,
+                              repeat=False, init_func=init)
 plt.show()
