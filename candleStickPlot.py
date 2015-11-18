@@ -42,6 +42,7 @@ ax.xaxis.set_minor_locator(alldays)
 ax.xaxis.set_major_formatter(weekFormatter)
 candlestick_ohlc(ax, Prices, width=0.5,colorup='r', colordown='g')
 
+ax.yaxis.grid(True)
 ## add notation
 Xmark=matplotlib.dates.date2num(datetime.strptime(curStock.dayStrList[indexDate], "%Y/%m/%d"))
 Ymark=curStock.dayPriceClosedFList[indexDate]*0.5+curStock.dayPriceOpenFList[indexDate]*0.5
@@ -50,5 +51,5 @@ ax.annotate("$", (Xmark,Ymark), xytext=(-2, 0), textcoords='offset points' )
 ax.xaxis_date()
 ax.autoscale_view()
 plt.setp( plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-plt.title(u"{} {} 20日K".format(stockID,dateFind))
+plt.title(u"{} {} 20日K".format(stockID,dateFind),color='r')
 plt.show()
