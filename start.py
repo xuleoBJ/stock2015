@@ -8,6 +8,13 @@ import stockPatternRecognition
 
 def tradePlan():
     print(u"20151112日提示：绝对不买票！！！计划中储卖600，新和成卖400，东安卖1500 高开不动，等到10:20时 把不是强势的股票清掉，尾盘接回。明天的钱不赚。")
+    print(u"1-plan:低开高走：")
+    print(u"2-plan:低开低走：")
+    print(u"3-plan:高开高走：")
+    print(u"4-plan:高开低走：")
+    print(u"5-plan:平开高走：")
+    print(u"6-plan:平开低走：")
+    print(u"7-plan:平走：")
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
 def calResistLine(cyclePeriod,keyPoint):
