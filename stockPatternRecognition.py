@@ -11,6 +11,13 @@ import Ccomfunc
 
 lineWritedList=[]
 def printResult(curStock,kMatchIndexList):
+    ##识别结果统计分析
+    dateList=[]
+    for i in kMatchIndexList:
+        dateList.append(curStock.dayStrList[i])
+    lineWritedList.append(u"识别结果：{},涨幅> ".format(len(dateList)))
+    lineWritedList.append('\t'.join(dateList))
+
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
         resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
