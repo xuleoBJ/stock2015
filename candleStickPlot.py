@@ -4,10 +4,11 @@ from pylab import *
 import matplotlib.pyplot as plt
 from datetime import datetime
 import time
+from matplotlib import collections, transforms
 from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
      DayLocator, MONDAY
 from matplotlib.finance import candlestick,\
-     plot_day_summary, candlestick_ohlc
+     plot_day_summary, candlestick_ohlc,volume_overlay3
 from Cstock import Stock
 
 def drawCandleStick(curStock,dateFind):
@@ -29,7 +30,8 @@ def drawCandleStick(curStock,dateFind):
         highestPrice=curStock.dayPriceHighestFList[i]
         lowestPrice=curStock.dayPriceLowestFList[i]
         closePrice=curStock.dayPriceClosedFList[i]
-        Prices.append((Date,openPrice,highestPrice, lowestPrice, closePrice))
+        tradeVolume=curStock.dayTradeVolumeFList[i]
+        Prices.append((Date,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume))
     print Prices
 
     #and then following the official example. 
@@ -48,6 +50,20 @@ def drawCandleStick(curStock,dateFind):
 
     ax.xaxis_date()
     ax.autoscale_view()
+
+
+    axVol = ax.twinx()
+
+    axVol.set_position(matplotlib.transforms.Bbox([[0.125,0.1],[0.9,0.32]]))
+# Plot the volume overlay
+    bc = volume_overlay3(axVol, Prices,colorup='r', colordown='g', width=4, alpha=1.0)
+    yticks = axVol.get_yticks()
+    axVol.yaxis.set_label_position("right")
+    axVol.add_collection(bc)
+#    corners = (0, 0), (len(bars), max(volumes))
+#    axVol.update_datalim(corners)
+
+    
     plt.setp( plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
     plt.title(u"{} {} 20日K".format(curStock.stockID,dateFind),color='r')
     plt.show()

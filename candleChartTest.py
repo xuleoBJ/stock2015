@@ -1,44 +1,65 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+from matplotlib.finance import candlestick_ohlc
+from matplotlib.finance import volume_overlay3
+from matplotlib.dates import num2date
+from matplotlib.dates import date2num
+import matplotlib.mlab as mlab
+import datetime
+
+datafile = u'E:\stock2015\so_data.csv'
+r = mlab.csv2rec(datafile, delimiter=';')
+
+# the dates in my example file-set are very sparse (and annoying) change the dates to be sequential
+for i in range(len(r)-1):
+    r['date'][i+1] = r['date'][i] + datetime.timedelta(days=1)
+
+candlesticks = zip(date2num(r['date']),r['open'],r['max'],r['min'],r['close'],r['volume'])
+
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+
+ax.set_ylabel('Quote ($)', size=20)
+candlestick_ohlc(ax, candlesticks,width=1,colorup='g', colordown='r')
+
+# shift y-limits of the candlestick plot so that there is space at the bottom for the volume bar chart
+pad = 0.25
+yl = ax.get_ylim()
+ax.set_ylim(yl[0]-(yl[1]-yl[0])*pad,yl[1])
+
+# create the second axis for the volume bar-plot
+ax2 = ax.twinx()
 
 
-def data_gen(t=0):
-    cnt = 0
-    while cnt < 1000:
-        cnt += 1
-        t += 0.1
-        yield t, np.sin(2*np.pi*t) * np.exp(-t/10.)
+# set the position of ax2 so that it is short (y2=0.32) but otherwise the same size as ax
+ax2.set_position(matplotlib.transforms.Bbox([[0.125,0.1],[0.9,0.32]]))
 
+# get data from candlesticks for a bar plot
+dates = [x[0] for x in candlesticks]
+dates = np.asarray(dates)
+volume = [x[5] for x in candlesticks]
+volume = np.asarray(volume)
 
-def init():
-    ax.set_ylim(-1.1, 1.1)
-    ax.set_xlim(0, 10)
-    del xdata[:]
-    del ydata[:]
-    line.set_data(xdata, ydata)
-    return line,
+# make bar plots and color differently depending on up/down for the day
+pos = r['open']-r['close']<0
+neg = r['open']-r['close']>0
+ax2.bar(dates[pos],volume[pos],color='green',width=1,align='center')
+ax2.bar(dates[neg],volume[neg],color='red',width=1,align='center')
 
-fig, ax = plt.subplots()
-line, = ax.plot([], [], lw=2)
-ax.grid()
-xdata, ydata = [], []
+#scale the x-axis tight
+ax2.set_xlim(min(dates),max(dates))
+# the y-ticks for the bar were too dense, keep only every third one
+yticks = ax2.get_yticks()
+ax2.set_yticks(yticks[::3])
 
+ax2.yaxis.set_label_position("right")
+ax2.set_ylabel('Volume', size=20)
 
-def run(data):
-    # update the data
-    t, y = data
-    xdata.append(t)
-    ydata.append(y)
-    xmin, xmax = ax.get_xlim()
+# format the x-ticks with a human-readable date. 
+xt = ax.get_xticks()
+new_xticks = [datetime.date.isoformat(num2date(d)) for d in xt]
+ax.set_xticklabels(new_xticks,rotation=45, horizontalalignment='right')
 
-    if t >= xmax:
-        ax.set_xlim(xmin, 2*xmax)
-        ax.figure.canvas.draw()
-    line.set_data(xdata, ydata)
-
-    return line,
-
-ani = animation.FuncAnimation(fig, run, data_gen, blit=False, interval=10,
-                              repeat=False, init_func=init)
+plt.ion()
 plt.show()

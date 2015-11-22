@@ -32,6 +32,36 @@ def printResult(curStock,kMatchIndexList):
             resultLine=u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,index,intervalDay))
             lineWritedList.append(resultLine)
 
+##利用个股和对应大盘的同步性分析 进行模式识别
+## matchDateIndex是要识别的strDate在序列中的指数位置 -1 是最新一个交易日
+def patternRecByMarketAndStock(curMarket,curStock,matchDateIndex):
+    ##根据涨幅进行历史K线模式识别,iTradeDay curStock周期，kNum是K线组合个数
+    ##需要增加从某一天开始的模式
+    kMatchIndexList=[] ##匹配的模式个数
+    print ("-"*8+u"根据大盘和个股的2日涨幅进行条件匹配模式识别，500个交易日之内：")
+    for i in range(-500,-1):
+	    bSelect=True
+	    iCount=0
+	    bias=0.5
+	    indexMarket=curMarket.dayStrList.index(curStock.dayStrList[i])
+	    while iCount<=2 and bSelect==True:
+		    ## 考虑大盘
+		    valueRate=math.floor(curMarket.dayRiseRateFList[matchDateIndex-iCount]/bias)*bias
+		    if not valueRate<=curMarket.dayRiseRateFList[indexMarket-iCount]<=valueRate+bias:
+			    bSelect=False
+		    iCount=iCount+1
+	    bias=0.5
+	    iCount=0
+	    while iCount<=2 and bSelect==True:
+		    ## 考虑个股
+		    valueRate=math.floor(curStock.dayRiseRateFList[matchDateIndex-iCount]/bias)*bias
+		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
+			    bSelect=False
+		    iCount=iCount+1
+	    if bSelect==True:
+		    kMatchIndexList.append(i)
+    print kMatchIndexList 
+    return kMatchIndexList
 
 def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
     ##根据涨幅进行历史K线模式识别,iTradeDay curStock周期，kNum是K线组合个数
@@ -169,8 +199,9 @@ if __name__=="__main__":
     
     stockIDList=["999999"]
     stockIDList.append("399001")
+    stockIDList.append("002001")
     for stockID in stockIDList: 
-        main(stockID,-1) ##-1是最后一个交易日分析
+        main(stockID,-2) ##-1是最后一个交易日分析
     
     for line in lineWritedList:
         print line

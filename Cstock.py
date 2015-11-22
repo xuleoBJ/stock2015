@@ -23,7 +23,15 @@ class Stock:
         self.dayOpenRateArray=np.array(self.dayOpenRateFList)       ##day开盘幅度，主要分析高开、低开等array
         self.dayOpenCloseRateArray=np.array(self.dayOpenCloseRateFList)	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势array
         self.dayRadioLinkOfTradeVolumeArray=np.array(self.dayRadioLinkOfTradeVolumeFList)  ##day成交量倍数价array
-
+        
+#        self.day3PriceAverageFList=[]     ##3日均价
+#        self.day5PriceAverageFList=[]     ##5日均价
+#        self.day10PriceAverageFList=[]     ##10日均价
+    def findIndexByDayStr(self,dayStr="2015/01/05"):
+        if dayStr in self.dayStrList:
+            return self.dayStrList.index(dayStr)
+        else:
+            return -1
     def __init__(self,stockID):
         self.stockName=""
         self.stockID=stockID
@@ -39,13 +47,10 @@ class Stock:
         self.dayRiseRateFList=[]        ##day价格涨幅
         self.dayWaveRateFList=[]        ##day波动涨幅
         self.dayOpenRateFList=[]	       ##day开盘幅度，主要分析高开、低开等
+        self.dayPriceAverageFList=[]     ##日均价
         self.dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
         self.dayRadioLinkOfTradeVolumeFList=[]  ##day成交量倍数
         self.dayRiseOfTurnOverFList=[]  ##day成交额倍数
-        self.dayPriceAverageFList=[]     ##日均价
-        self.day3PriceAverageFList=[]     ##3日均价
-        self.day5PriceAverageFList=[]     ##5日均价
-        self.day10PriceAverageFList=[]     ##10日均价
         self.monthStrList=[]          ##月，string
         self.monthPriceOpenFList=[]    ##month开盘价
         self.monthPriceClosedFList=[]     ##month收盘价
@@ -70,7 +75,7 @@ class Stock:
                 splitLine=line.split()
                 if lineIndex==1:
                     self.stockName=splitLine[0]
-                    print(line)
+                    print "{},{}".format(self.stockID,self.stockName)
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
                     self.dateList.append(Ccomfunc.convertDateStr2Date(splitLine[0]))
@@ -177,7 +182,7 @@ class Stock:
                 print(u"数据读取完毕,数据开始日：\t"+self.dayStrList[0]+"\t数据结束日：\t"+self.dayStrList[-1]+ \
                        "\t收盘价：\t"+str(self.dayPriceClosedFList[-1]))
             else:
-                print("数据列为空")
+                print(u"数据列为空")
 
         else:
             print(stockID+"数据不存在")

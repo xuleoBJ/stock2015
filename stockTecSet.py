@@ -6,6 +6,12 @@ import datetime
 import Ccomfunc
 import numpy as np
 import Cstock
+import stockPatternRecognition
+
+import scipy.optimize as optimize
+
+def func(fData,a,b,c,d):
+    return fData[0]*a+fData[1]*b+fData[2]*c + d
 
 if __name__=="__main__":
     
@@ -13,13 +19,119 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    curStock=Cstock.Stock('600787')
+
+
+    curStock=Cstock.Stock('600178')
+    curStock.list2array()
     
+    curMarket=Cstock.Stock('399001')
+   
     print ("做T价格计算，做t是宁可错过，不能做错的方案，一定要有价差才能买入。。")
-    arrayDayPriceLowest=np.array(curStock.dayPriceLowestFList)
+    
     ##买入点：用15分钟K线的支撑位买入T
     ##卖出点：5日内高点，或者日内3个点。
     ##割肉点：三日破位或者大行情不好。
+
+## 如果预测当日大盘好，用近期高点的97%作为买入点位。
+## 预测大盘不好，用近期低点97%作为点位。
+
+## 买入价一定要 超出买入预期，卖出价要降标准 
+
+    indexMax=len(curStock.dayStrList)
+    dayRadioLinkPriceLowArray=np.zeros(indexMax)
+    for i in range(1,indexMax):
+        if curStock.dayPriceLowestArray[i-1]>0:
+            dayRadioLinkPriceLowArray[i]=100*(curStock.dayPriceLowestArray[i]-curStock.dayPriceLowestArray[i-1])/curStock.dayPriceLowestArray[i-1]
+#    print(dayRadioLinkPriceLowArray[-10:])
+    
+    
+    ## 利用匹配日求取买入价
+    ##用最近的一个匹配日的最低价的涨幅
+    matchDateIndex=-1 ##识别日的指数
+    stockPatternRecognition.patternRecByMarketAndStock(curMarket,curStock,matchDateIndex)
+    listPatternRecBycurStock=stockPatternRecognition.patternRecByRiseRate(curStock,300,3,matchDateIndex)
+    print listPatternRecBycurStock
+    findIndex=curStock.findIndexByDayStr("2012/05/21")
+    scale= dayRadioLinkPriceLowArray[findIndex+1]
+    print "匹配日此次预测低价{:.2f}".format(curStock.dayPriceLowestArray[-1]*(1+scale*0.01))
+  
+
+##仔细分析拟合算法
+##利用3日的最低价做多项式拟合，周期选14。
+    kPeriod=7 ##拟合区间
+    indexDateFit=-3
+    fData=np.array([curStock.dayPriceLowestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
+            curStock.dayPriceLowestArray[indexDateFit-1-kPeriod:indexDateFit-1],\
+            curStock.dayPriceLowestArray[indexDateFit-kPeriod:indexDateFit]])
+    guess = (0.3,0.4,0.3,0)
+    params, pcov = optimize.curve_fit(func, fData,curStock.dayPriceLowestArray[-kPeriod:], guess)
+    print(params)
+    ##用模式识别的日期，寻找指数，然后找出比例 
+    for indexDate in range(indexMax-kPeriod,indexMax-1):
+        knum=3
+        print("-"*72)
+        print(curStock.dayStrList[indexDate-knum:indexDate])
+        priceRiseRate3day=(curStock.dayRiseRateArray[indexDate-knum:indexDate]).mean()
+        priceHigh3days=curStock.dayPriceHighestArray[indexDate-knum:indexDate].mean()
+        priceClose3days=curStock.dayPriceClosedArray[indexDate-knum:indexDate].mean()
+        priceLowFit=(curStock.dayPriceLowestArray[indexDate-knum:indexDate]*params[:3]).sum()+params[3]
+        priceLow3days=curStock.dayPriceLowestArray[indexDate-knum:indexDate].mean()
+        priceOpen3days=curStock.dayPriceOpenArray[indexDate-knum:indexDate].mean()
+        priceWave3days=curStock.dayWaveRateArray[indexDate-knum:indexDate].mean()
+        print("{}日涨幅平均{:.2f}，开盘均价{:.2f}，高均价{:.2f}，低均价{:.2f}，收盘均价{:.2f},平均波幅{:.2f}".format\
+                (knum,priceRiseRate3day,priceOpen3days,priceHigh3days,priceLow3days,priceClose3days,priceWave3days))
+        
+        print("{}日最低价{:.2f}，最高价{:.2f}，最小波幅{:.2f}".format\
+                (knum,curStock.dayPriceLowestArray[indexDate-knum:indexDate].min(),\
+                curStock.dayPriceHighestArray[indexDate-knum:indexDate].max(),\
+                curStock.dayWaveRateArray[indexDate-knum:indexDate].min() \
+                )\
+                )
+
+        priceTbuy=priceLowFit*0.5+priceLow3days*0.5
+        priceTsell=priceTbuy*1.025
+        printTStop=priceTbuy*0.975
+        print("3日T-buy价{:.2f}，次日最低{},T-sell价{:.2f}，次日最高{},次日止损{:.2f},次日收盘{}".format(\
+                priceTbuy,curStock.dayPriceLowestArray[indexDate+1],\
+                priceTsell,curStock.dayPriceHighestArray[indexDate+1],\
+                printTStop,curStock.dayPriceClosedArray[indexDate+1])\
+                )
+
+    print("$"*72)
+    priceTbuy=(curStock.dayPriceLowestArray[-3:]*params[:3]).sum()+params[3]
+    priceTsell=priceTbuy*1.025
+    printTStop=priceTbuy*0.975
+    print("{}收盘价{},{}日最低价{:.2f}，最高价{:.2f}，最小波幅{:.2f}".format\
+                ( curStock.dayStrList[-1],curStock.dayPriceClosedArray[-1],\
+                  knum,curStock.dayPriceLowestArray[-3:].min(), curStock.dayPriceHighestArray[-3:].max(),\
+                curStock.dayWaveRateArray[-3:].min() \
+                )\
+        )
+    print("3日T-buy价{:.2f}，T-sell价{:.2f},T-stop价{:.2f}".format(priceTbuy,priceTsell,printTStop))
+    print("$"*72)
+
+    for i in range(-3,0): ##循环指数起始比匹配指数少1
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+        resultLine="{},星期{}\t收盘价:{}\t涨幅:{}\t量能环比:{}\t波动幅度:{}".format(\
+                curStock.dayStrList[i],weekDay,curStock.dayPriceClosedArray[i],curStock.dayRiseRateFList[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
+        print resultLine
+##放量上涨
+    if curStock.dayRadioLinkOfTradeVolumeArray[-1]>1 and curStock.dayRiseRateArray[-1]>0:
+        print("放量上涨。")
+##缩量上涨
+    if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]>0:
+        print("缩量上涨。")
+##放量下跌
+    if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]<0:
+        print("放量下跌。")
+##缩量下跌
+    if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]<0:
+        print("缩量下跌。")
+    
+    marketMood=1
+    if marketMood<=0.5:
+        print("3日T均价{:.2f}".format(priceLow3days*0.5+priceClose3days*0.5))
 
 
 
@@ -37,8 +149,6 @@ if __name__=="__main__":
     ## 如何T飞了 或者仓位不够的话，可以尾盘2：45再买回来！宁可不赚钱，不能赔钱。
     ## 弱势别想着暴涨，卖了就涨飞了？那种可能性也不是那么大的。一年也不会发生几回。而且平摊了仓位风险。亏不了多少。
 
-    print(u"最近5日最低价{}".format(arrayDayPriceLowest[-5:]))
-    print(arrayDayPriceLowest[-5:].mean())
     
     print ("严格的执行止损方案。")
     timeSpan=time.clock()-startClock

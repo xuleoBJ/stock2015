@@ -18,7 +18,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        dateList="2003/05/28	2003/12/08	2005/02/18	2011/05/12	2012/11/27	2013/05/14	2014/01/03".split()                    
+        dateList="2000/10/09	2004/05/19	2006/09/05	2013/01/21".split()                    
         for iDate in dateList:
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)

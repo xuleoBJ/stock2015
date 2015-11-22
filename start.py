@@ -6,6 +6,9 @@ import Cstock
 import Ccomfunc
 import stockPatternRecognition
 
+from PyQt4 import QtGui # Import the PyQt4 module we'll need
+from PyQt4.QtGui import *
+
 def tradePlan():
     print(u"20151112日提示：绝对不买票！！！计划中储卖600，新和成卖400，东安卖1500 高开不动，等到10:20时 把不是强势的股票清掉，尾盘接回。明天的钱不赚。")
     print(u"1-plan:低开高走：")
