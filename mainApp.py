@@ -25,6 +25,14 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
 
         self.pButtonSelect.clicked.connect(self.selectExe)  # When the button is pressed
 
+        self.btnCalGDP.clicked.connect(self.calGDP)
+
+    def calGDP(self):
+        fGDPsh=float(self.lineEditMarketValueSH.text())
+        fGDPsz=float(self.lineEditMarketValueSZ.text())
+        fGDP2014=63.6
+        QMessageBox.about(self, u"计算结果",u"两市市值总和占2014GDP比例:\t{:.2f}".format((fGDPsh+fGDPsz)/fGDP2014))
+    
     def selectExe(self):
         stockID='999999'
         curStock=Stock(stockID)
@@ -40,4 +48,3 @@ def main():
 
 if __name__ == '__main__':              # if we're running file directly and not importing it
     main()              
-#    QMessageBox.about(self, u"标题",u"中文")

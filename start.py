@@ -91,11 +91,15 @@ if __name__ == "__main__":
    
     for period in [10,20,30,60,120]:
         indexHighPoint=curStock.dayPriceHighestFList.index(max(curStock.dayPriceHighestFList[-period:]))
+        riseHighcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
+        rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexHighPoint]
         indexLowPoint=curStock.dayPriceLowestFList.index(min(curStock.dayPriceLowestFList[-period:]))
-        print(u"{}日最高点{}，出现日期{}，距今日{}个交易日".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
-                curStock.dayStrList[indexHighPoint],len(curStock.dayStrList)-1-indexHighPoint))
-        print(u"{}日最低点{}，出现日期{}，距今日{}个交易日".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
-                curStock.dayStrList[indexLowPoint],len(curStock.dayStrList)-1-indexLowPoint))
+        riseLowcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
+        rateLowTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexLowPoint]
+        print(u"{}日最高点{}，出现日期{}，距今日{}个交易日,涨幅{:.2f}%，量能比{:.2f}".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
+                curStock.dayStrList[indexHighPoint],len(curStock.dayStrList)-1-indexHighPoint,riseHighcurrent,rateHighTradeVolumecurrent))
+        print(u"{}日最低点{}，出现日期{}，距今日{}个交易日,涨幅{:.2f}%，量能比{:.2f}".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
+                curStock.dayStrList[indexLowPoint],len(curStock.dayStrList)-1-indexLowPoint,riseLowcurrent,rateLowTradeVolumecurrent))
 
 ## 3.仓位控制和仓位止损控制
     print("-"*80)

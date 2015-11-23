@@ -31,16 +31,17 @@ def drawCandleStick(curStock,dateFind):
         lowestPrice=curStock.dayPriceLowestFList[i]
         closePrice=curStock.dayPriceClosedFList[i]
         tradeVolume=curStock.dayTradeVolumeFList[i]
-        Prices.append((Date,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume))
+        Prices.append([Date,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume])
     print Prices
-
+    
+    PricesArray=np.array(Prices)
     #and then following the official example. 
     fig, ax = plt.subplots()
     fig.subplots_adjust(bottom=0.2)
     ax.xaxis.set_major_locator(mondays)
     ax.xaxis.set_minor_locator(alldays)
     ax.xaxis.set_major_formatter(weekFormatter)
-    candlestick_ohlc(ax, Prices, width=0.5,colorup='r', colordown='g')
+    candlestick_ohlc(ax, PricesArray, width=0.5,colorup='r', colordown='g')
 
     ax.yaxis.grid(True)
     ## add notation
@@ -53,13 +54,25 @@ def drawCandleStick(curStock,dateFind):
 
 
     axVol = ax.twinx()
+##
+    dates = PricesArray[:,0]
+    dates = np.asarray(dates)
+    volume = PricesArray[:,5]
+    volume = np.asarray(volume)
 
-    axVol.set_position(matplotlib.transforms.Bbox([[0.125,0.1],[0.9,0.32]]))
+    # make bar plots and color differently depending on up/down for the day
+    pos = PricesArray[:,1]-PricesArray[:,4]<0
+    neg = PricesArray[:,1]-PricesArray[:,4]>0
+    axVol.bar(dates[pos],volume[pos],color='red',width=0.5,align='center')
+    axVol.bar(dates[neg],volume[neg],color='green',width=0.5,align='center')
+    axVol.set_position(matplotlib.transforms.Bbox([[0.125,0.05],[0.9,0.2]]))
 # Plot the volume overlay
-    bc = volume_overlay3(axVol, Prices,colorup='r', colordown='g', width=4, alpha=1.0)
-    yticks = axVol.get_yticks()
-    axVol.yaxis.set_label_position("right")
-    axVol.add_collection(bc)
+#    bc = volume_overlay3(axVol, Prices,colorup='r', colordown='g', width=4, alpha=1.0)
+#    yticks = axVol.get_yticks()
+#    ymax=max(curStock.dayTradeVolumeFList[indexDate-10:indexDate+10])*1.5
+#    axVol.set_ylim([0,ymax])
+#    axVol.yaxis.set_label_position("right")
+#    axVol.add_collection(bc)
 #    corners = (0, 0), (len(bars), max(volumes))
 #    axVol.update_datalim(corners)
 

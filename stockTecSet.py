@@ -13,18 +13,15 @@ import scipy.optimize as optimize
 def func(fData,a,b,c,d):
     return fData[0]*a+fData[1]*b+fData[2]*c + d
 
-if __name__=="__main__":
-    
-    print("\n"+"#"*80)
-    
-    startClock=time.clock() ##记录程序开始计算时间
-    
-
-
-    curStock=Cstock.Stock('600178')
+def main(stockID):
+    curStock=Cstock.Stock(stockID)
     curStock.list2array()
     
-    curMarket=Cstock.Stock('399001')
+    marketID='999999'
+    if not stockID.startswith('6'):
+        marketID='399001'
+
+    curMarket=Cstock.Stock(marketID)
    
     print ("做T价格计算，做t是宁可错过，不能做错的方案，一定要有价差才能买入。。")
     
@@ -60,6 +57,7 @@ if __name__=="__main__":
 ##利用3日的最低价做多项式拟合，周期选14。
     kPeriod=7 ##拟合区间
     indexDateFit=-3
+    ##也可以用np.vstack((x,y,z))组合fData
     fData=np.array([curStock.dayPriceLowestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
             curStock.dayPriceLowestArray[indexDateFit-1-kPeriod:indexDateFit-1],\
             curStock.dayPriceLowestArray[indexDateFit-kPeriod:indexDateFit]])
@@ -151,7 +149,14 @@ if __name__=="__main__":
 
     
     print ("严格的执行止损方案。")
+
+if __name__=="__main__":
+    
+    print("\n"+"#"*80)
+    
+    startClock=time.clock() ##记录程序开始计算时间
+    for stockID in ["600178","002001"]:
+        main(stockID)
+    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
-
-
