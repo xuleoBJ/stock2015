@@ -201,6 +201,7 @@ if __name__=="__main__":
     print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
     print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
     print curStock.dayPriceAverageFList[-10:]
+    print curStock.monthStrList[-10:]
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

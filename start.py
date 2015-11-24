@@ -5,12 +5,14 @@ import ConfigParser
 import Cstock
 import Ccomfunc
 import stockPatternRecognition
+import stockTecSet
+import volumeEnerge
 
 from PyQt4 import QtGui # Import the PyQt4 module we'll need
 from PyQt4.QtGui import *
 
 def tradePlan():
-    print(u"20151112日提示：绝对不买票！！！计划中储卖600，新和成卖400，东安卖1500 高开不动，等到10:20时 把不是强势的股票清掉，尾盘接回。明天的钱不赚。")
+    print(u"最近策略日提示：上午10点半前大涨大卖，小涨小卖，大跌大卖，小跌小买。剩下的下午2：30后操作，以便控制仓位。")
     print(u"1-plan:低开高走：")
     print(u"2-plan:低开低走：")
     print(u"3-plan:高开高走：")
@@ -24,31 +26,25 @@ def calResistLine(cyclePeriod,keyPoint):
     resistLine=cycleLow+(cycleHigh-cycleLow)*keyPoint
     return resistLine
 
-if __name__ == "__main__":
- 
-    startClock=time.clock() ##记录程序开始计算时间
-
-    ## 改变路径到工作目录 
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    print os.path.curdir
-
-    ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
-    config = ConfigParser.ConfigParser()
-    config.read('config.ini')
-    stockID=config.get("stock","stockID")
-    Ccomfunc.printInfor()
-    curStock=Cstock.Stock(stockID)
-
-    print(u"-"*80)
-    ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
-    print(u"1-趋势分析")
-    print (u"\n"+"#"*80)
-    print(u"1.1-分析两市总市值和GDP的关系")
-    gdp2014=float(config.get("GDP","2014"))
+def calGDG():
+    print(u"分析两市总市值和GDP的关系")
+    gdp2014=63.6
     ##此处应该设计必须成输入！
     AB_SH=30.0
     AB_SZ=21.7
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
+
+
+def main(curStock):
+
+    ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
+    config = ConfigParser.ConfigParser()
+    config.read('config.ini')
+    
+    print(u"-"*80)
+    ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
+    print(u"1-趋势分析")
+    print (u"\n"+"#"*80)
 
 ##  分析近期走势
     print (u"\n"+"#"*80+"正在进行趋势分析：")
@@ -57,33 +53,26 @@ if __name__ == "__main__":
 
 ##  峰值研究
 ##  分析近年同期走势
-    print (u"过去3年同期交易日走势,近期走势：")
+    print (u"过去3年同月涨幅：")
     today=datetime.date.today()
     for i in [1,2,3]:
-        todayLastYear=today-datetime.timedelta(days=365*i) ##不准确但是可行
-        wordsPrint=[]
-        for item in curStock.dateList:
-            if todayLastYear-datetime.timedelta(days=1)<=item:
-                _index=curStock.dateList.index(item)
-                wordsPrint.append(curStock.dayStrList[_index])
-                for days in [3,5,8,13]:
-                    wordsPrint.append("{}日涨幅{:.2f}".format(days,Ccomfunc.calRiseRateInterval(curStock,_index,days)))
-                break
-   
-        print u"{}年同期涨幅:{}".format(todayLastYear.year,"\t".join(wordsPrint))
+        currentYear=today.year-i
+        currentMonth=today.month
+        strYM=str(currentYear)+str(currentMonth)
+        findIndexStrYM=curStock.monthStrList.index(strYM)
+        print u"{}年{}月涨幅:{}".format(currentYear,currentMonth,curStock.monthRiseRateFList[findIndexStrYM])
 
     ## 2.空间目标分析，也就是点位预测，在点位空间内控制仓位
     print(u"2-时空分析")
     ##分析当前点位在20日均线和120日均线的压力或者支撑线，50%，33%分割。
     ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
     print (u"\n"+"#"*80+"关键点位提示分析：")
-    for period in [20,120]:
-        cycle=config.get("cycle","cycle"+str(period))
-        cycleHigh=float(cycle.split(":")[0])
-        cycleLow=float(cycle.split(":")[1])
-        for keyPoint in [0.33,0.5]:
+    for period in [20,60,120,180]:
+        cycleHigh=curStock.dayPriceHighestArray[-period:].max()
+        cycleLow=curStock.dayPriceLowestArray[-period:].min()
+        for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
-            print(u"{}日 低点:{}，高点:{}，{}线:{}".format(period,cycleLow,cycleHigh,keyPoint,resistLinePoint))
+            print(u"{}日 低点:{}，高点:{}，{}线:{:.2f}".format(period,cycleLow,cycleHigh,keyPoint,resistLinePoint))
             if(abs(curStock.dayPriceClosedFList[-1]-resistLinePoint)<=50):
                 print(u"注意压力位！")
     
@@ -137,6 +126,21 @@ if __name__ == "__main__":
 ##  均线买入价设计
 
 ##  止损位设计
+
+if __name__ == "__main__":
+ 
+    startClock=time.clock() ##记录程序开始计算时间
+    Ccomfunc.printInfor()
+    calGDG()
+    ## 改变路径到工作目录 
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    print os.path.curdir
+    for stockID in ["999999","399001","600178","002001"]:
+        curStock=Cstock.Stock(stockID)
+        curStock.list2array()
+        volumeEnerge.moodIndex(curStock,200)
+        main(curStock)
+        stockTecSet.main(curStock)
     tradePlan()
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

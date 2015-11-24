@@ -8,7 +8,7 @@ import Cstock
 import Ccomfunc
 
 
-stockID="999999"
+stockID="002001"
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -51,8 +51,11 @@ def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFLis
             d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
             daysSpan=(d2-d1).days
             daySpanLast=dayPeriod if daySpanLast==0 else daySpanLast
+            riseRate=-999
+            if standValue!=0:
+                riseRate=round((max_value-standValue)/standValue,3)*100
             lineWritedList.append(curDateStrList[i]+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t" \
-                    +str(curPriceHighestFList[i])+"\t"+str(round((max_value-standValue)/standValue,3)*100)+"\t")
+                    +str(curPriceHighestFList[i])+"\t"+str(riseRate)+"\t")
             d1=d2
             indexLast=max_index
             standValue=max_value
@@ -69,8 +72,11 @@ def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFLis
         if min_index==i:
             d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
             daysSpan=(d2-d1).days
+            riseRate=-999
+            if standValue!=0:
+                riseRate=round((min_value-standValue)/standValue,3)*100
             lineWritedList.append(curDateStrList[i]+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t" \
-                    +str(curPriceLowestFList[i])+"\t"+str(round((min_value-standValue)/standValue,3)*100)+"\t")
+                    +str(curPriceLowestFList[i])+"\t"+str(riseRate)+"\t")
             d1=d2
             indexLast=min_index
             standValue=min_value
@@ -232,7 +238,7 @@ if __name__=="__main__":
 	   
 
     print ("正在进行历史时空分析：")
-    for dayPeriod in [5,10,20,30,60,90,120,250]:
+    for dayPeriod in [3,5,10,20,30,60,90,120,250]:
         resultDir="resultDir"
         if not os.path.exists(resultDir):
             os.makedirs(resultDir)

@@ -13,12 +13,10 @@ import scipy.optimize as optimize
 def func(fData,a,b,c,d):
     return fData[0]*a+fData[1]*b+fData[2]*c + d
 
-def main(stockID):
-    curStock=Cstock.Stock(stockID)
-    curStock.list2array()
+def main(curStock):
     
     marketID='999999'
-    if not stockID.startswith('6'):
+    if not curStock.stockID.startswith('6'):
         marketID='399001'
 
     curMarket=Cstock.Stock(marketID)
@@ -47,10 +45,10 @@ def main(stockID):
     matchDateIndex=-1 ##识别日的指数
     stockPatternRecognition.patternRecByMarketAndStock(curMarket,curStock,matchDateIndex)
     listPatternRecBycurStock=stockPatternRecognition.patternRecByRiseRate(curStock,300,3,matchDateIndex)
-    print listPatternRecBycurStock
+#    print listPatternRecBycurStock
     findIndex=curStock.findIndexByDayStr("2012/05/21")
     scale= dayRadioLinkPriceLowArray[findIndex+1]
-    print "匹配日此次预测低价{:.2f}".format(curStock.dayPriceLowestArray[-1]*(1+scale*0.01))
+#    print "匹配日此次预测低价{:.2f}".format(curStock.dayPriceLowestArray[-1]*(1+scale*0.01))
   
 
 ##仔细分析拟合算法
@@ -78,7 +76,6 @@ def main(stockID):
         priceWave3days=curStock.dayWaveRateArray[indexDate-knum:indexDate].mean()
         print("{}日涨幅平均{:.2f}，开盘均价{:.2f}，高均价{:.2f}，低均价{:.2f}，收盘均价{:.2f},平均波幅{:.2f}".format\
                 (knum,priceRiseRate3day,priceOpen3days,priceHigh3days,priceLow3days,priceClose3days,priceWave3days))
-        
         print("{}日最低价{:.2f}，最高价{:.2f}，最小波幅{:.2f}".format\
                 (knum,curStock.dayPriceLowestArray[indexDate-knum:indexDate].min(),\
                 curStock.dayPriceHighestArray[indexDate-knum:indexDate].max(),\
@@ -106,6 +103,16 @@ def main(stockID):
                 )\
         )
     print("3日T-buy价{:.2f}，T-sell价{:.2f},T-stop价{:.2f}".format(priceTbuy,priceTsell,printTStop))
+    
+    for period in [3,5,10]:
+        indexHighPoint=curStock.dayPriceHighestFList.index(max(curStock.dayPriceHighestFList[-period:]))
+        indexLowPoint=curStock.dayPriceLowestFList.index(min(curStock.dayPriceLowestFList[-period:]))
+        priceHigh=curStock.dayPriceHighestFList[indexHighPoint]
+        priceLow=curStock.dayPriceLowestFList[indexLowPoint]
+        print("{}日最高点{}，出现日期{},{}日最低点{}，出现日期{}".format( \
+                period,priceHigh,curStock.dayStrList[indexHighPoint], \
+                period,priceLow,curStock.dayStrList[indexLowPoint]))
+        print("%95buy: {:.2f},%93buy: {:.2f}".format(priceHigh*0.95,priceHigh*0.93))
     print("$"*72)
 
     for i in range(-3,0): ##循环指数起始比匹配指数少1
@@ -156,7 +163,9 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     for stockID in ["600178","002001"]:
-        main(stockID)
+        curStock=Cstock.Stock(stockID)
+        curStock.list2array()
+        main(curStock)
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
