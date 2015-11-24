@@ -7,16 +7,24 @@ import math
 import Cstock
 import sys
 import Ccomfunc
+import configOS
 
 
 lineWritedList=[]
+
 def printResult(curStock,kMatchIndexList):
     ##识别结果统计分析
     dateList=[]
     for i in kMatchIndexList:
         dateList.append(curStock.dayStrList[i])
+        if curStock.stockID=="999999" and (not curStock.dayStrList[i] in configOS.patternRecDateListSH) :
+            configOS.patternRecDateListSH.append(curStock.dayStrList[i])
+        
     lineWritedList.append(u"识别结果：{},涨幅> ".format(len(dateList)))
-    lineWritedList.append('\t'.join(dateList))
+    dateStrLine='\t'.join(dateList)
+    lineWritedList.append(dateStrLine)
+
+
 
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
@@ -200,9 +208,16 @@ if __name__=="__main__":
     stockIDList=["999999"]
     stockIDList.append("399001")
     stockIDList.append("002001")
+    del configOS.patternRecDateListSH[:]
+    del configOS.patternRecDateListSZ[:]
+    del configOS.patternRecDateListCYB[:]
+
+
     for stockID in stockIDList: 
-        main(stockID,-2) ##-1是最后一个交易日分析
-    
+        main(stockID,-1) ##-1是最后一个交易日分析
+
+    configOS.updatePetternRectDateList()
+
     for line in lineWritedList:
         print line
     goalFilePath="patternRec.txt" ##输出文件名

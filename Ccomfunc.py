@@ -7,6 +7,7 @@ import sys
 import Cstock
 import Tkinter
 import ctypes 
+import ConfigParser
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -14,6 +15,9 @@ sys.setdefaultencoding('utf-8')
 
 ##数据目录
 dirData="C:\\new_dxzq_v6\\T0002\\export\\" 
+## 改变路径到工作目录 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+print os.path.curdir
 
 
 ##将2008/08/08转换成dateTime

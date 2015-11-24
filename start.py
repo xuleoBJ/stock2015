@@ -4,6 +4,7 @@ import datetime,time
 import ConfigParser
 import Cstock
 import Ccomfunc
+import configOS
 import stockPatternRecognition
 import stockTecSet
 import volumeEnerge
@@ -34,7 +35,6 @@ def calGDG():
     AB_SZ=21.7
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
-
 def main(curStock):
 
     ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
@@ -45,7 +45,6 @@ def main(curStock):
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     print(u"1-趋势分析")
     print (u"\n"+"#"*80)
-
 ##  分析近期走势
     print (u"\n"+"#"*80+"正在进行趋势分析：")
     for days in [3,5,8,13,21,34,55,89,144]:

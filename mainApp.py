@@ -9,6 +9,8 @@ import mainUI # This file holds our MainWindow and all design related things
 from Cstock import Stock
 from candleStickPlot import drawCandleStick
 
+import configOS
+
 class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     def __init__(self):
         # Explaining super is out of the scope of this article
@@ -18,7 +20,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        dateList="2000/10/09	2004/05/19	2006/09/05	2013/01/21".split()                    
+        dateList=configOS.config.get('patternRecDate', 'SH').split()
         for iDate in dateList:
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)
