@@ -4,6 +4,7 @@ import datetime,time
 import ConfigParser
 import Cstock
 import Ccomfunc
+import configOS
 import stockPatternRecognition
 
 from PyQt4 import QtGui # Import the PyQt4 module we'll need
@@ -28,14 +29,8 @@ if __name__ == "__main__":
  
     startClock=time.clock() ##记录程序开始计算时间
 
-    ## 改变路径到工作目录 
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    print os.path.curdir
-
-    ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
-    config = ConfigParser.ConfigParser()
-    config.read('config.ini')
-    stockID=config.get("stock","stockID")
+    ## 活得股票ID,实例化 curStock
+    stockID=configOS.config.get("stock","stockID")
     Ccomfunc.printInfor()
     curStock=Cstock.Stock(stockID)
 
@@ -44,7 +39,7 @@ if __name__ == "__main__":
     print(u"1-趋势分析")
     print (u"\n"+"#"*80)
     print(u"1.1-分析两市总市值和GDP的关系")
-    gdp2014=float(config.get("GDP","2014"))
+    gdp2014=float(configOS.config.get("GDP","2014"))
     ##此处应该设计必须成输入！
     AB_SH=30.0
     AB_SZ=21.7
@@ -78,7 +73,7 @@ if __name__ == "__main__":
     ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
     print (u"\n"+"#"*80+"关键点位提示分析：")
     for period in [20,120]:
-        cycle=config.get("cycle","cycle"+str(period))
+        cycle=configOS.config.get("cycle","cycle"+str(period))
         cycleHigh=float(cycle.split(":")[0])
         cycleLow=float(cycle.split(":")[1])
         for keyPoint in [0.33,0.5]:
