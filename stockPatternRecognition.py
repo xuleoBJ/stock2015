@@ -19,6 +19,8 @@ def printResult(curStock,kMatchIndexList):
         dateList.append(curStock.dayStrList[i])
         if curStock.stockID=="999999" and (not curStock.dayStrList[i] in configOS.patternRecDateListSH) :
             configOS.patternRecDateListSH.append(curStock.dayStrList[i])
+        if curStock.stockID=="399001" and (not curStock.dayStrList[i] in configOS.patternRecDateListSZ) :
+            configOS.patternRecDateListSZ.append(curStock.dayStrList[i])
         
     lineWritedList.append(u"识别结果：{},涨幅> ".format(len(dateList)))
     dateStrLine='\t'.join(dateList)
@@ -205,15 +207,12 @@ if __name__=="__main__":
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     
-    stockIDList=["999999"]
-    stockIDList.append("399001")
-    stockIDList.append("002001")
     del configOS.patternRecDateListSH[:]
     del configOS.patternRecDateListSZ[:]
     del configOS.patternRecDateListCYB[:]
 
 
-    for stockID in stockIDList: 
+    for stockID in configOS.stockIDMarketList: 
         main(stockID,-1) ##-1是最后一个交易日分析
 
     configOS.updatePetternRectDateList()

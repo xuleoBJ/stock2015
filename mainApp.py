@@ -20,11 +20,14 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        
-        dateList=configOS.config.get('patternRecDate', 'SH').split(',')
+         
         self.comboBoxStockID.clear()
-        self.comboBoxStockID.addItems(configOS.stockIDMarketList+configOS.stockIDList)
-        
+        self.comboBoxStockID.addItems(configOS.stockIDMarketList)
+
+        self.comboBoxStockID.currentIndexChanged.connect(self.setupListWidget)
+  
+         
+        dateList=configOS.config.get('patternRecDate', 'SH').split(',')
         for iDate in dateList:
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)
@@ -32,6 +35,9 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         self.pButtonSelect.clicked.connect(self.selectExe)  # When the button is pressed
 
         self.btnCalGDP.clicked.connect(self.calGDP)
+    
+    def setupListWidget(self,iItem):
+        QMessageBox.about(self, u"选择",self.comboBoxStockID.itemText(iItem))
 
     def calGDP(self):
         fGDPsh=float(self.lineEditMarketValueSH.text())
