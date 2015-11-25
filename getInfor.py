@@ -157,7 +157,7 @@ def perform(inc):
     s.enter(inc,0,perform,(inc,))
     event_func_gwy()
     event_func_xhs()
-    event_func_fgw()
+#    event_func_fgw()
 
 def mymain(inc=90):
     if not os.path.exists(resultDir):

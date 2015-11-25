@@ -4,15 +4,17 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 
+stockIDMarketList=config.get("stock","stockIDMarket").split(',')
+stockIDList=config.get("stock","stockIDList").split(',')
 
 patternRecDateListSH=[]
 patternRecDateListSZ=[]
 patternRecDateListCYB=[]
 
 def updatePetternRectDateList():
-    config.set("patternRecDate", "SH","\t".join(patternRecDateListSH))
-    config.set("patternRecDate", "SZ","\t".join(patternRecDateListSZ))
-    config.set("patternRecDate", "CYB","\t".join(patternRecDateListCYB))
+    config.set("patternRecDate", "SH",",".join(patternRecDateListSH))
+    config.set("patternRecDate", "SZ",",".join(patternRecDateListSZ))
+    config.set("patternRecDate", "CYB",",".join(patternRecDateListCYB))
     updateConfig()
 
 def creatConfig():
@@ -48,5 +50,4 @@ def updateConfig():
         config.write(f)
 
 if __name__=="__main__":
-    creatConfig()
-
+    pass

@@ -20,7 +20,11 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        dateList=configOS.config.get('patternRecDate', 'SH').split()
+        
+        dateList=configOS.config.get('patternRecDate', 'SH').split(',')
+        self.comboBoxStockID.clear()
+        self.comboBoxStockID.addItems(configOS.stockIDMarketList+configOS.stockIDList)
+        
         for iDate in dateList:
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)

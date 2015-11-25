@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainUI.ui'
 #
-# Created: Mon Nov 23 10:10:50 2015
+# Created: Wed Nov 25 16:36:49 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -68,11 +68,14 @@ class Ui_MainWindow(object):
         self.label.setGeometry(QtCore.QRect(40, 50, 54, 12))
         self.label.setObjectName(_fromUtf8("label"))
         self.listWidgetMatchDate = QtGui.QListWidget(self.tab_6)
-        self.listWidgetMatchDate.setGeometry(QtCore.QRect(70, 100, 256, 291))
+        self.listWidgetMatchDate.setGeometry(QtCore.QRect(40, 210, 256, 291))
         self.listWidgetMatchDate.setObjectName(_fromUtf8("listWidgetMatchDate"))
         self.pButtonSelect = QtGui.QPushButton(self.tab_6)
-        self.pButtonSelect.setGeometry(QtCore.QRect(340, 110, 71, 31))
+        self.pButtonSelect.setGeometry(QtCore.QRect(310, 220, 71, 31))
         self.pButtonSelect.setObjectName(_fromUtf8("pButtonSelect"))
+        self.comboBoxStockID = QtGui.QComboBox(self.tab_6)
+        self.comboBoxStockID.setGeometry(QtCore.QRect(40, 120, 131, 31))
+        self.comboBoxStockID.setObjectName(_fromUtf8("comboBoxStockID"))
         self.tabWidget.addTab(self.tab_6, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
@@ -102,7 +105,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_2.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.btnPatternRec, QtCore.SIGNAL(_fromUtf8("clicked()")), self.lineEditStockID.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 

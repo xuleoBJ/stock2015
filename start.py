@@ -134,11 +134,16 @@ if __name__ == "__main__":
     ## 改变路径到工作目录 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     print os.path.curdir
-    for stockID in ["999999","399001","600178","002001"]:
+    
+    for stockID in configOS.stockIDMarketList:
         curStock=Cstock.Stock(stockID)
         curStock.list2array()
         volumeEnerge.moodIndex(curStock,200)
         main(curStock)
+    
+    for stockID in configOS.stockIDList:
+        curStock=Cstock.Stock(stockID)
+        curStock.list2array()
         stockTecSet.main(curStock)
     tradePlan()
     timeSpan=time.clock()-startClock

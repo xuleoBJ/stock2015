@@ -7,13 +7,9 @@ if __name__=="__main__":
     
     src="C:\\new_dxzq_v6\\T0002\\export\\" 
     dst='dataStock'
-    src2dst=False
-    if src2dst==True:
-        sourceDirPath=src
-        goalDirPath=dst
-    else:
-        sourceDirPath=dst
-        goalDirPath=src
+    sourceDirPath=src
+    goalDirPath=dst
+    
     if not os.path.exists(goalDirPath):
         os.makedirs(goalDirPath)
     
