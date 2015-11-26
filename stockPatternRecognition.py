@@ -150,9 +150,13 @@ def addInforLine(inforLine):
     lineWritedList.append(inforLine)
 
     ## 默认的是最后一个交易日作匹配模型
-def main(stockID,matchDateIndex=-1):
+def main(stockID,strDate=""):
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
+    if strDate=="":
+        matchDateIndex=-1
+    else:
+        matchDateIndex=curStock.dayStrList.index(strDate)
 
     lineWritedList.append("-"*72)
     lineWritedList.append(stockID)
@@ -200,18 +204,13 @@ def main(stockID,matchDateIndex=-1):
     patterRecByVolume(curStock,matchDateIndex,kPatternList,kNum)
 	
 
-if __name__=="__main__":
-    
-    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
-    startClock=time.clock() ##记录程序开始计算时间
-    
+def mainAppCall(strDate=""):
     del configOS.patternRecDateListSH[:]
     del configOS.patternRecDateListSZ[:]
     del configOS.patternRecDateListCYB[:]
 
-
     for stockID in configOS.stockIDMarketList: 
-        main(stockID,-1) ##-1是最后一个交易日分析
+        main(stockID,strDate) ##-1是最后一个交易日分析
 
     configOS.updatePetternRectDateList()
 
@@ -219,6 +218,12 @@ if __name__=="__main__":
         print line
     goalFilePath="patternRec.txt" ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList) 
+
+if __name__=="__main__":
+    
+    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
+    startClock=time.clock() ##记录程序开始计算时间
+    mainAppCall()
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

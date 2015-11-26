@@ -10,6 +10,7 @@ from Cstock import Stock
 from candleStickPlot import drawCandleStick
 
 import configOS
+import stockPatternRecognition
 
 def updateListWidgetItem(listWidget,listStr):
     listWidget.clear()
@@ -38,10 +39,17 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
             self.listWidgetMatchDate.addItem(item)
 
         self.pButtonSelect.clicked.connect(self.selectExe)  # When the button is pressed
-
         self.btnCalGDP.clicked.connect(self.calGDP)
-    
-        QMessageBox.about(self, u"交易提示",configOS.config.get("TradeWarn","recMarkDate")+configOS.config.get("TradeWarn","tradeInfor"))
+        self.btnTradeInfor.clicked.connect(self.tradeWarn)
+        self.btnPatternRecAna.clicked.connect(self.calPatternRec)
+
+    def calPatternRec(self):
+        sDate=str(self.lineEditDateRec.text())
+        print sDate
+        stockPatternRecognition.mainAppCall(sDate)
+
+    def tradeWarn(self):
+        QMessageBox.about(self, u"交易提示","参考走势："+configOS.config.get("TradeWarn","recMarkDate")+"\t"+configOS.config.get("TradeWarn","tradeInfor"))
     
     def setupListWidget(self,iItem):
         stockIDselect=self.comboBoxStockID.itemText(iItem)

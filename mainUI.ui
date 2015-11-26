@@ -17,10 +17,10 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>831</width>
-      <height>611</height>
+      <x>0</x>
+      <y>0</y>
+      <width>851</width>
+      <height>641</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -33,8 +33,8 @@
      <widget class="QLineEdit" name="lineEditMarketValueSH">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>60</y>
+        <x>550</x>
+        <y>50</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -46,8 +46,8 @@
      <widget class="QPushButton" name="btnCalGDP">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>80</y>
+        <x>740</x>
+        <y>70</y>
         <width>75</width>
         <height>31</height>
        </rect>
@@ -59,8 +59,8 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>70</y>
+        <x>490</x>
+        <y>60</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -72,8 +72,8 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>110</y>
+        <x>490</x>
+        <y>100</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -85,8 +85,8 @@
      <widget class="QLineEdit" name="lineEditMarketValueSZ">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>100</y>
+        <x>550</x>
+        <y>90</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -98,8 +98,8 @@
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>70</y>
+        <x>680</x>
+        <y>60</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -111,8 +111,8 @@
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>110</y>
+        <x>680</x>
+        <y>100</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -121,45 +121,94 @@
        <string>万亿元</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnTradeInfor">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>交易提示</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnMarketAna">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>50</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>市场分析</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>30</y>
+        <width>361</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>GDP计算</string>
+      </property>
+     </widget>
+     <zorder>groupBox</zorder>
+     <zorder>lineEditMarketValueSH</zorder>
+     <zorder>btnCalGDP</zorder>
+     <zorder>label_2</zorder>
+     <zorder>label_3</zorder>
+     <zorder>lineEditMarketValueSZ</zorder>
+     <zorder>label_4</zorder>
+     <zorder>label_5</zorder>
+     <zorder>btnTradeInfor</zorder>
+     <zorder>btnMarketAna</zorder>
     </widget>
     <widget class="QWidget" name="tab_6">
      <attribute name="title">
       <string>模式识别</string>
      </attribute>
-     <widget class="QLineEdit" name="lineEditStockID">
+     <widget class="QLineEdit" name="lineEditDateRec">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>40</y>
+        <x>40</x>
+        <y>70</y>
         <width>121</width>
-        <height>31</height>
+        <height>21</height>
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="btnPatternRec">
+     <widget class="QPushButton" name="btnPatternRecAna">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>40</y>
+        <x>170</x>
+        <y>63</y>
         <width>75</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>识别</string>
+       <string>模式识别</string>
       </property>
      </widget>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>50</y>
-        <width>54</width>
-        <height>12</height>
+        <y>160</y>
+        <width>131</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>股票代码</string>
+       <string>请选择查看股票代码</string>
       </property>
      </widget>
      <widget class="QListWidget" name="listWidgetMatchDate">
@@ -188,11 +237,24 @@
      <widget class="QComboBox" name="comboBoxStockID">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>120</y>
+        <x>160</x>
+        <y>160</y>
         <width>131</width>
         <height>31</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>30</y>
+        <width>201</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>请输入交易日（2008/08/08）</string>
       </property>
      </widget>
     </widget>
@@ -200,6 +262,45 @@
      <attribute name="title">
       <string>风险控制</string>
      </attribute>
+     <widget class="QPushButton" name="btnMarketMoodAna_2">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>时间周期分析</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna_3">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>空间周期分析</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna_7">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>退出原则</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -210,11 +311,117 @@
      <attribute name="title">
       <string>量化交易</string>
      </attribute>
+     <widget class="QPushButton" name="btnPatternRecAna_2">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>50</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>量化交易计算</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditStockID_2">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>50</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>请输入交易代码：</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_7">
+     <attribute name="title">
+      <string>选票系统</string>
+     </attribute>
+     <widget class="QPushButton" name="btnMarketMoodAna_4">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>行业前景</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna_5">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>财务状况</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna_6">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>管理团队</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna_8">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>股票个性</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
       <string>信息获取</string>
      </attribute>
+     <widget class="QPushButton" name="btnMarketMoodAna_9">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>50</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>欧洲市场</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -245,9 +452,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>btnPatternRec</sender>
+   <sender>btnPatternRecAna</sender>
    <signal>clicked()</signal>
-   <receiver>lineEditStockID</receiver>
+   <receiver>lineEditDateRec</receiver>
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
