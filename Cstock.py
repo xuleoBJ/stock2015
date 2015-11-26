@@ -7,9 +7,10 @@ import Ccomfunc
 import numpy as np
 
 ##数据目录
-dirData="C:\\new_dxzq_v6\\T0002\\export\\" 
+dirData="dataManage\\stockSelect" 
+#dirData="C:\\new_dxzq_v6\\T0002\\export\\" 
 
-##读取指定代码List
+##根据StockID读入数据
 class Stock:
     def list2array(self):
         self.dayPriceOpenArray=np.array(self.dayPriceOpenFList)    ##day开盘价array

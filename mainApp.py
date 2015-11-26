@@ -11,6 +11,12 @@ from candleStickPlot import drawCandleStick
 
 import configOS
 
+def updateListWidgetItem(listWidget,listStr):
+    listWidget.clear()
+    for iDate in listStr:
+        item = QListWidgetItem(iDate)
+        listWidget.addItem(item)
+
 class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     def __init__(self):
         # Explaining super is out of the scope of this article
@@ -26,7 +32,6 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
 
         self.comboBoxStockID.currentIndexChanged.connect(self.setupListWidget)
   
-         
         dateList=configOS.config.get('patternRecDate', 'SH').split(',')
         for iDate in dateList:
             item = QListWidgetItem(iDate)
@@ -36,8 +41,17 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
 
         self.btnCalGDP.clicked.connect(self.calGDP)
     
+        QMessageBox.about(self, u"交易提示",configOS.config.get("TradeWarn","recMarkDate")+configOS.config.get("TradeWarn","tradeInfor"))
+    
     def setupListWidget(self,iItem):
-        QMessageBox.about(self, u"选择",self.comboBoxStockID.itemText(iItem))
+        stockIDselect=self.comboBoxStockID.itemText(iItem)
+        dateList=[]
+        if stockIDselect=="999999":
+            dateList=configOS.config.get('patternRecDate', 'SH').split(',')
+        if stockIDselect=="399001":
+            dateList=configOS.config.get('patternRecDate', 'SZ').split(',')
+        print dateList
+        updateListWidgetItem(self.listWidgetMatchDate,dateList)
 
     def calGDP(self):
         fGDPsh=float(self.lineEditMarketValueSH.text())
@@ -46,7 +60,8 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         QMessageBox.about(self, u"计算结果",u"两市市值总和占2014GDP比例:\t{:.2f}".format((fGDPsh+fGDPsz)/fGDP2014))
     
     def selectExe(self):
-        stockID='999999'
+        stockID=str(self.comboBoxStockID.currentText())
+        print stockID
         curStock=Stock(stockID)
         dateFind=self.listWidgetMatchDate.currentItem().text()
         drawCandleStick(curStock,dateFind)

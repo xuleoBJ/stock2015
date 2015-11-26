@@ -26,8 +26,6 @@ def printResult(curStock,kMatchIndexList):
     dateStrLine='\t'.join(dateList)
     lineWritedList.append(dateStrLine)
 
-
-
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
         resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
@@ -173,7 +171,7 @@ def main(stockID,matchDateIndex=-1):
     
     kNum=3 ##需要分析的K线天数
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
-    if stockID not in ["999999","399001"] :
+    if stockID not in ["999999"] :
         bias=1.0
     
     inforLine="-"*8+u"最近交易日的相关数据："

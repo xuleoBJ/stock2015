@@ -44,20 +44,34 @@ def historyPrint_optimize_curve_fit(curStock,countOfEle,kPeriod,params):
                 priceTsell,curStock.dayPriceHighestArray[indexDate+1],\
                 printTStop,curStock.dayPriceClosedArray[indexDate+1])\
                 )
-
-def main(curStock):
-    
+def patternRecCalTPrice(curStock,dayRadioLinkPriceLowArray):
     marketID='999999'
     if not curStock.stockID.startswith('6'):
         marketID='399001'
 
     curMarket=Cstock.Stock(marketID)
-   
+    matchDateIndex=-1 ##识别日的指数
+    stockPatternRecognition.patternRecByMarketAndStock(curMarket,curStock,matchDateIndex)
+    listPatternRecBycurStock=stockPatternRecognition.patternRecByRiseRate(curStock,300,3,matchDateIndex)
+#    print listPatternRecBycurStock
+    findIndex=curStock.findIndexByDayStr("2012/05/21")
+    scale= dayRadioLinkPriceLowArray[findIndex+1]
+    print "匹配日此次预测低价{:.2f}".format(curStock.dayPriceLowestArray[-1]*(1+scale*0.01))
+
+def main(curStock):
     print ("买卖的目的：1 建仓 2 T价差 3 控制仓位 4 止损")
     print ("卖的条件：1 价格到位 2 时间点")
     print ("做T价格计算，做t是宁可错过，不能做错的方案，一定要有价差才能买入。。")
-    
+    print ("-"*72)
+    print("{}收盘价{},3日最低价{:.2f}，最高价{:.2f}，最小波幅{:.2f}".format\
+                ( curStock.dayStrList[-1],curStock.dayPriceClosedArray[-1],\
+                  curStock.dayPriceLowestArray[-3:].min(), curStock.dayPriceHighestArray[-3:].max(),\
+                curStock.dayWaveRateArray[-3:].min() \
+                )\
+        )
+   
     ##买入点：用15分钟K线的支撑位买入T
+    ##追高点：涨幅超过3个点绝对不能追高。
     ##卖出点：5日内高点，或者日内3个点。
     ##割肉点：三日破位或者大行情不好。
 
@@ -77,14 +91,10 @@ def main(curStock):
 ##----模式识别法买卖价计算模块
     ## 利用匹配日求取买入价
     ##用最近的一个匹配日的最低价的涨幅
+    print("-"*72)
     print("\n模式识别法计算：")
-    matchDateIndex=-1 ##识别日的指数
-    stockPatternRecognition.patternRecByMarketAndStock(curMarket,curStock,matchDateIndex)
-    listPatternRecBycurStock=stockPatternRecognition.patternRecByRiseRate(curStock,300,3,matchDateIndex)
-#    print listPatternRecBycurStock
-    findIndex=curStock.findIndexByDayStr("2012/05/21")
-    scale= dayRadioLinkPriceLowArray[findIndex+1]
-#    print "匹配日此次预测低价{:.2f}".format(curStock.dayPriceLowestArray[-1]*(1+scale*0.01))
+    print("-"*72)
+#    patternRecCalTPrice(curStock,dayRadioLinkPriceLowArray)
 ##----模式识别法买卖价计算模块
   
 
@@ -94,70 +104,80 @@ def main(curStock):
     kPeriod=7 ##拟合区间
     indexDateFit=-3
     ##也可以用np.vstack((x,y,z))组合fData
-    fData=np.array([curStock.dayPriceLowestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
+    fDataLow=np.array([curStock.dayPriceLowestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
             curStock.dayPriceLowestArray[indexDateFit-1-kPeriod:indexDateFit-1],\
             curStock.dayPriceLowestArray[indexDateFit-kPeriod:indexDateFit]])
     guess = (0.3,0.4,0.3,0)
-    params, pcov = optimize.curve_fit(func, fData,curStock.dayPriceLowestArray[-kPeriod:], guess)
-#    print(params) ##最小二乘法计算参数
+    paramsLow, pcovLow = optimize.curve_fit(func, fDataLow,curStock.dayPriceLowestArray[-kPeriod:], guess)
     
-#    historyPrint_optimize_curve_fit(curStock,countOfEle,kPeriod,params)
+    fDataHigh=np.array([curStock.dayPriceHighestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
+            curStock.dayPriceHighestArray[indexDateFit-1-kPeriod:indexDateFit-1],\
+            curStock.dayPriceHighestArray[indexDateFit-kPeriod:indexDateFit]])
+    paramsHigh, pcovHigh = optimize.curve_fit(func, fDataHigh,curStock.dayPriceHighestArray[-kPeriod:], guess)
+#    print(paramsLow) ##最小二乘法计算参数
+    
+#    historyPrint_optimize_curve_fit(curStock,countOfEle,kPeriod,paramsLow)
     
     print("-"*72)
     print("最优化计算：")
-    priceTbuy=(curStock.dayPriceLowestArray[-3:]*params[:3]).sum()+params[3]
+    print("-"*72)
+    priceTbuy=(curStock.dayPriceLowestArray[-3:]*paramsLow[:3]).sum()+paramsLow[3]
     priceTsell=priceTbuy*1.025
     printTStop=priceTbuy*0.975
-    print("{}收盘价{},3日最低价{:.2f}，最高价{:.2f}，最小波幅{:.2f}".format\
-                ( curStock.dayStrList[-1],curStock.dayPriceClosedArray[-1],\
-                  curStock.dayPriceLowestArray[-3:].min(), curStock.dayPriceHighestArray[-3:].max(),\
-                curStock.dayWaveRateArray[-3:].min() \
-                )\
-        )
-    print("最优化T-buy价{:.2f}，T-sell价{:.2f},T-stop价{:.2f}".format(priceTbuy,priceTsell,printTStop))
+    priceTfitHigh=(curStock.dayPriceHighestArray[-3:]*paramsHigh[:3]).sum()+paramsHigh[3]
+    print("最优化T-buy价: {:.2f}，T-sell价: {:.2f}, T-FitHigh价: {:.2f}, T-stop价: {:.2f}".format(priceTbuy,priceTsell,priceTfitHigh,printTStop))
 ##----最优化方法买卖价
 
+    print("-"*72)
 ##----5日最值法买卖价模块
     print("\n最值法计算：")
-    for period in [3,5,10]:
+    print("-"*72)
+    for period in [3,5,7]:
         indexHighPoint=Ccomfunc.rindex(curStock.dayPriceHighestFList,max(curStock.dayPriceHighestFList[countOfEle-period:]))
         indexLowPoint=Ccomfunc.rindex(curStock.dayPriceLowestFList,min(curStock.dayPriceLowestFList[countOfEle-period:]))
         priceHigh=curStock.dayPriceHighestFList[indexHighPoint]
         priceLow=curStock.dayPriceLowestFList[indexLowPoint]
-        print("{}日最高点{}，出现日期{},{}日最低点{}，出现日期{}".format( \
+        print("{}日最高点:{}，出现日期:{}, {}日最低点:{}，出现日期:{}".format( \
                 period,priceHigh,curStock.dayStrList[indexHighPoint], \
                 period,priceLow,curStock.dayStrList[indexLowPoint]))
         print("%high-95buy: {:.2f},\t%low-95buy: {:.2f}".format(priceHigh*0.95,priceLow*0.95))
         print("%high-93buy: {:.2f},\t%low-93buy: {:.2f}".format(priceHigh*0.93,priceLow*0.93))
-    print("$"*72)
+        print("-"*72)
 ##----5日最值法买卖价模块
 
 ##----市场情绪法买卖价模块
+    print("-"*72)
     print("\n市场情绪法计算：")
+    print("-"*72)
+##上涨
+    if curStock.dayRiseRateArray[-1]>0:
+        if 1.5<=curStock.dayRadioLinkOfTradeVolumeArray[-1]:
+            print("放巨量上涨。")
+        if 1<curStock.dayRadioLinkOfTradeVolumeArray[-1]<1.5:
+            print("微放量上涨。")
+        if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1:
+            print("缩量上涨。")
+##下跌
+    if curStock.dayRiseRateArray[-1]<0:
+        if 1.5<=curStock.dayRadioLinkOfTradeVolumeArray[-1]:
+            print("巨放量下跌。")
+        if 1<curStock.dayRadioLinkOfTradeVolumeArray[-1]<1.5:
+            print("微放量下跌。")
+        if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1:
+            print("缩量下跌。")
     marketMood=1
     if marketMood<=0.5:
         print("3日T均价{:.2f}".format(priceLow3days*0.5+priceClose3days*0.5))
 
 ##----市场情绪法买卖价模块
 
+    print("-"*72)
     for i in range(-3,0): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
         resultLine="{},星期{}\t收盘价:{}\t涨幅:{}\t量能环比:{}\t波动幅度:{}".format(\
                 curStock.dayStrList[i],weekDay,curStock.dayPriceClosedArray[i],curStock.dayRiseRateFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
         print resultLine
-##放量上涨
-    if curStock.dayRadioLinkOfTradeVolumeArray[-1]>1 and curStock.dayRiseRateArray[-1]>0:
-        print("放量上涨。")
-##缩量上涨
-    if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]>0:
-        print("缩量上涨。")
-##放量下跌
-    if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]<0:
-        print("放量下跌。")
-##缩量下跌
-    if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]<0:
-        print("缩量下跌。")
     
 
 

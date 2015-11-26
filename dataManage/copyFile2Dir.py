@@ -6,19 +6,19 @@ import shutil
 if __name__=="__main__":
     
     src="C:\\new_dxzq_v6\\T0002\\export\\" 
-    dst='dataStock'
     sourceDirPath=src
-    goalDirPath=dst
+    stockSelectPath="stockSelect"
+       
+    if not os.path.exists(stockSelectPath):
+        os.makedirs(stockSelectPath)
     
-    if not os.path.exists(goalDirPath):
-        os.makedirs(goalDirPath)
-    
-    stockIDList=["999999","399001","002001","600178"]
+    stockMarketIDList=["999999","399001"]
+    stockSelectIDList=["002001","600178"]
     fileNames=os.listdir(sourceDirPath)
     for fileItem in fileNames:
-        if os.path.splitext(fileItem)[0] in stockIDList:
-            print ('-'*5+'Current copying:\t'+fileItem)
-            filePathSource=sourceDirPath+'\\'+fileItem
-            fileoPathGoal=goalDirPath+"\\"+fileItem
+        print ('-'*5+'Current copying:\t'+fileItem)
+        filePathSource=sourceDirPath+'\\'+fileItem
+        if os.path.splitext(fileItem)[0] in stockMarketIDList+stockSelectIDList:
+            fileoPathGoal=stockSelectPath+"\\"+fileItem
             shutil.copyfile(filePathSource,fileoPathGoal)
     print("job done")

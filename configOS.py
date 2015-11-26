@@ -1,8 +1,11 @@
 from ConfigParser import SafeConfigParser
 import ConfigParser
+import codecs  
 
 config = ConfigParser.ConfigParser()
-config.read('config.ini')
+cfgfile='config.ini'
+#config.read('config.ini')
+config.readfp(codecs.open(cfgfile, "r", "utf-8-sig"))
 
 stockIDMarketList=config.get("stock","stockIDMarket").split(',')
 stockIDList=config.get("stock","stockIDList").split(',')
