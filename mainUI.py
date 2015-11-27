@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainUI.ui'
 #
-# Created: Thu Nov 26 22:56:47 2015
+# Created: Fri Nov 27 08:33:08 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -106,9 +106,9 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_3, _fromUtf8(""))
         self.tab_4 = QtGui.QWidget()
         self.tab_4.setObjectName(_fromUtf8("tab_4"))
-        self.btnPatternRecAna_2 = QtGui.QPushButton(self.tab_4)
-        self.btnPatternRecAna_2.setGeometry(QtCore.QRect(260, 50, 111, 31))
-        self.btnPatternRecAna_2.setObjectName(_fromUtf8("btnPatternRecAna_2"))
+        self.btnCalTradePrice = QtGui.QPushButton(self.tab_4)
+        self.btnCalTradePrice.setGeometry(QtCore.QRect(260, 50, 111, 31))
+        self.btnCalTradePrice.setObjectName(_fromUtf8("btnCalTradePrice"))
         self.lineEditStockID_2 = QtGui.QLineEdit(self.tab_4)
         self.lineEditStockID_2.setGeometry(QtCore.QRect(120, 50, 121, 31))
         self.lineEditStockID_2.setObjectName(_fromUtf8("lineEditStockID_2"))
@@ -153,7 +153,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_2.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(4)
         QtCore.QObject.connect(self.btnPatternRecAna, QtCore.SIGNAL(_fromUtf8("clicked()")), self.lineEditDateRec.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -180,7 +180,7 @@ class Ui_MainWindow(object):
         self.btnMarketMoodAna_7.setText(_translate("MainWindow", "退出原则", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "风险控制", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "仓位管理", None))
-        self.btnPatternRecAna_2.setText(_translate("MainWindow", "量化交易计算", None))
+        self.btnCalTradePrice.setText(_translate("MainWindow", "量化交易计算", None))
         self.label_7.setText(_translate("MainWindow", "请输入交易代码：", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "量化交易", None))
         self.btnMarketMoodAna_4.setText(_translate("MainWindow", "行业前景", None))
