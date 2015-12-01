@@ -35,8 +35,20 @@ def calGDG():
     AB_SZ=21.7
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
-def main(curStock):
+##  分析历年年同期走势
+def trendOfMonthHistory(curStock,numOfyear):
+    print (u"过去{}年同月涨幅：".format(numOfyear))
+    today=datetime.date.today()
+    for i in range(1,numOfyear):
+        currentYear=today.year-i
+        currentMonth=today.month
+        strYM=str(currentYear)+str(currentMonth)
+        findIndexStrYM=curStock.monthStrList.index(strYM)
+        print u"{}年{}月涨幅:{}".format(currentYear,currentMonth,curStock.monthRiseRateFList[findIndexStrYM])
 
+
+
+def main(curStock):
     ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
@@ -52,14 +64,8 @@ def main(curStock):
 
 ##  峰值研究
 ##  分析近年同期走势
-    print (u"过去3年同月涨幅：")
-    today=datetime.date.today()
-    for i in [1,2,3]:
-        currentYear=today.year-i
-        currentMonth=today.month
-        strYM=str(currentYear)+str(currentMonth)
-        findIndexStrYM=curStock.monthStrList.index(strYM)
-        print u"{}年{}月涨幅:{}".format(currentYear,currentMonth,curStock.monthRiseRateFList[findIndexStrYM])
+    numOfyear=10
+    trendOfMonthHistory(curStock,numOfyear)
 
     ## 2.空间目标分析，也就是点位预测，在点位空间内控制仓位
     print(u"2-时空分析")

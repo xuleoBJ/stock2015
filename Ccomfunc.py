@@ -14,7 +14,7 @@ sys.setdefaultencoding('utf-8')
 
 
 ##数据目录
-dirData="\\dataManage\\dataStock" 
+dirData="dataManage\\stockSelect" 
 ## 改变路径到工作目录 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 print os.path.curdir
@@ -58,7 +58,8 @@ def printCalTrend(curStock,intervalDay):
 def printInfor():
     ctypes.windll.user32.MessageBoxA(0, "1-What's your trade plan today?\n2-Every Trade is a complete chance?\n3-0-patience 1-time,2-volume,3-price.\n4-Some money is not in my system.", "infor", 1)
     print("\n"+"#"*80)
-    print(u"1.股市需要耐心")
+    print(u"0.市场是我的好朋友。")
+    print(u"1.朋友相处，需要耐心。")
     print(u"2.减少交易频率，每次交易前要提醒自己，确定性机会，最好是下午2:45以后再买。")
     print(u"3.买卖交易之间必须有时间差！！！万不可盘中频繁的把一只票扔了，马上去买另一只票！买前想逻辑！")
     print(u"4.股市态度要认真,有的钱不去赚。")

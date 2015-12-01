@@ -47,6 +47,7 @@ if __name__=="__main__":
 
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
+    curStock.list2array()
     
     ##过去三年同期的涨幅，涨幅最大的三个连续交易日，同样，分析最小的
   
@@ -125,6 +126,8 @@ if __name__=="__main__":
         print("当日走势{}%-{}%，次日涨幅分布：".format(i,i+1))
         countTrendByOpenCloseRate(curStock,curStock.dayRiseRateFList,i-0.1,i+0.1)
   
+    ##统计分析大盘跌4个点的交易日的走势和次日走势。
+    
     ##统计分析 近期大盘开盘点位和最低点的差额,这个只能近期有效，长期无效
     ##最近10个交易日的浮动是对做t最好的参考资料。而不能凭感觉说 低了，或者高了！！！！
     ##分析高开低走，低开高走，高开高走，低开低走的个数

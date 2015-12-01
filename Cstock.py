@@ -20,6 +20,8 @@ class Stock:
         self.dayTradeVolumeArray=np.array(self.dayTradeVolumeFList)     ##day成交量array
         self.dayTurnOverArray=np.array(self.dayTurnOverFList)       ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题array
         self.dayRiseRateArray=np.array(self.dayRiseRateFList)        ##day价格涨幅array
+        self.dayRiseRateLowestArray=np.array(self.dayRiseRateLowestFList)        ##day最低价涨幅array
+        self.dayRiseRateHighestArray=np.array(self.dayRiseRateHighestFList)        ##day最低价涨幅array
         self.dayWaveRateArray=np.array(self.dayWaveRateFList)       ##day波动涨幅array
         self.dayOpenRateArray=np.array(self.dayOpenRateFList)       ##day开盘幅度，主要分析高开、低开等array
         self.dayOpenCloseRateArray=np.array(self.dayOpenCloseRateFList)	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势array
@@ -46,6 +48,8 @@ class Stock:
         self.dayTradeVolumeFList=[]     ##day成交量
         self.dayTurnOverFList=[]        ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
         self.dayRiseRateFList=[]        ##day价格涨幅
+        self.dayRiseRateLowestFList=[]        ##day价格涨幅
+        self.dayRiseRateHighestFList=[]        ##day价格涨幅
         self.dayWaveRateFList=[]        ##day波动涨幅
         self.dayOpenRateFList=[]	       ##day开盘幅度，主要分析高开、低开等
         self.dayPriceAverageFList=[]     ##日均价
@@ -75,7 +79,7 @@ class Stock:
                 lineIndex=lineIndex+1
                 splitLine=line.split()
                 if lineIndex==1:
-                    self.stockName=splitLine[0]
+                    self.stockName=splitLine[1]
                     print "{},{}".format(self.stockID,self.stockName)
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
@@ -101,6 +105,10 @@ class Stock:
                     if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-2]>0:
 						##(当日收盘-上日收盘)/上一日收盘
                         self.dayRiseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
+						##(当日最低-上日收盘)/上一日收盘
+                        self.dayRiseRateLowestFList.append(round(100*(self.dayPriceLowestFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
+						##(当日最高-上日收盘)/上一日收盘
+                        self.dayRiseRateHighestFList.append(round(100*(self.dayPriceHighestFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
 						##(当日最高-当日最低)/上一日收盘
                         self.dayWaveRateFList.append(round(100*(self.dayPriceHighestFList[-1]-self.dayPriceLowestFList[-1])/self.dayPriceClosedFList[-2],2))
 						##(当日开盘-上日收盘)/上一日收盘
@@ -109,6 +117,8 @@ class Stock:
                         self.dayOpenCloseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceOpenFList[-1])/self.dayPriceClosedFList[-2],2))
                     else:
                         self.dayRiseRateFList.append(-999)
+                        self.monthPriceLowestFList.append(-999)
+                        self.monthPriceHighestFList.append(-999)
                         self.dayWaveRateFList.append(-999)
                         self.dayOpenRateFList.append(-999)
                         self.dayOpenCloseRateFList.append(-999)
@@ -197,11 +207,13 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     shStock=Stock('999999')
     
-    curStock=Stock('600178')
+    curStock=Stock('002001')
+    curStock.list2array()
     print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
     print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
     print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
     print curStock.dayPriceAverageFList[-10:]
+    print curStock.dayRiseRateLowestArray[-10:]
     print curStock.monthStrList[-10:]
     
     timeSpan=time.clock()-startClock
