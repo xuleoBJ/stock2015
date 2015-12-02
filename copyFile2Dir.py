@@ -1,13 +1,11 @@
 # -*- coding: cp936 -*-
 import os
 import shutil
+import Ccomfunc
 
-
-if __name__=="__main__":
-    
-    src="C:\\new_dxzq_v6\\T0002\\export\\" 
-    sourceDirPath=src
-    stockSelectPath="stockSelect"
+def copyData2Dir():
+    sourceDirPath=Ccomfunc.src
+    stockSelectPath=Ccomfunc.dirData
        
     if not os.path.exists(stockSelectPath):
         os.makedirs(stockSelectPath)
@@ -21,4 +19,7 @@ if __name__=="__main__":
         if os.path.splitext(fileItem)[0] in stockMarketIDList+stockSelectIDList:
             fileoPathGoal=stockSelectPath+"\\"+fileItem
             shutil.copyfile(filePathSource,fileoPathGoal)
+
+if __name__=="__main__":
+    copyData2Dir()
     print("job done")

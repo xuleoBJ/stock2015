@@ -24,9 +24,9 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tbgDailyInfor">
      <attribute name="title">
       <string>每日提醒</string>
      </attribute>
@@ -137,14 +137,14 @@
      <widget class="QPushButton" name="btnMarketAna">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>50</y>
+        <x>20</x>
+        <y>100</y>
         <width>101</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>市场分析</string>
+       <string>时空分析</string>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox">
@@ -160,6 +160,19 @@
        <string>GDP计算</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>150</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>情绪分析</string>
+      </property>
+     </widget>
      <zorder>groupBox</zorder>
      <zorder>lineEditMarketValueSH</zorder>
      <zorder>btnCalGDP</zorder>
@@ -170,8 +183,27 @@
      <zorder>label_5</zorder>
      <zorder>btnTradeInfor</zorder>
      <zorder>btnMarketAna</zorder>
+     <zorder>btnMarketMoodAna</zorder>
     </widget>
-    <widget class="QWidget" name="tab_6">
+    <widget class="QWidget" name="tbg_Data">
+     <attribute name="title">
+      <string>数据管理</string>
+     </attribute>
+     <widget class="QPushButton" name="btnCopyData2Dir">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>40</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>数据入库</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tbg_PatternRec">
      <attribute name="title">
       <string>模式识别</string>
      </attribute>
@@ -258,7 +290,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="tbgRiskManage">
      <attribute name="title">
       <string>风险控制</string>
      </attribute>
@@ -302,12 +334,12 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_3">
+    <widget class="QWidget" name="tbgMoneyManage">
      <attribute name="title">
       <string>仓位管理</string>
      </attribute>
     </widget>
-    <widget class="QWidget" name="tab_4">
+    <widget class="QWidget" name="tbgQuanlityTrade">
      <attribute name="title">
       <string>量化交易</string>
      </attribute>
@@ -348,7 +380,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_7">
+    <widget class="QWidget" name="tbgStockSelect">
      <attribute name="title">
       <string>选票系统</string>
      </attribute>
@@ -404,8 +436,21 @@
        <string>股票个性</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnMarketMoodAna_10">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>100</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>股票弹性</string>
+      </property>
+     </widget>
     </widget>
-    <widget class="QWidget" name="tab_5">
+    <widget class="QWidget" name="tbgWebInfor">
      <attribute name="title">
       <string>信息获取</string>
      </attribute>

@@ -13,8 +13,8 @@ def mymain():
     curStock=Stock('399001')
     shStock=Stock('999999')
     print (u"量能对比分析最后5个交易日量能对比：")
-#    print shStock.stockID,shStock.stockName,shStock.dayStrList[-5:],shStock.dayRadioLinkOfTradeVolumeFList[-5:]
-#    print curStock.stockID,curStock.stockName,curStock.dayStrList[-5:],curStock.dayRadioLinkOfTradeVolumeFList[-5:]
+    print shStock.stockID,shStock.stockName,shStock.dayStrList[-5:],shStock.dayRadioLinkOfTradeVolumeFList[-5:]
+    print curStock.stockID,curStock.stockName,curStock.dayStrList[-5:],curStock.dayRadioLinkOfTradeVolumeFList[-5:]
 
 
 ##period 是量能情绪控制周期
@@ -53,13 +53,16 @@ def moodIndex(curStock,period):
 
 
 if __name__ == "__main__":
-    print (u"成交量反应了市场情绪。")
+    print (u"市场情绪分析：")
     stockID='999999'
+    print (u"市场整体情绪分析：")
     shStock=Stock(stockID)
     shStock.list2array()
     ## 应该考虑长期情绪指数和短期情绪指数
     moodIndex(shStock,100)
     moodIndex(shStock,15)
+    ## 蓝筹市场、中小创市场判断,主要看 上证和深市的涨幅和人气对比
+    print (u"市场类型判断")
     mymain()
 
 

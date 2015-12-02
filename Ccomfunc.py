@@ -14,7 +14,10 @@ sys.setdefaultencoding('utf-8')
 
 
 ##数据目录
-dirData="dataManage\\stockSelect" 
+
+src="C:\\new_dxzq_v6\\T0002\\export\\"
+dirData="dataManage\\stockSelect"
+
 ## 改变路径到工作目录 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 print os.path.curdir

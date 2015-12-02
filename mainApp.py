@@ -11,6 +11,7 @@ from candleStickPlot import drawCandleStick
 
 import configOS
 import stockPatternRecognition
+import copyFile2Dir
 
 def updateListWidgetItem(listWidget,listStr):
     listWidget.clear()
@@ -42,6 +43,12 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         self.btnCalGDP.clicked.connect(self.calGDP)
         self.btnTradeInfor.clicked.connect(self.tradeWarn)
         self.btnPatternRecAna.clicked.connect(self.calPatternRec)
+##数据管理 目录管理
+        self.btnCopyData2Dir.clicked.connect(self.copyData2dir)
+
+    def copyData2dir(self):
+        copyFile2Dir.copyData2Dir()
+        QMessageBox.about(self, u"提示",u"数据入库完成。")
 
     def calPatternRec(self):
         sDate=str(self.lineEditDateRec.text())
