@@ -6,8 +6,8 @@ import datetime
 import sys
 import Cstock
 import Ccomfunc
+import numpy as np
 
-stockID="999999"
 lineWrited=[]
 
 ##根据涨幅，第二天趋势分析
@@ -41,20 +41,34 @@ def trend(curStock):
 
 if __name__=="__main__":
    
-    Ccomfunc.printInfor()
-    
     startClock=time.clock() ##记录程序开始计算时间
 
+    stockID="999999"
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
     curStock.list2array()
     
-    ##过去三年同期的涨幅，涨幅最大的三个连续交易日，同样，分析最小的
-  
     ##输出文件名
     goalFilePath='result.txt'
     fileWrited=open(goalFilePath,'w')
     fileWrited.write(stockID+'\n')
+    
+    ##过去n年同期某个时间段的涨幅，最高点出现的时间，最低点出现的时间
+    print("##统计分析最近不同交易周期内，不同涨幅的个数分布频率")
+    for year in range(2000,2015):
+        headLine=str(year)+"年12月高点和低点出现统计分析："
+        print(headLine)
+        dateStrStart=str(year)+"/12/01"
+        indexOfStart=Ccomfunc.getIndexByStrdate(curStock,dateStrStart)
+        dateStrEnd=str(year)+"/12/31"
+        indexOfEnd=Ccomfunc.getIndexByStrdate(curStock,dateStrEnd)
+        ##区间涨幅
+        rise= 100*(curStock.dayPriceClosedFList[indexOfEnd]-curStock.dayPriceClosedFList[indexOfStart-1])/curStock.dayPriceClosedFList[indexOfStart-1]
+        print "涨幅：{:.2f}".format(rise) 
+        indexMax=indexOfStart+curStock.dayPriceHighestArray[indexOfStart:indexOfEnd].argmax()
+        indexMin=indexOfStart+curStock.dayPriceHighestArray[indexOfStart:indexOfEnd].argmin()
+        print "区间低点出现日期：{}，高点日期：{}".format(curStock.dayStrList[indexMin],curStock.dayStrList[indexMax])
+        fileWrited.write(headLine+"\n")
 
     ##设置分析周期
     iDaysPeriodUser=len(curStock.dayStrList)

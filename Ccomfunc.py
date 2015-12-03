@@ -31,6 +31,14 @@ def convertDateStr2Date(dateStr):
     split1=dateStr.split('/')
     return datetime.date(int(split1[0]),int(split1[1]),int(split1[2]))
 
+## 根据dateStr返回最接近的index，有就返回最近的指数，超出，返回-1
+def getIndexByStrdate(curStock,dateStr):
+    dateInput=convertDateStr2Date(dateStr)
+    for i in range(0,len(curStock.dayStrList)-1):
+        if curStock.dateList[i]<=dateInput<curStock.dateList[i+1]:
+            return i
+    return -1
+
 ##计算两个日期间的自然日个数
 def calNatureDays(dateStr1,dateStr2):
     d1= convertDateStr2Date(dateStr1)

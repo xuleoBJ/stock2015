@@ -55,7 +55,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
 
     def copyData2dir(self):
         copyFile2Dir.copyData2Dir()
-        QMessageBox.about(self, u"提示",u"数据入库完成。")
+        QMessageBox.about(self, u"提示",u"数据已经复制到文件夹。")
 
     def calPatternRec(self):
         sDate=str(self.lineEditDateRec.text())

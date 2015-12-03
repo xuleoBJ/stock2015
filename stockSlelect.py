@@ -27,31 +27,28 @@ def calRiseRateBetween2Date(dateStr,interval):
             if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") :
                 stockIDList.append(os.path.splitext(fileItem)[0])
     lineWritedList=[]
-    dateInput=Ccomfunc.convertDateStr2Date(dateStr)
+    
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID,Ccomfunc.dirHisData)
         curStock.list2array()
-        indexOfDate=-1
+        indexOfDate=Ccomfunc.getIndexByStrdate(curStock,dateStr)
 #        pdb.set_trace()
-        for i in range(0,len(curStock.dayStrList)-1):
-            if curStock.dateList[i]<=dateInput<=curStock.dateList[i+1]:
-                indexOfDate=i
-                break
+
         ##减少运算量把停牌暴涨的删除了，另外 去掉数组越界的
-        if indexOfDate>0 and len(curStock.dayStrList)>indexOfDate+interval and \
-                (curStock.dateList[indexOfDate+interval]-curStock.dateList[indexOfDate]).days<=interval*2:
+        if indexOfDate<0:
+            pass
+        elif len(curStock.dayStrList)<indexOfDate+interval:
+            pass
+        elif (curStock.dateList[indexOfDate+interval]-curStock.dateList[indexOfDate]).days>interval*2: ##减少运算量把停牌暴涨的删除了
+            pass
+        else:
             sList=[]
             sList.append(curStock.stockID)
             sList.append(curStock.stockName)
             sList.append(curStock.dayStrList[indexOfDate])
-            try:
-                sList.append(curStock.dayStrList[indexOfDate+interval])
-                rise= 100*(curStock.dayPriceClosedFList[indexOfDate+interval]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
-            except Exception: 
-                sList.append(curStock.dayStrList[indexOfDate])
-                rise=-999
-                pass
+            sList.append(curStock.dayStrList[indexOfDate+interval])
+            rise= 100*(curStock.dayPriceClosedFList[indexOfDate+interval]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
             sList.append(str(round(rise,2)))
             lineWritedList.append("\t".join(sList))
 
