@@ -6,9 +6,6 @@ import datetime
 import Ccomfunc
 import numpy as np
 
-##数据目录
-dirData="dataManage\\stockSelect" 
-#dirData="C:\\new_dxzq_v6\\T0002\\export\\" 
 
 ##根据StockID读入数据
 class Stock:
@@ -35,7 +32,7 @@ class Stock:
             return self.dayStrList.index(dayStr)
         else:
             return -1
-    def __init__(self,stockID):
+    def __init__(self,stockID,stockDirData="dataManage\\stockSelect"):
         self.stockName=""
         self.stockID=stockID
         print("#"*80)
@@ -70,7 +67,7 @@ class Stock:
         self.monthRiseOfTradeVolumeFList=[]  ##month成交量涨幅
         self.monthRiseOfTurnOverFList=[]  ##month成交额涨幅
        
-        stockDataFile=os.path.join(dirData,stockID+'.txt')
+        stockDataFile=os.path.join(stockDirData,stockID+'.txt')
         if os.path.exists(stockDataFile):
             fileOpened=open(stockDataFile,'r')
             ##从文件中读取日数据，并计算构造相关的日数据
@@ -83,7 +80,7 @@ class Stock:
                     print "{},{}".format(self.stockID,self.stockName)
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
-                    self.dateList.append(Ccomfunc.convertDateStr2Date(splitLine[0]))
+                    self.dateList.append(Ccomfunc.convertDateStr2Date(self.dayStrList[-1]))
                     
                     self.dayPriceOpenFList.append(float(splitLine[1]))
                     self.dayPriceHighestFList.append(float(splitLine[2]))
@@ -174,7 +171,7 @@ class Stock:
                     self.monthTurnOverFList.append(self.dayTurnOverFList[item["indexEnd"]])
 
                 ##计算月度涨幅和振幅
-                if len(self.monthPriceClosedFList)>=2 and self.monthPriceClosedFList[-1]>0:
+                if len(self.monthPriceClosedFList)>=2 and self.monthPriceClosedFList[-2]>0:
                     ##(当日收盘-上日收盘)/上一日收盘
                     self.monthRiseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
                     ##(当日最高-当日最低)/上一日收盘
@@ -206,6 +203,7 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     shStock=Stock('999999')
+    print shStock.dateList[-10:]
     
     curStock=Stock('002001')
     curStock.list2array()

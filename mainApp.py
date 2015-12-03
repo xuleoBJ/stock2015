@@ -43,8 +43,15 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         self.btnCalGDP.clicked.connect(self.calGDP)
         self.btnTradeInfor.clicked.connect(self.tradeWarn)
         self.btnPatternRecAna.clicked.connect(self.calPatternRec)
-##数据管理 目录管理
+
+        ##交易策略入库
+        self.btnInertDataTradeTactics.clicked.connect(self.inertDataTradeTactics)
+
+        ##数据管理 目录管理
         self.btnCopyData2Dir.clicked.connect(self.copyData2dir)
+    
+    def inertDataTradeTactics(self):
+        QMessageBox.about(self, u"提示",u"交易策略已入库")
 
     def copyData2dir(self):
         copyFile2Dir.copyData2Dir()
