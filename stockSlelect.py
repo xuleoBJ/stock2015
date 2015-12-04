@@ -14,45 +14,43 @@ import pdb
 ##1 弱势的反弹力度
 ##2 目标价位，支撑价位。
 
-##给出两个交易日期，计算两个交易日的涨幅
-def calRiseRateBetween2Date(dateStr,interval):
-    ##key is dateStr的指数寻找，是不是交易日，如果找不到怎么办？
-    ##判断datestr是否有数据？
-    ##如果没有，日期+1，再判断，再没有再+1
-    stockIDList=[]
-    if len(stockIDList)==0:
-        fileNames=os.listdir(Ccomfunc.dirHisData)
-        for fileItem in fileNames:
-            ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
-            if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") :
-                stockIDList.append(os.path.splitext(fileItem)[0])
+##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
+def calRiseRateBetween2Date(myStrInput,interval):
+    stockIDList=["999999","399001"]
+    fileNames=os.listdir(Ccomfunc.dirHisData)
+    for fileItem in fileNames:
+        ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
+        if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") :
+            stockIDList.append(os.path.splitext(fileItem)[0])
     lineWritedList=[]
     
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID,Ccomfunc.dirHisData)
         curStock.list2array()
-        indexOfDate=Ccomfunc.getIndexByStrdate(curStock,dateStr)
-#        pdb.set_trace()
+        sList=[]
+        sList.append(curStock.stockID)
+        sList.append(curStock.stockName)
+        for year in [2011,2012,2013,2014]:
+            dateStr=str(year)+"/"+myStrInput
+            print dateStr
+            indexOfDate=Ccomfunc.getIndexByStrdate(curStock,dateStr)
+    #        pdb.set_trace()
 
-        ##减少运算量把停牌暴涨的删除了，另外 去掉数组越界的
-        if indexOfDate<0:
-            pass
-        elif len(curStock.dayStrList)<indexOfDate+interval:
-            pass
-        elif (curStock.dateList[indexOfDate+interval]-curStock.dateList[indexOfDate]).days>interval*2: ##减少运算量把停牌暴涨的删除了
-            pass
-        else:
-            sList=[]
-            sList.append(curStock.stockID)
-            sList.append(curStock.stockName)
-            sList.append(curStock.dayStrList[indexOfDate])
-            sList.append(curStock.dayStrList[indexOfDate+interval])
-            rise= 100*(curStock.dayPriceClosedFList[indexOfDate+interval]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
-            sList.append(str(round(rise,2)))
-            lineWritedList.append("\t".join(sList))
-
-    goalFilePath='_result.txt'
+            ##减少运算量把停牌暴涨的删除了，另外 去掉数组越界的
+            if indexOfDate<0:
+                pass
+            elif len(curStock.dayStrList)<=indexOfDate+interval:
+                pass
+            elif (curStock.dateList[indexOfDate+interval]-curStock.dateList[indexOfDate]).days>interval*2: ##减少运算量把停牌暴涨的删除了
+                pass
+            else:
+                sList.append(curStock.dayStrList[indexOfDate])
+                sList.append(curStock.dayStrList[indexOfDate+interval])
+                rise= 100*(curStock.dayPriceClosedFList[indexOfDate+interval]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
+                sList.append(str(round(rise,2)))
+        lineWritedList.append("\t".join(sList))
+    goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
 ## 根据指数板块月涨幅选股
@@ -93,7 +91,7 @@ if __name__=="__main__":
 
    #lineWritedList=selectStockByMonthRise() 
     
-    lineWritedList=calRiseRateBetween2Date("2013/12/04",10) 
+    lineWritedList=calRiseRateBetween2Date("12/04",10) 
     
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     

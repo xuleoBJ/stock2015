@@ -13,15 +13,17 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-##数据目录
-
+##数据目录字符串
 src="C:\\new_dxzq_v6\\T0002\\export\\"
 dirData="dataManage\\stockSelect"
 dirHisData="dataManage\\hisData"
+
 ## 改变路径到工作目录 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 print os.path.curdir
-
+resultDir="resultDir"
+if not os.path.exists(resultDir):
+    os.makedirs(resultDir)
 ##寻找最后一个匹配值 
 def rindex(_list, _value):
     return len(_list) - _list[::-1].index(_value) - 1

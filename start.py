@@ -14,13 +14,6 @@ from PyQt4.QtGui import *
 
 def tradePlan():
     print(u"最近策略日提示：上午10点半前大涨大卖，小涨小卖，大跌大卖，小跌小买。剩下的下午2：30后操作，以便控制仓位。")
-    print(u"1-plan:低开高走：")
-    print(u"2-plan:低开低走：")
-    print(u"3-plan:高开高走：")
-    print(u"4-plan:高开低走：")
-    print(u"5-plan:平开高走：")
-    print(u"6-plan:平开低走：")
-    print(u"7-plan:平走：")
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
 def calResistLine(cyclePeriod,keyPoint):
@@ -45,7 +38,6 @@ def trendOfMonthHistory(curStock,numOfyear):
         strYM=str(currentYear)+str(currentMonth)
         findIndexStrYM=curStock.monthStrList.index(strYM)
         print u"{}年{}月涨幅:{}".format(currentYear,currentMonth,curStock.monthRiseRateFList[findIndexStrYM])
-
 
 
 def main(curStock):
@@ -136,11 +128,8 @@ if __name__ == "__main__":
  
     startClock=time.clock() ##记录程序开始计算时间
     Ccomfunc.printInfor()
-    calGDG()
-    ## 改变路径到工作目录 
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    print os.path.curdir
-    
+#    calGDG()
+
     for stockID in configOS.stockIDMarketList:
         curStock=Cstock.Stock(stockID)
         curStock.list2array()
