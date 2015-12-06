@@ -30,7 +30,7 @@
      <bool>true</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tbgImportInfor">
      <attribute name="title">
@@ -97,7 +97,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>100</y>
+        <y>180</y>
         <width>101</width>
         <height>31</height>
        </rect>
@@ -214,7 +214,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>150</y>
+        <y>250</y>
         <width>101</width>
         <height>31</height>
        </rect>
@@ -318,11 +318,25 @@
        </property>
       </widget>
      </widget>
+     <widget class="QPushButton" name="btnMarketMonthAna">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>100</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>月度历史</string>
+      </property>
+     </widget>
      <zorder>groupBox_2</zorder>
      <zorder>groupBox</zorder>
      <zorder>btnTradeInfor</zorder>
      <zorder>btnMarketAna</zorder>
      <zorder>btnMarketMoodAna</zorder>
+     <zorder>btnMarketMonthAna</zorder>
     </widget>
     <widget class="QWidget" name="tbgQuanlityTrade">
      <attribute name="title">

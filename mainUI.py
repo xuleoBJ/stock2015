@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainUI.ui'
 #
-# Created: Thu Dec 03 22:04:13 2015
+# Created: Sun Dec 06 10:27:57 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.btnTradeInfor.setGeometry(QtCore.QRect(20, 50, 101, 31))
         self.btnTradeInfor.setObjectName(_fromUtf8("btnTradeInfor"))
         self.btnMarketAna = QtGui.QPushButton(self.tbgAnaTrend)
-        self.btnMarketAna.setGeometry(QtCore.QRect(20, 100, 101, 31))
+        self.btnMarketAna.setGeometry(QtCore.QRect(20, 180, 101, 31))
         self.btnMarketAna.setObjectName(_fromUtf8("btnMarketAna"))
         self.groupBox = QtGui.QGroupBox(self.tbgAnaTrend)
         self.groupBox.setGeometry(QtCore.QRect(340, 30, 381, 111))
@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         self.lineEditMarketValueSZ.setGeometry(QtCore.QRect(80, 60, 121, 31))
         self.lineEditMarketValueSZ.setObjectName(_fromUtf8("lineEditMarketValueSZ"))
         self.btnMarketMoodAna = QtGui.QPushButton(self.tbgAnaTrend)
-        self.btnMarketMoodAna.setGeometry(QtCore.QRect(20, 150, 101, 31))
+        self.btnMarketMoodAna.setGeometry(QtCore.QRect(20, 250, 101, 31))
         self.btnMarketMoodAna.setObjectName(_fromUtf8("btnMarketMoodAna"))
         self.groupBox_2 = QtGui.QGroupBox(self.tbgAnaTrend)
         self.groupBox_2.setGeometry(QtCore.QRect(340, 150, 301, 391))
@@ -105,6 +105,9 @@ class Ui_MainWindow(object):
         self.listWidgetMatchDate = QtGui.QListWidget(self.groupBox_2)
         self.listWidgetMatchDate.setGeometry(QtCore.QRect(140, 90, 131, 291))
         self.listWidgetMatchDate.setObjectName(_fromUtf8("listWidgetMatchDate"))
+        self.btnMarketMonthAna = QtGui.QPushButton(self.tbgAnaTrend)
+        self.btnMarketMonthAna.setGeometry(QtCore.QRect(20, 100, 101, 31))
+        self.btnMarketMonthAna.setObjectName(_fromUtf8("btnMarketMonthAna"))
         self.tabWidget.addTab(self.tbgAnaTrend, _fromUtf8(""))
         self.tbgQuanlityTrade = QtGui.QWidget()
         self.tbgQuanlityTrade.setObjectName(_fromUtf8("tbgQuanlityTrade"))
@@ -212,7 +215,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_2.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -237,6 +240,7 @@ class Ui_MainWindow(object):
         self.btnPatternRecAna.setText(_translate("MainWindow", "模式识别", None))
         self.label.setText(_translate("MainWindow", "请选择查看股票代码", None))
         self.pButtonSelect.setText(_translate("MainWindow", "选择", None))
+        self.btnMarketMonthAna.setText(_translate("MainWindow", "月度历史", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbgAnaTrend), _translate("MainWindow", "趋势分析", None))
         self.btnCalTradePrice.setText(_translate("MainWindow", "量化交易计算", None))
         self.label_7.setText(_translate("MainWindow", "请输入交易代码：", None))
