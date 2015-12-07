@@ -34,6 +34,7 @@ def drawCandleStick(curStock,dateFind):
         Prices.append([Date,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume])
     print Prices
     
+    
     PricesArray=np.array(Prices)
     #and then following the official example. 
     fig, ax = plt.subplots()
@@ -52,7 +53,6 @@ def drawCandleStick(curStock,dateFind):
     ax.xaxis_date()
     ax.autoscale_view()
 
-
     axVol = ax.twinx()
 ##
     dates = PricesArray[:,0]
@@ -66,19 +66,11 @@ def drawCandleStick(curStock,dateFind):
     axVol.bar(dates[pos],volume[pos],color='red',width=0.5,align='center')
     axVol.bar(dates[neg],volume[neg],color='green',width=0.5,align='center')
     axVol.set_position(matplotlib.transforms.Bbox([[0.125,0.05],[0.9,0.2]]))
-# Plot the volume overlay
-#    bc = volume_overlay3(axVol, Prices,colorup='r', colordown='g', width=4, alpha=1.0)
-#    yticks = axVol.get_yticks()
-#    ymax=max(curStock.dayTradeVolumeFList[indexDate-10:indexDate+10])*1.5
-#    axVol.set_ylim([0,ymax])
-#    axVol.yaxis.set_label_position("right")
-#    axVol.add_collection(bc)
-#    corners = (0, 0), (len(bars), max(volumes))
-#    axVol.update_datalim(corners)
 
-    
     plt.setp( plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
     plt.title(u"{} {} 20日K".format(curStock.stockID,dateFind),color='r')
+
+
     plt.show()
 
 if __name__=="__main__":

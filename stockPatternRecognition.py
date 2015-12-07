@@ -8,7 +8,9 @@ import Cstock
 import sys
 import Ccomfunc
 import configOS
-
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter  
 
 lineWritedList=[]
 
@@ -22,6 +24,7 @@ def printResult(curStock,kMatchIndexList):
         if curStock.stockID=="399001" and (not curStock.dayStrList[i] in configOS.patternRecDateListSZ) :
             configOS.patternRecDateListSZ.append(curStock.dayStrList[i])
         
+
     lineWritedList.append(u"识别结果：{},涨幅> ".format(len(dateList)))
     dateStrLine='\t'.join(dateList)
     lineWritedList.append(dateStrLine)
@@ -87,6 +90,24 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
 		    iCount=iCount+1
 	    if bSelect==True:
 		    kMatchIndexList.append(i)
+            
+    ind = np.arange(len(kMatchIndexList))    # the x locations for the groups
+    width=0.35
+    dateTick=[]
+    dataDraw=[]
+    for iDateIndex in kMatchIndexList:
+        dateTick.append(curStock.dayStrList[iDateIndex])
+        dataDraw.append(curStock.dayRiseRateFList[iDateIndex])
+
+    p1 = plt.bar(ind, dataDraw, width, color='r')
+    plt.ylabel(u'riseRate')
+    plt.title(curStock.stockName)
+    plt.ylim([-5,5])
+    ax=plt.gca()
+    ymajorLocator   = MultipleLocator(0.5) #将y轴主刻度标签设置为0.5的倍数
+    ax.yaxis.set_major_locator(ymajorLocator)    
+    plt.xticks(ind + width/2., dateTick)
+    plt.show()
     return kMatchIndexList
 
 ## 在利用K线组合的匹配的结果中，用开盘价进行过滤 
@@ -211,6 +232,8 @@ def mainAppCall(strDate=""):
 
     for stockID in configOS.stockIDMarketList: 
         main(stockID,strDate) ##-1是最后一个交易日分析
+    
+
 
     configOS.updatePetternRectDateList()
 
