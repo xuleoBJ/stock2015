@@ -11,6 +11,7 @@ import configOS
 import scipy.optimize as optimize
 
 
+wordWrited=[]
 def func(fData,a,b,c,d):
     return fData[0]*a+fData[1]*b+fData[2]*c + d
 
@@ -45,11 +46,7 @@ def historyPrint_optimize_curve_fit(curStock,countOfEle,kPeriod,params):
                 printTStop,curStock.dayPriceClosedArray[indexDate+1])\
                 )
 def patternRecCalTPrice(curStock,dayRadioLinkPriceLowArray):
-    marketID='999999'
-    if not curStock.stockID.startswith('6'):
-        marketID='399001'
-
-    curMarket=Cstock.Stock(marketID)
+    curMarket=Ccomfunc.getMarketStock(curStock.stockID)
     matchDateIndex=-1 ##识别日的指数
     stockPatternRecognition.patternRecByMarketAndStock(curMarket,curStock,matchDateIndex)
     listPatternRecBycurStock=stockPatternRecognition.patternRecByRiseRate(curStock,300,3,matchDateIndex)
@@ -63,12 +60,11 @@ def main(curStock):
     print ("卖的条件：1 价格到位 2 时间点")
     print ("做T价格计算，做t是宁可错过，不能做错的方案，一定要有价差才能买入。。")
     print ("-"*72)
-    print("{}收盘价{},3日最低价{:.2f}，最高价{:.2f}，最小波幅{:.2f}".format\
-                ( curStock.dayStrList[-1],curStock.dayPriceClosedArray[-1],\
-                  curStock.dayPriceLowestArray[-3:].min(), curStock.dayPriceHighestArray[-3:].max(),\
-                curStock.dayWaveRateArray[-3:].min() \
-                )\
-        )
+
+    for i in [5,8,13,21]:
+        argsort=curStock.dayPriceLowestArray.argsort()
+        print("{}日最低价{:.2f}，最高价{:.2f}".format(i,curStock.dayPriceLowestArray[-i:].min(), curStock.dayPriceHighestArray[-i:].max(),\
+                ))
    
     ##买入点：用15分钟K线的支撑位买入T
     ##追高点：涨幅超过3个点绝对不能追高。

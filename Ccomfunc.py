@@ -24,6 +24,16 @@ print os.path.curdir
 resultDir="resultDir"
 if not os.path.exists(resultDir):
     os.makedirs(resultDir)
+
+##根据输入的股票ID，返回对应的stockMarktet
+def getMarketStock(curStockID):
+    marketID='999999'
+    if not curStockID.startswith('6'):
+        marketID='399001'
+    curMarket=Cstock.Stock(marketID)
+    curMarket.list2array()
+    return curMarket
+    
 ##寻找最后一个匹配值 
 def rindex(_list, _value):
     return len(_list) - _list[::-1].index(_value) - 1
@@ -63,6 +73,7 @@ def calTrend(curStock,intervalDay):
         return 100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceClosedFList[-1+intervalDay])/curStock.dayPriceClosedFList[-1+intervalDay]
     else:
 		return -999
+
 ##输出交易日的差额
 def printCalTrend(curStock,intervalDay):
     print(str(intervalDay)+u"个交易日日累计涨幅:"+str(round(calTrend(curStock,intervalDay),2))+"%")
