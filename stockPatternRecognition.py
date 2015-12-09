@@ -17,18 +17,24 @@ lineWritedList=[]
 def printResult(curStock,kMatchIndexList):
     ##识别结果统计分析
     dateList=[]
+    riseRateNextList=[]
     for i in kMatchIndexList:
         dateList.append(curStock.dayStrList[i])
+        riseRateNextList.append(curStock.dayRiseRateFList[i+1])
         if curStock.stockID=="999999" and (not curStock.dayStrList[i] in configOS.patternRecDateListSH) :
             configOS.patternRecDateListSH.append(curStock.dayStrList[i])
         if curStock.stockID=="399001" and (not curStock.dayStrList[i] in configOS.patternRecDateListSZ) :
             configOS.patternRecDateListSZ.append(curStock.dayStrList[i])
-        
-
-    lineWritedList.append(u"识别结果：{},涨幅> ".format(len(dateList)))
-    dateStrLine='\t'.join(dateList)
-    lineWritedList.append(dateStrLine)
-
+    
+    matchNum=len(kMatchIndexList)
+    value0_bigger0=len(filter(lambda x:x>=0,riseRateNextList))
+    value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
+    value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
+    if matchNum>0:
+        lineWritedList.append(u"识别结果：{}, 涨幅>0个数: {}, 涨幅>1个数: {}, 涨幅<-1个数: {}".format(matchNum,value0_bigger0,value_bigger1,value_smaller_1))
+    sumLine='\t'.join(dateList+map(str,riseRateNextList))
+    lineWritedList.append(sumLine)
+    
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
         resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
@@ -99,14 +105,23 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
         dateTick.append(curStock.dayStrList[iDateIndex])
         dataDraw.append(curStock.dayRiseRateFList[iDateIndex])
 
-    p1 = plt.bar(ind, dataDraw, width, color='r')
-    plt.ylabel(u'riseRate')
-    plt.title(curStock.stockName)
-    plt.ylim([-5,5])
-    ax=plt.gca()
-    ymajorLocator   = MultipleLocator(0.5) #将y轴主刻度标签设置为0.5的倍数
-    ax.yaxis.set_major_locator(ymajorLocator)    
-    plt.xticks(ind + width/2., dateTick)
+    num_bins = 10
+    # the histogram of the data
+    n, bins, patches = plt.hist(dataDraw, num_bins, normed=1, facecolor='green', alpha=0.5)
+    plt.xlabel('Smarts')
+    plt.ylabel('%')
+    plt.title(r'Histogram of result: ')
+
+#    plt.subplots_adjust(left=0.15)
+#    plt.show()
+#    p1 = plt.bar(ind, dataDraw, width, color='r')
+#    plt.ylabel(u'riseRate')
+#    plt.title(curStock.stockName)
+#    plt.ylim([-5,5])
+#    ax=plt.gca()
+#    ymajorLocator   = MultipleLocator(0.5) #将y轴主刻度标签设置为0.5的倍数
+#    ax.yaxis.set_major_locator(ymajorLocator)    
+#    plt.xticks(ind + width/2., dateTick)
     plt.show()
     return kMatchIndexList
 
