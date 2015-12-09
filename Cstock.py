@@ -32,7 +32,7 @@ class Stock:
             return self.dayStrList.index(dayStr)
         else:
             return -1
-    def __init__(self,stockID,stockDirData="dataManage\\stockSelect"):
+    def __init__(self,stockID,stockDirData="C:\\new_dxzq_v6\\T0002\\export\\"):
         self.stockName=""
         self.stockID=stockID
         print("#"*80)
