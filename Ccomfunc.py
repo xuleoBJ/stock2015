@@ -5,7 +5,6 @@ import time
 import datetime
 import sys
 import Cstock
-import Tkinter
 import ctypes 
 import ConfigParser
 
@@ -44,12 +43,20 @@ def convertDateStr2Date(dateStr):
     return datetime.date(int(split1[0]),int(split1[1]),int(split1[2]))
 
 ## 根据dateStr返回最接近的index，有就返回最近的指数，超出，返回-1
-def getIndexByStrdate(curStock,dateStr):
-    dateInput=convertDateStr2Date(dateStr)
-    for i in range(0,len(curStock.dayStrList)-1):
-        if curStock.dateList[i]<=dateInput<curStock.dateList[i+1]:
+def getIndexByStrdate(_curStock,_dateStr):
+    dateInput=convertDateStr2Date(_dateStr)
+    return getIndexByDate(_curStock,dateInput)
+
+## 根据date返回最接近的index，有就返回最近的指数，超出，返回-1
+def getIndexByDate(_curStock,dateInput):
+    for i in range(0,len(_curStock.dateList)-1):
+        if _curStock.dateList[i]<=dateInput<_curStock.dateList[i+1]:
             return i
     return -1
+
+## 根据输入的date，返回每个月的1号
+def first_day_of_month(d):
+    return datetime.date(d.year, d.month, 1)
 
 ##计算两个日期间的自然日个数
 def calNatureDays(dateStr1,dateStr2):
@@ -57,26 +64,6 @@ def calNatureDays(dateStr1,dateStr2):
     d2= convertDateStr2Date(dateStr2)
     return (d1-d2).days
 
-##计算两个交易日直接的涨幅indexOfDate是指数，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
-def calRiseRateInterval(curStock,indexOfDate,intervalDay):
-	if indexOfDate+intervalDay<len(curStock.dayPriceClosedFList) and curStock.dayPriceClosedFList[indexOfDate+intervalDay]>0:
-            if intervalDay>0: ##后推
-                return 100*(curStock.dayPriceClosedFList[indexOfDate+intervalDay]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
-            else:    ##前推 
-                return 100*(curStock.dayPriceClosedFList[indexOfDate]-curStock.dayPriceClosedFList[indexOfDate+intervalDay])/curStock.dayPriceClosedFList[indexOfDate+intervalDay]
-	else:
-		return -999
-	    
-##计算最后一个交易日，interValDay个交易日的比今天的涨幅，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
-def calTrend(curStock,intervalDay):
-    if intervalDay<0:
-        return 100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceClosedFList[-1+intervalDay])/curStock.dayPriceClosedFList[-1+intervalDay]
-    else:
-		return -999
-
-##输出交易日的差额
-def printCalTrend(curStock,intervalDay):
-    print(str(intervalDay)+u"个交易日日累计涨幅:"+str(round(calTrend(curStock,intervalDay),2))+"%")
 
 
 def printInfor():

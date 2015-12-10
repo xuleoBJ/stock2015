@@ -6,7 +6,7 @@ import datetime
 import math
 import Cstock
 import sys
-import Ccomfunc
+import Ccomfunc,trendAna
 import configOS
 import numpy as np
 import matplotlib.pyplot as plt
@@ -32,8 +32,8 @@ def printResult(curStock,kMatchIndexList):
     dataX=[]
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday()
-        riseRate3B=Ccomfunc.calRiseRateInterval(curStock,index,-3)
-        riseRate5B=Ccomfunc.calRiseRateInterval(curStock,index,-5)
+        riseRate3B=trendAna.calRiseRateInterval(curStock,index,-3)
+        riseRate5B=trendAna.calRiseRateInterval(curStock,index,-5)
         dataX.append(curStock.dayRiseRateFList[index-1])
         resultLine= u"{}\t星期{}\t{}\t{}\t{}\t{:.2f}\t{:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-1],curStock.dayRadioLinkOfTradeVolumeFList[index-1],curStock.dayRiseRateFList[index],\

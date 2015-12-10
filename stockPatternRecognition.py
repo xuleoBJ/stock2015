@@ -6,7 +6,7 @@ import datetime
 import math
 import Cstock
 import sys
-import Ccomfunc
+import Ccomfunc,trendAna
 import configOS
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,13 +27,16 @@ def printResult(curStock,kMatchIndexList):
             configOS.patternRecDateListSZ.append(curStock.dayStrList[i])
     
     matchNum=len(kMatchIndexList)
-    value0_bigger0=len(filter(lambda x:x>=0,riseRateNextList))
+    value0_smaller0=len(filter(lambda x:x<=0,riseRateNextList))
     value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
     value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
     if matchNum>0:
-        lineWritedList.append(u"识别结果：{}, 涨幅>0个数: {}, 涨幅>1个数: {}, 涨幅<-1个数: {}".format(matchNum,value0_bigger0,value_bigger1,value_smaller_1))
-    sumLine='\t'.join(dateList+map(str,riseRateNextList))
-    lineWritedList.append(sumLine)
+        lineWritedList.append("-"*72)
+        lineWritedList.append(u"识别结果：{}, 涨幅<=0个数: {}({:.2f}%), 涨幅>=1个数: {}, 涨幅<-1个数: {}".format( \
+                matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
+    valueLine='\t'.join(map(str,sorted(riseRateNextList)))
+    lineWritedList.append("result:\t"+valueLine)
+    lineWritedList.append("-"*72)
     
     for index in kMatchIndexList: 
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
@@ -46,7 +49,7 @@ def printResult(curStock,kMatchIndexList):
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
         for intervalDay in [-60,-30,-10,-5,3,5,8,13,21,44]:
-            resultLine=u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,index,intervalDay))
+            resultLine=u"{}日涨幅{:.2f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
             lineWritedList.append(resultLine)
 
 ##利用个股和对应大盘的同步性分析 进行模式识别
@@ -98,7 +101,6 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
 		    kMatchIndexList.append(i)
             
     ind = np.arange(len(kMatchIndexList))    # the x locations for the groups
-    width=0.35
     dateTick=[]
     dataDraw=[]
     for iDateIndex in kMatchIndexList:
@@ -107,21 +109,18 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
 
     num_bins = 10
     # the histogram of the data
-    n, bins, patches = plt.hist(dataDraw, num_bins, normed=1, facecolor='green', alpha=0.5)
-    plt.xlabel('Smarts')
-    plt.ylabel('%')
-    plt.title(r'Histogram of result: ')
-
-#    plt.subplots_adjust(left=0.15)
-#    plt.show()
-#    p1 = plt.bar(ind, dataDraw, width, color='r')
-#    plt.ylabel(u'riseRate')
-#    plt.title(curStock.stockName)
-#    plt.ylim([-5,5])
-#    ax=plt.gca()
-#    ymajorLocator   = MultipleLocator(0.5) #将y轴主刻度标签设置为0.5的倍数
-#    ax.yaxis.set_major_locator(ymajorLocator)    
-#    plt.xticks(ind + width/2., dateTick)
+    bins=[i*0.5 for i in range(-10,10)]
+    n, bins, patches = plt.hist(dataDraw, bins, normed=1, facecolor='green',alpha=0.5)
+    ax=plt.gca()  
+    xmajorLocator   = MultipleLocator(0.5) 
+    ax.xaxis.set_major_locator( xmajorLocator )  
+#    xminorLocator   = MultipleLocator(0.1) #将x轴次刻度标签设置为5的倍数
+#    ax.xaxis.set_minor_locator( xminorLocator )  
+    ymajorLocator   = MultipleLocator(1) 
+    ax.yaxis.set_major_locator( ymajorLocator )  
+    plt.xlabel('interval')
+    plt.ylabel('num')
+    plt.title( curStock.stockID )
     plt.show()
     return kMatchIndexList
 

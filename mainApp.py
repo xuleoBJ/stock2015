@@ -12,6 +12,7 @@ from candleStickPlot import drawCandleStick
 import configOS
 import stockPatternRecognition
 import copyFile2Dir
+import start
 
 def updateListWidgetItem(listWidget,listStr):
     listWidget.clear()
@@ -63,7 +64,10 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         stockPatternRecognition.mainAppCall(sDate)
 
     def tradeWarn(self):
-        QMessageBox.about(self, u"交易提示","参考走势："+configOS.config.get("TradeWarn","recMarkDate")+"\t"+configOS.config.get("TradeWarn","tradeInfor"))
+        for stockID in ["999999"]:
+            curStock=Stock(stockID)
+            curStock.list2array()
+            start.main(curStock)
     
     def setupListWidget(self,iItem):
         stockIDselect=self.comboBoxStockID.itemText(iItem)
