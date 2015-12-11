@@ -32,6 +32,9 @@ def main(curStock):
     ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
+     
+    print(u"-"*72)
+    print(u"当前市场定义：强势，弱势？上升市，下跌市，震荡市？这个月的目标是啥？")
     
     print(u"-"*72)
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
@@ -77,6 +80,7 @@ if __name__ == "__main__":
  
     startClock=time.clock() ##记录程序开始计算时间
     Ccomfunc.printInfor()
+    print(u"当前市场定义：强势，弱势？上升市，下跌市，震荡市？这个月的目标是啥？")
 #    calGDG()
     
     stockIDList=configOS.stockIDMarketList

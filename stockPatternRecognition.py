@@ -18,9 +18,13 @@ def printResult(curStock,kMatchIndexList):
     ##识别结果统计分析
     dateList=[]
     riseRateNextList=[]
+    riseRateHighestNextList=[]
+    riseRateLowestNextList=[]
     for i in kMatchIndexList:
         dateList.append(curStock.dayStrList[i])
         riseRateNextList.append(curStock.dayRiseRateFList[i+1])
+        riseRateHighestNextList.append(curStock.dayRiseRateHighestFList[i+1])
+        riseRateLowestNextList.append(curStock.dayRiseRateLowestFList[i+1])
         if curStock.stockID=="999999" and (not curStock.dayStrList[i] in configOS.patternRecDateListSH) :
             configOS.patternRecDateListSH.append(curStock.dayStrList[i])
         if curStock.stockID=="399001" and (not curStock.dayStrList[i] in configOS.patternRecDateListSZ) :
@@ -34,8 +38,15 @@ def printResult(curStock,kMatchIndexList):
         lineWritedList.append("-"*72)
         lineWritedList.append(u"识别结果：{}, 涨幅<=0个数: {}({:.2f}%), 涨幅>=1个数: {}, 涨幅<-1个数: {}".format( \
                 matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
-    valueLine='\t'.join(map(str,sorted(riseRateNextList)))
-    lineWritedList.append("result:\t"+valueLine)
+        valueLine='\t'.join(map(str,sorted(riseRateNextList)))
+        _median=np.median(riseRateNextList)
+        lineWritedList.append(u"收盘涨幅:{},中位数:{:.2f}".format(valueLine,_median))
+        valueHighestLine='\t'.join(map(str,sorted(riseRateHighestNextList)))
+        _median=np.median(riseRateHighestNextList)
+        lineWritedList.append(u"最高涨幅:{},中位数:{:.2f}".format(valueHighestLine,_median))
+        valueLowestLine='\t'.join(map(str,sorted(riseRateLowestNextList)))
+        _median=np.median(riseRateLowestNextList)
+        lineWritedList.append(u"最低涨幅:{},中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
     
     for index in kMatchIndexList: 

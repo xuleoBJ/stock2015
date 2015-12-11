@@ -8,15 +8,6 @@ import ctypes
 from Cstock import Stock
 import numpy as np
 
-
-def mymain():
-    curStock=Stock('399001')
-    shStock=Stock('999999')
-    print (u"量能对比分析最后5个交易日量能对比：")
-    print shStock.stockID,shStock.stockName,shStock.dayStrList[-5:],shStock.dayRadioLinkOfTradeVolumeFList[-5:]
-    print curStock.stockID,curStock.stockName,curStock.dayStrList[-5:],curStock.dayRadioLinkOfTradeVolumeFList[-5:]
-
-
 ##period 是量能情绪控制周期
 def moodIndex(curStock,period):
     print (u"{}日情绪指数分析".format(period))
@@ -63,7 +54,6 @@ if __name__ == "__main__":
     moodIndex(shStock,15)
     ## 蓝筹市场、中小创市场判断,主要看 上证和深市的涨幅和人气对比
     print (u"市场类型判断")
-    mymain()
 
 
 

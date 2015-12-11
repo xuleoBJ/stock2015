@@ -38,7 +38,7 @@ storeDir=datetime.date.today().strftime("%Y%m%d")
 
 def event_func_gwy():
     num=1
-    urlLink="http://www.gov.cn/xinwen/"
+    urlLink="http://www.gov.cn/xinwen/xw_rd.htm"
     lineList=[]
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
@@ -50,7 +50,7 @@ def event_func_gwy():
             html=response.read()
             parsed_html = lxml.html.fromstring(html)
             ##修改xpath，得到相关新闻对应的xpath语法
-            for elem in parsed_html.xpath("//div/div/ul/li/a"):
+            for elem in parsed_html.xpath("//div/div/div/div/ul/li/a"):
                 newOne=elem.text_content()
                 if not newOne in newsList:
                     newsList.append(elem.text_content())

@@ -21,6 +21,13 @@ def countTrendByRiseRate(cStock,fList,fLow,fHigh):
             fSelectList.append(fList[k+1])
     print("满足条件个数：{},>0的个数{}".format(len(fSelectList),len(filter(lambda x:x>0,fSelectList))))
 
+def volumeCompare():
+    curStock=Stock('399001')
+    shStock=Stock('999999')
+    print ("量能对比分析最后5个交易日量能对比：")
+    print shStock.stockID,shStock.stockName,shStock.dayStrList[-5:],shStock.dayRadioLinkOfTradeVolumeFList[-5:]
+    print curStock.stockID,curStock.stockName,curStock.dayStrList[-5:],curStock.dayRadioLinkOfTradeVolumeFList[-5:]
+
 ##根据第一天的走势，第二天趋势分析
 ##fList是需要分析的数据list，比如涨幅，或者高开数据，flow是数据区间的下限值，fHigh是数据区间的上限值
 def countTrendByOpenCloseRate(cStock,fList,fLow,fHigh):
@@ -40,6 +47,31 @@ def trend(cStock):
             if todayLastYear-datetime.timedelta(days=1)<=item<=todayLastYear+datetime.timedelta(days=10):
                 _index=cStock.dateList.index(item)
                 print cStock.dayStrList[_index],cStock.dayRiseRateFList[_index]
+
+##分析股票与大盘走势的同步性
+def analysisSynchronization(cStock,cMarketStock,dateStrStart,dateStrEnd):
+## get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart=dayStrList.index(dateStrStart)
+    indexEnd=dayStrList.index(dateStrEnd)
+    print("-"*50)
+    synFile=stockID+"syn.txt"
+    fileWrited=open(synFile,'w')
+    waveSHFList=[]
+    waveStockFList=[]
+## 通过日期找到大盘同期index
+    fileWrited.write("日期"+"\t"+"大盘涨幅"+"\t"+"股票涨幅"+"\t"+ '同步比例\n')
+    for i in range(indexStart,indexEnd):
+        dateStrSH=dayStrList[i]
+        indexSH=cMarketStock.index(dateStrSH)
+        r1=round(100*(cStock.dayPriceClosedFList[i]-cStock.dayPriceClosedFList[i-1])/cStock.dayPriceClosedFList[i-1],2)
+        waveStockFList.append(r1)
+        rSH=round(100*(cMarketStock.dayPriceClosedFList[indexSH]-cMarketStock.dayPriceClosedFList[indexSH-1])/cMarketStock.dayPriceClosedFList[indexSH-1],2)
+        waveSHFList.append(rSH)
+        line=dateStrSH+"\t"+str(rSH)+"\t"+str(r1)+"\t"+ str(round(r1-rSH,2))
+        fileWrited.write(line+'\n')
+    fileWrited.close()
+    print("股票与大盘指数相关系数："+str(pearsonr(waveSHFList,waveStockFList)))
+    print("大盘同步性分析写入"+synFile)
 
 
 def compareStockAndMarket(cStock,strDateStart,strDateEnd):
@@ -93,7 +125,10 @@ def statisticsRiselrate(cStock,iYearStart,iYearEnd,sMDStart,sMDEnd):## sMDStart=
     ind =np.arange(len(dateTick))    # the x locations for the groups
     width=0.35
     
-    p1 = plt.bar(ind, dataDraw, width, color='r')
+    barlist = plt.bar(ind, dataDraw, width, color='r')
+    for i in range(len(dataDraw)):
+        if dataDraw[i] <=0:
+            barlist[i].set_color('g')
     plt.ylabel(u'riseRate')
     plt.title(cStock.stockID)
     ax=plt.gca()
@@ -111,6 +146,9 @@ if __name__=="__main__":
     curStock=Cstock.Stock(stockID)
     curStock.list2array()
     curMarketStock=Ccomfunc.getMarketStock(stockID) 
+    
+    ##比较与大盘的同步性
+
     ##输出文件名
     goalFilePath='result.txt'
     fileWrited=open(goalFilePath,'w')

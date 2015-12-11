@@ -225,30 +225,6 @@ def analysisConsecutive(stockID,dateStrStart,dateStrEnd,numConsecutiveTradeDays,
         strDate=strDate+dayStrList[item]+"\t"
     print("振幅超过比例天数:\t"+str(len(waveFList))+"\t起始日期是："+strDate)
 
-##分析股票与大盘走势的同步性
-def analysisSynchronization(stockID,dateStrStart,dateStrEnd):
-## get analysis indexStartDay and indexEndDay by dayStrList
-    indexStart=dayStrList.index(dateStrStart)
-    indexEnd=dayStrList.index(dateStrEnd)
-    print("-"*50)
-    synFile=stockID+"syn.txt"
-    fileWrited=open(synFile,'w')
-    waveSHFList=[]
-    waveStockFList=[]
-## 通过日期找到大盘同期index
-    fileWrited.write("日期"+"\t"+"大盘涨幅"+"\t"+"股票涨幅"+"\t"+ '同步比例\n')
-    for i in range(indexStart,indexEnd):
-        dateStrSH=dayStrList[i]
-        indexSH=shDateStrList.index(dateStrSH)
-        r1=round(100*(priceCloseingFList[i]-priceCloseingFList[i-1])/priceCloseingFList[i-1],2)
-        waveStockFList.append(r1)
-        rSH=round(100*(shPriceCloseingFList[indexSH]-shPriceCloseingFList[indexSH-1])/shPriceCloseingFList[indexSH-1],2)
-        waveSHFList.append(rSH)
-        line=dateStrSH+"\t"+str(rSH)+"\t"+str(r1)+"\t"+ str(round(r1-rSH,2))
-        fileWrited.write(line+'\n')
-    fileWrited.close()
-    print("股票与大盘指数相关系数："+str(pearsonr(waveSHFList,waveStockFList)))
-    print("大盘同步性分析写入"+synFile)
     
 
 if __name__=="__main__":
