@@ -6,7 +6,6 @@ import datetime
 import Ccomfunc
 import numpy as np
 
-
 ##根据StockID读入数据
 class Stock:
     def list2array(self):
@@ -27,18 +26,104 @@ class Stock:
 #        self.day3PriceAverageFList=[]     ##3日均价
 #        self.day5PriceAverageFList=[]     ##5日均价
 #        self.day10PriceAverageFList=[]     ##10日均价
-    def findIndexByDayStr(self,dayStr="2015/01/05"):
-        if dayStr in self.dayStrList:
-            return self.dayStrList.index(dayStr)
-        else:
-            return -1
+
+    ##构造周级别数据
+    def initWeekData(self):
+        self.weekPriceOpenFList=[]       ##week开盘价
+        self.weekPriceClosedFList=[]     ##week收盘价
+        self.weekPriceHighestFList=[]    ##week最高价
+        self.weekPriceLowestFList=[]     ##week最低价
+        self.weekTradeVolumeFList=[]     ##week成交量
+        self.weekTurnOverFList=[]        ##week成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
+        self.weekRiseRateFList=[]        ##week价格涨幅
+        self.weekRiseRateLowestFList=[]        ##week价格涨幅
+        self.weekRiseRateHighestFList=[]        ##week价格涨幅
+        self.weekWaveRateFList=[]        ##week波动涨幅
+        self.weekOpenRateFList=[]	       ##week开盘幅度，主要分析高开、低开等
+        self.weekPriceAverageFList=[]     ##日均价
+        self.weekOpenCloseRateFList=[]	##week收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
+        self.weekRadioLinkOfTradeVolumeFList=[]  ##week成交量倍数
+        self.weekRiseOfTurnOverFList=[]  ##week成交额倍数
+    
+    ##构造月级别数据
+    def initMonthData(self):
+        self.monthStrList=[]          ##月，string
+        self.monthPriceOpenFList=[]    ##month开盘价
+        self.monthPriceClosedFList=[]     ##month收盘价
+        self.monthPriceHighestFList=[]    ##month最高价
+        self.monthPriceLowestFList=[]     ##month最低价
+        self.monthTradeVolumeFList=[]     ##month成交量
+        self.monthTurnOverFList=[]        ##month成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
+        self.monthRiseRateFList=[]        ##month价格涨幅
+        self.monthWaveRateFList=[]        ##month波动涨幅
+        self.monthOpenRateFList=[]		##month开盘幅度，主要分析高开、低开等
+        self.monthOpenCloseRateFList=[]	##month收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
+        self.monthRiseOfTradeVolumeFList=[]  ##month成交量涨幅
+        self.monthRiseOfTurnOverFList=[]  ##month成交额涨幅
+        ##为了得到月度数据统计结果，把dateList分片的指数按年月存储在元组里
+        indexYearMonthList=[]  ##定义一个List 存储 按月度分离的指数，存元组（年，月，在dateList起始下标，在dateList结束下标）
+        indexStart=0
+        for i in range(1,len(self.dateList)):
+            itemCur = self.dateList[i]
+            itemBefore=self.dateList[i-1]
+            if  itemCur.month!=itemBefore.month or itemCur.year!=itemBefore.year:
+                dictIndex={}
+                dictIndex["year"]=itemBefore.year
+                dictIndex["month"]=itemBefore.month
+                dictIndex["indexStart"]=indexStart
+                dictIndex["indexEnd"]=i-1
+                indexYearMonthList.append(dictIndex)
+                indexStart=i
+            if i==len(self.dateList)-1:
+                dictIndex={}
+                dictIndex["year"]=itemCur.year
+                dictIndex["month"]=itemCur.month
+                dictIndex["indexStart"]=indexStart
+                dictIndex["indexEnd"]=i
+                indexYearMonthList.append(dictIndex)
+
+        for item in indexYearMonthList:
+#                print item  ##print dictIndex debug used
+            self.monthStrList.append("{}{:02}".format(item["year"],item["month"]))
+            self.monthPriceOpenFList.append(self.dayPriceOpenFList[item["indexStart"]])
+            self.monthPriceClosedFList.append(self.dayPriceClosedFList[item["indexEnd"]])
+            if item["indexEnd"]>item["indexStart"]: ##处理一个月只有1个交易日，导致indexStart==indexEnd==0
+                self.monthPriceHighestFList.append(max(self.dayPriceHighestFList[item["indexStart"]:item["indexEnd"]]))
+                self.monthPriceLowestFList.append(min(self.dayPriceLowestFList[item["indexStart"]:item["indexEnd"]]))
+                self.monthTradeVolumeFList.append(sum(self.dayTradeVolumeFList[item["indexStart"]:item["indexEnd"]]))
+                self.monthTurnOverFList.append(sum(self.dayTurnOverFList[item["indexStart"]:item["indexEnd"]]))
+            else:
+                self.monthPriceHighestFList.append(self.dayPriceHighestFList[item["indexEnd"]])
+                self.monthPriceLowestFList.append(self.dayPriceLowestFList[item["indexEnd"]])
+                self.monthTradeVolumeFList.append(self.dayTradeVolumeFList[item["indexEnd"]])
+                self.monthTurnOverFList.append(self.dayTurnOverFList[item["indexEnd"]])
+
+            ##计算月度涨幅和振幅
+            if len(self.monthPriceClosedFList)>=2 and self.monthPriceClosedFList[-2]>0:
+                ##(当日收盘-上日收盘)/上一日收盘
+                self.monthRiseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
+                ##(当日最高-当日最低)/上一日收盘
+                self.monthWaveRateFList.append(round(100*(self.monthPriceHighestFList[-1]-self.monthPriceLowestFList[-1])/self.monthPriceClosedFList[-2],2))
+                ##(当日开盘-上日收盘)/上一日收盘
+                self.monthOpenRateFList.append(round(100*(self.monthPriceOpenFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
+                ##(当日收盘-当日开盘)/上一日收盘
+                self.monthOpenCloseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceOpenFList[-1])/self.monthPriceClosedFList[-2],2))
+            else:
+                self.monthRiseRateFList.append(-999)
+                self.monthWaveRateFList.append(-999)
+                self.monthOpenRateFList.append(-999)
+                self.monthOpenCloseRateFList.append(-999)
+   
+
     def __init__(self,stockID,stockDirData="C:\\new_dxzq_v6\\T0002\\export\\"):
         self.stockName=""
         self.stockID=stockID
-        print("#"*80)
-        self.dayStrList=[]          ##day日期，string
+        print("-"*72)
+        self.dayStrList=[]           ##day日期，string
         self.dateList=[]             ##date日期，date格式
-        self.dayPriceOpenFList=[]    ##day开盘价
+        
+        ##日级别
+        self.dayPriceOpenFList=[]       ##day开盘价
         self.dayPriceClosedFList=[]     ##day收盘价
         self.dayPriceHighestFList=[]    ##day最高价
         self.dayPriceLowestFList=[]     ##day最低价
@@ -53,19 +138,6 @@ class Stock:
         self.dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
         self.dayRadioLinkOfTradeVolumeFList=[]  ##day成交量倍数
         self.dayRiseOfTurnOverFList=[]  ##day成交额倍数
-        self.monthStrList=[]          ##月，string
-        self.monthPriceOpenFList=[]    ##month开盘价
-        self.monthPriceClosedFList=[]     ##month收盘价
-        self.monthPriceHighestFList=[]    ##month最高价
-        self.monthPriceLowestFList=[]     ##month最低价
-        self.monthTradeVolumeFList=[]     ##month成交量
-        self.monthTurnOverFList=[]        ##month成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
-        self.monthRiseRateFList=[]        ##month价格涨幅
-        self.monthWaveRateFList=[]        ##month波动涨幅
-        self.monthOpenRateFList=[]		##month开盘幅度，主要分析高开、低开等
-        self.monthOpenCloseRateFList=[]	##month收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
-        self.monthRiseOfTradeVolumeFList=[]  ##month成交量涨幅
-        self.monthRiseOfTurnOverFList=[]  ##month成交额涨幅
        
         stockDataFile=os.path.join(stockDirData,stockID+'.txt')
         if os.path.exists(stockDataFile):
@@ -114,8 +186,6 @@ class Stock:
                         self.dayOpenCloseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceOpenFList[-1])/self.dayPriceClosedFList[-2],2))
                     else:
                         self.dayRiseRateFList.append(-999)
-                        self.monthPriceLowestFList.append(-999)
-                        self.monthPriceHighestFList.append(-999)
                         self.dayWaveRateFList.append(-999)
                         self.dayOpenRateFList.append(-999)
                         self.dayOpenCloseRateFList.append(-999)
@@ -131,64 +201,11 @@ class Stock:
                         self.dayRiseOfTurnOverFList.append(-999)
             fileOpened.close()
             
-            ##从日数据构造月度分析数据
-            ##为了得到月度数据统计结果，把dateList分片的指数按年月存储在元组里
-            indexYearMonthList=[]  ##定义一个List 存储 按月度分离的指数，存元组（年，月，在dateList起始下标，在dateList结束下标）
-            indexStart=0
-            for i in range(1,len(self.dateList)):
-                itemCur = self.dateList[i]
-                itemBefore=self.dateList[i-1]
-                if  itemCur.month!=itemBefore.month or itemCur.year!=itemBefore.year:
-                    dictIndex={}
-                    dictIndex["year"]=itemBefore.year
-                    dictIndex["month"]=itemBefore.month
-                    dictIndex["indexStart"]=indexStart
-                    dictIndex["indexEnd"]=i-1
-                    indexYearMonthList.append(dictIndex)
-                    indexStart=i
-                if i==len(self.dateList)-1:
-                    dictIndex={}
-                    dictIndex["year"]=itemCur.year
-                    dictIndex["month"]=itemCur.month
-                    dictIndex["indexStart"]=indexStart
-                    dictIndex["indexEnd"]=i
-                    indexYearMonthList.append(dictIndex)
-
-            for item in indexYearMonthList:
-#                print item  ##print dictIndex debug used
-                self.monthStrList.append("{}{:02}".format(item["year"],item["month"]))
-                self.monthPriceOpenFList.append(self.dayPriceOpenFList[item["indexStart"]])
-                self.monthPriceClosedFList.append(self.dayPriceClosedFList[item["indexEnd"]])
-                if item["indexEnd"]>item["indexStart"]: ##处理一个月只有1个交易日，导致indexStart==indexEnd==0
-                    self.monthPriceHighestFList.append(max(self.dayPriceHighestFList[item["indexStart"]:item["indexEnd"]]))
-                    self.monthPriceLowestFList.append(min(self.dayPriceLowestFList[item["indexStart"]:item["indexEnd"]]))
-                    self.monthTradeVolumeFList.append(sum(self.dayTradeVolumeFList[item["indexStart"]:item["indexEnd"]]))
-                    self.monthTurnOverFList.append(sum(self.dayTurnOverFList[item["indexStart"]:item["indexEnd"]]))
-                else:
-                    self.monthPriceHighestFList.append(self.dayPriceHighestFList[item["indexEnd"]])
-                    self.monthPriceLowestFList.append(self.dayPriceLowestFList[item["indexEnd"]])
-                    self.monthTradeVolumeFList.append(self.dayTradeVolumeFList[item["indexEnd"]])
-                    self.monthTurnOverFList.append(self.dayTurnOverFList[item["indexEnd"]])
-
-                ##计算月度涨幅和振幅
-                if len(self.monthPriceClosedFList)>=2 and self.monthPriceClosedFList[-2]>0:
-                    ##(当日收盘-上日收盘)/上一日收盘
-                    self.monthRiseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
-                    ##(当日最高-当日最低)/上一日收盘
-                    self.monthWaveRateFList.append(round(100*(self.monthPriceHighestFList[-1]-self.monthPriceLowestFList[-1])/self.monthPriceClosedFList[-2],2))
-                    ##(当日开盘-上日收盘)/上一日收盘
-                    self.monthOpenRateFList.append(round(100*(self.monthPriceOpenFList[-1]-self.monthPriceClosedFList[-2])/self.monthPriceClosedFList[-2],2))
-                    ##(当日收盘-当日开盘)/上一日收盘
-                    self.monthOpenCloseRateFList.append(round(100*(self.monthPriceClosedFList[-1]-self.monthPriceOpenFList[-1])/self.monthPriceClosedFList[-2],2))
-                else:
-                    self.monthRiseRateFList.append(-999)
-                    self.monthWaveRateFList.append(-999)
-                    self.monthOpenRateFList.append(-999)
-                    self.monthOpenCloseRateFList.append(-999)
-       
+            self.initMonthData() 
+            
             if len(self.dayStrList)>0:
-                print(u"数据读取完毕,数据开始日：\t"+self.dayStrList[0]+"\t数据结束日：\t"+self.dayStrList[-1]+ \
-                       "\t收盘价：\t"+str(self.dayPriceClosedFList[-1]))
+                print("DateStart: "+self.dayStrList[0]+"\tDateEnd: "+self.dayStrList[-1]+ \
+                        "\tPriceClosedLastDay: "+str(self.dayPriceClosedFList[-1]))
             else:
                 print(u"数据列为空")
 
