@@ -46,20 +46,21 @@ def printResult(curStock,kMatchIndexList):
     goalFilePath="ResultStatictics.txt" ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList) 
     ##绘图分析
-    num_bins = 10
-    # the histogram of the data
-    n, bins, patches = plt.hist(dataX, num_bins, normed=1, facecolor='green', alpha=0.5)
-    # add a 'best fit' line
-    mu = 100  # mean of distribution
-    sigma = 15  # standard deviation of distribution
-    y = mlab.normpdf(bins, mu, sigma)
-    plt.plot(bins, y, 'r--')
-    plt.xlabel('Smarts')
-    plt.ylabel('%')
-    plt.title(r'Histogram of result: ')
+    if len(dataX)>0:
+        num_bins = 10
+        # the histogram of the data
+        n, bins, patches = plt.hist(dataX, num_bins, normed=1, facecolor='green', alpha=0.5)
+        # add a 'best fit' line
+        mu = 100  # mean of distribution
+        sigma = 15  # standard deviation of distribution
+        y = mlab.normpdf(bins, mu, sigma)
+        plt.plot(bins, y, 'r--')
+        plt.xlabel('Smarts')
+        plt.ylabel('%')
+        plt.title(r'Histogram of result: ')
 
-    plt.subplots_adjust(left=0.15)
-    plt.show()
+        plt.subplots_adjust(left=0.15)
+        plt.show()
 
 def addInforLine(inforLine):
     lineWritedList.append("-"*72)
@@ -69,24 +70,38 @@ def main(stockID,strDate=""):
     curStock=Cstock.Stock(stockID)
     curStock.list2array()
     
+    curMarketStock=Ccomfunc.getMarketStock(stockID)
+    
+    lineWrited=[]
+    headline="日期\tcur最低\tmarket最低\tcur最高\tmarket最高\tcur波动幅度\tmarket波动幅度"
+    lineWrited.append( headline )
+    for i in range(-30,0):
+        j=curMarketStock.dayStrList.index( curStock.dayStrList[i] ) ## curStock 和 curMarketStock 不一定是相同指数，由于停牌等等原因
+        wordList=[]
+        wordList.append( str( curStock.dayStrList[i] ) )
+        wordList.append( str( curStock.dayRiseRateLowestArray[i] ) )
+        wordList.append( str( curMarketStock.dayRiseRateLowestArray[j] ) ) 
+        wordList.append( str( curStock.dayRiseRateHighestArray[i] ) )
+        wordList.append( str( curMarketStock.dayRiseRateHighestArray[j] ) )
+        wordList.append( str( curStock.dayWaveRateArray[i] ) )
+        wordList.append( str( curMarketStock.dayWaveRateArray[j] ) )
+        lineWrited.append("\t".join(wordList))
+
+    Ccomfunc.write2Text("ana.txt",lineWrited)
     indexDateStart=0
     indexDateEnd=len(curStock.dayStrList)
     
+    ##手工设置条件，前日最低，前日最高，前日波动，今日开盘价，然后统计分析
     print("-"*72)
     kPatternList=[]
     for i in range(indexDateStart,indexDateEnd):
-        if curStock.dayOpenRateArray[i]<-0.5:
+        if curStock.dayOpenRateArray[i]<=-0.9 and -0.7<=curStock.dayPriceClosedArray[i-1]<=-0.5:
             kPatternList.append(i)
     printResult(curStock,kPatternList)
     
 
 def mainAppCall(strDate=""):
-#    del configOS.patternRecDateListSH[:]
-#    del configOS.patternRecDateListSZ[:]
-#    del configOS.patternRecDateListCYB[:]
-#    for stockID in configOS.stockIDMarketList: 
-    riseRateOpen=-0.5
-    main("999999",riseRateOpen) ##-1是最后一个交易日分析
+    main("002152") ##-1是最后一个交易日分析
     
 
 

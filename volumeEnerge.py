@@ -34,12 +34,14 @@ def moodIndex(curStock,period):
         print( curStock.dayStrList[-period:][item] )
     tradeVolmin=tradeVolmin/numOfmoodDay
     
+    print ("-"*72)
+
     ##规定tradeVolmin+(tradeVolmax-tradeVolmin)*0.5 为 0.50
     ##计算情绪指数
 
     moodIndex50=tradeVolmin+(tradeVolmax-tradeVolmin)*0.5
-    for i in range(100,0,-1):
-        moodIndex=(curStock.dayTradeVolumeArray[-i]-moodIndex50)/moodIndex50+0.50
+    for i in range(10,0,-1):
+        moodIndex=100*(curStock.dayTradeVolumeArray[-i]-moodIndex50)/moodIndex50+50
         print (u"{}情绪指数：{:.2f},次日涨幅{}".format(curStock.dayStrList[-i],moodIndex,curStock.dayRiseRateFList[-i+1]))
 
 
@@ -51,7 +53,7 @@ if __name__ == "__main__":
     shStock.list2array()
     ## 应该考虑长期情绪指数和短期情绪指数
     moodIndex(shStock,100)
-    moodIndex(shStock,15)
+    moodIndex(shStock,200)
     ## 蓝筹市场、中小创市场判断,主要看 上证和深市的涨幅和人气对比
     print (u"市场类型判断")
 

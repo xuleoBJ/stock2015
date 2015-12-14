@@ -193,14 +193,10 @@ def main(cStock):
                 cStock.dayStrList[i],weekDay,cStock.dayPriceClosedArray[i],cStock.dayRiseRateFList[i],\
                 cStock.dayRadioLinkOfTradeVolumeFList[i],cStock.dayWaveRateFList[i])
         print resultLine
-    
-
 
     ## 美股-1.5以上，当日上午不买做T，可以适度的上午减仓做T。 
     ## 设计做T的价格，用15分钟K线的支撑或者其它点位。
     ## 大盘涨价少 跌家多 不做短线。 
-    
-
 
     ##做T的价格如果低了2个点 坚决出。
 
