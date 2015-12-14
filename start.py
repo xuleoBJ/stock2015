@@ -28,7 +28,9 @@ def calGDG():
 
 
 
-def main(curStock):
+def main(stockID):
+    curStock=Cstock.Stock(stockID)
+    curStock.list2array()
     ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
@@ -79,7 +81,7 @@ def main(curStock):
 
     print(u"-"*72)
     print(u"3-市场情绪趋势分析")
-    volumeEnerge.moodIndex(curStock,200)
+    volumeEnerge.moodIndex(stockID)
 
     
 ## 3.仓位控制和仓位止损控制
@@ -98,14 +100,7 @@ if __name__ == "__main__":
     
     stockIDList=configOS.stockIDMarketList
     for stockID in ["999999"]:
-        curStock=Cstock.Stock(stockID)
-        curStock.list2array()
-        main(curStock)
-#    
-#    for stockID in configOS.stockIDList:
-#        curStock=Cstock.Stock(stockID)
-#        curStock.list2array()
-#        stockTecSet.main(curStock)
+        main(stockID)
     
     timeSpan=time.clock()-startClock
 

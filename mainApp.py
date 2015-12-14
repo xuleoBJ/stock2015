@@ -64,10 +64,8 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         stockPatternRecognition.mainAppCall(sDate)
 
     def tradeWarn(self):
-        for stockID in ["999999"]:
-            curStock=Stock(stockID)
-            curStock.list2array()
-            start.main(curStock)
+        stockID=str(self.lineEditInputStockIDTrend.text())
+        start.main(stockID)
     
     def setupListWidget(self,iItem):
         stockIDselect=self.comboBoxStockID.itemText(iItem)
