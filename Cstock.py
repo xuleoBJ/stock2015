@@ -118,6 +118,7 @@ class Stock:
     def __init__(self,stockID,stockDirData="C:\\new_dxzq_v6\\T0002\\export\\"):
         self.stockName=""
         self.stockID=stockID
+        self.count = 0
         print("-"*72)
         self.dayStrList=[]           ##day日期，string
         self.dateList=[]             ##date日期，date格式
@@ -200,10 +201,11 @@ class Stock:
                     else:
                         self.dayRiseOfTurnOverFList.append(-999)
             fileOpened.close()
-            
+            self.count
             self.initMonthData() 
             
             if len(self.dayStrList)>0:
+                self.count=len(self.dayStrList)
                 print("DateStart: "+self.dayStrList[0]+"\tDateEnd: "+self.dayStrList[-1]+ \
                         "\tPriceClosedLastDay: "+str(self.dayPriceClosedFList[-1]))
             else:

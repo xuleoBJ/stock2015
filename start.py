@@ -26,17 +26,21 @@ def calGDG():
     AB_SZ=21.7
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
-
-
 def main(stockID):
     curStock=Cstock.Stock(stockID)
     curStock.list2array()
     ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
-     
+    
+    today=datetime.date.today()
     print(u"-"*72)
-    print(u"当前市场定义：强势，弱势？上升市，下跌市，震荡市？这个月的目标是啥？")
+    print(u"近期市场分析：")
+    for i in range(-5,0):
+        weekDay=curStock.dateList[i].isoweekday() 
+        print(u"{}:星期{},涨幅{:.2f}%，量能比{:.2f}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i]))
+     
     print(u"-"*72)
 
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
@@ -95,7 +99,6 @@ if __name__ == "__main__":
  
     startClock=time.clock() ##记录程序开始计算时间
     Ccomfunc.printInfor()
-    print(u"当前市场定义：强势，弱势？上升市，下跌市，震荡市？这个月的目标是啥？")
 #    calGDG()
     
     stockIDList=configOS.stockIDMarketList

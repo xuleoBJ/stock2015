@@ -40,17 +40,17 @@ def printResult(curStock,kMatchIndexList):
                 matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
         valueLine='\t'.join(map(str,sorted(riseRateNextList)))
         _median=np.median(riseRateNextList)
-        lineWritedList.append(u"收盘涨幅:{},中位数:{:.2f}".format(valueLine,_median))
+        lineWritedList.append(u"收盘涨幅:{}\t中位数:{:.2f}".format(valueLine,_median))
         valueHighestLine='\t'.join(map(str,sorted(riseRateHighestNextList)))
         _median=np.median(riseRateHighestNextList)
-        lineWritedList.append(u"最高涨幅:{},中位数:{:.2f}".format(valueHighestLine,_median))
+        lineWritedList.append(u"最高涨幅:{}\t中位数:{:.2f}".format(valueHighestLine,_median))
         valueLowestLine='\t'.join(map(str,sorted(riseRateLowestNextList)))
         _median=np.median(riseRateLowestNextList)
-        lineWritedList.append(u"最低涨幅:{},中位数:{:.2f}".format(valueLowestLine,_median))
+        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
     
     for index in kMatchIndexList: 
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
+        weekDay=curStock.dateList[index].isoweekday() 
         resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
@@ -60,7 +60,7 @@ def printResult(curStock,kMatchIndexList):
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
         for intervalDay in [-60,-30,-10,-5,3,5,8,13,21,44]:
-            resultLine=u"{}日涨幅{:.2f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
+            resultLine=u"{}日涨幅:\t{:.2f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
             lineWritedList.append(resultLine)
 
 ##利用个股和对应大盘的同步性分析 进行模式识别

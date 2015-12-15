@@ -7,7 +7,12 @@ import time,sched,os,urllib2,re,string
 import ctypes
 from Cstock import Stock
 import numpy as np
-
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.mlab as mlab
+import matplotlib.cbook as cbook
+import matplotlib.ticker as ticker
+from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, DayLocator, MONDAY,YearLocator , MonthLocator 
 
 def calMoodIndexBase(cStock,period=200):
     print (u"{}日情绪指数分析".format(period))
@@ -45,11 +50,34 @@ def moodIndex(stockID,period=200):
     cStock=Stock(stockID)
     cStock.list2array()
     tradeVolBase,moodIndexBase =  calMoodIndexBase(cStock,period)
+    moodIndexList=[]
     ##计算情绪指数
-    for i in range(20,0,-1):
+    for i in range(100,0,-1):
         moodIndex=(cStock.dayTradeVolumeArray[-i]-tradeVolBase)/moodIndexBase
-        print (u"{}情绪指数：{:.2f},次日涨幅{}".format(cStock.dayStrList[-i],moodIndex,cStock.dayRiseRateFList[-i+1]))
-
+        moodIndexList.append(moodIndex)
+        print (u"{}情绪指数：{:.2f}\t次日涨幅:{}".format(cStock.dayStrList[-i],moodIndex,cStock.dayRiseRateFList[-i+1]))
+    
+    mplDate=mpl.dates.date2num(cStock.dateList[-100:])
+    mplData=moodIndexList
+    print len(mplDate),len(mplData)
+    mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
+    alldays    = DayLocator()              # minor ticks on the days
+    weekFormatter = DateFormatter('%Y-%m-%d')  # e.g., Jan 12
+    dayFormatter = DateFormatter('%d')      # e.g., 12
+    yearsFmt = DateFormatter('%Y')
+    fig, ax = plt.subplots()
+    ax.plot(mplDate, mplData, 'o-')
+    right_ax = ax.twinx() 
+    right_ax.plot(mplDate, cStock.dayPriceClosedArray[-100:], '--',color="r")
+    
+    ax.xaxis.set_major_locator(mondays)
+    ax.xaxis.set_minor_locator(alldays)
+    ax.xaxis.set_major_formatter(weekFormatter)
+    ax.autoscale_view()
+    fig.autofmt_xdate()
+    
+    plt.title(u"{}情绪指数分析".format(cStock.stockID),color='r')
+    plt.show()
 
 if __name__ == "__main__":
     print (u"市场情绪分析：")

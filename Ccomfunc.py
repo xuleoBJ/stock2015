@@ -57,7 +57,7 @@ def getIndexByStrdate(_curStock,_dateStr):
 
 ## 根据date返回最接近的index，有就返回最近的指数，超出，返回-1
 def getIndexByDate(_curStock,dateInput):
-    for i in range(0,len(_curStock.dateList)-1):
+    for i in range(0,_curStock.count-1):
         if _curStock.dateList[i]<=dateInput<_curStock.dateList[i+1]:
             return i
     return -1
@@ -65,7 +65,6 @@ def getIndexByDate(_curStock,dateInput):
 ## 根据输入的date，返回每个月的1号
 def first_day_of_month( inputDate ):
     return datetime.date( inputDate.year, inputDate.month, 1 )
-
 
 ## 根据输入的date，返回当周周1的日期
 def monday_of_week( inputDate ):
@@ -81,8 +80,6 @@ def calNatureDays( dateStr1 , dateStr2 ):
     d1= convertDateStr2Date(dateStr1)
     d2= convertDateStr2Date(dateStr2)
     return (d1-d2).days
-
-
 
 def printInfor():
     ctypes.windll.user32.MessageBoxA(0, "1-What's your trade plan today?\n2-Every Trade is a complete chance?\n3-0-patience 1-time,2-volume,3-price.\n4-Some money is not in my system.", "infor", 1)
@@ -101,7 +98,6 @@ def write2Text(goalFilePath,lineList):
     for line in lineList:
         fileWrited.write(line+'\n')
     fileWrited.close()
-
 
 if __name__=="__main__":
     today=datetime.date.today()
