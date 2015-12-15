@@ -17,7 +17,7 @@ import pdb
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
 def calRiseRateBetween2Date(myStrInput,interval):
     stockIDList=["999999","399001"]
-    fileNames=os.listdir(Ccomfunc.dirHisData)
+    fileNames=os.listdir(Ccomfunc.src)
     for fileItem in fileNames:
         ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
         if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") :
@@ -26,7 +26,7 @@ def calRiseRateBetween2Date(myStrInput,interval):
     
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
-        curStock=Cstock.Stock(stockID,Ccomfunc.dirHisData)
+        curStock=Cstock.Stock(stockID)
         curStock.list2array()
         sList=[]
         sList.append(curStock.stockID)
@@ -91,7 +91,7 @@ if __name__=="__main__":
 
    #lineWritedList=selectStockByMonthRise() 
     
-    lineWritedList=calRiseRateBetween2Date("12/04",10) 
+    lineWritedList=calRiseRateBetween2Date("12/15",10) 
     
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     

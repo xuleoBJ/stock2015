@@ -13,6 +13,8 @@ import matplotlib.mlab as mlab
 import matplotlib.cbook as cbook
 import matplotlib.ticker as ticker
 from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, DayLocator, MONDAY,YearLocator , MonthLocator 
+mpl.rcParams['font.sans-serif'] = ['SimHei'] 
+mpl.rcParams['axes.unicode_minus'] = False  ## 负号问题
 
 def calMoodIndexBase(cStock,period=200):
     print (u"{}日情绪指数分析".format(period))
@@ -52,30 +54,38 @@ def moodIndex(stockID,period=200):
     tradeVolBase,moodIndexBase =  calMoodIndexBase(cStock,period)
     moodIndexList=[]
     ##计算情绪指数
-    for i in range(100,0,-1):
+    for i in range(period,0,-1):
         moodIndex=(cStock.dayTradeVolumeArray[-i]-tradeVolBase)/moodIndexBase
         moodIndexList.append(moodIndex)
-        print (u"{}情绪指数：{:.2f}\t次日涨幅:{}".format(cStock.dayStrList[-i],moodIndex,cStock.dayRiseRateFList[-i+1]))
+   #     print (u"{}情绪指数：{:.2f}\t次日涨幅:{}".format(cStock.dayStrList[-i],moodIndex,cStock.dayRiseRateFList[-i+1]))
     
-    mplDate=mpl.dates.date2num(cStock.dateList[-100:])
+    mplDate=mpl.dates.date2num(cStock.dateList[-period:])
     mplData=moodIndexList
-    print len(mplDate),len(mplData)
     mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
     alldays    = DayLocator()              # minor ticks on the days
-    weekFormatter = DateFormatter('%Y-%m-%d')  # e.g., Jan 12
+    weekFormatter = DateFormatter('%Y%m%d')  # e.g., Jan 12
     dayFormatter = DateFormatter('%d')      # e.g., 12
-    yearsFmt = DateFormatter('%Y')
     fig, ax = plt.subplots()
-    ax.plot(mplDate, mplData, 'o-')
-    right_ax = ax.twinx() 
-    right_ax.plot(mplDate, cStock.dayPriceClosedArray[-100:], '--',color="r")
+    ax.plot(mplDate, mplData, '--',label=u"情绪指数",color="blue")
+    ax.spines['left'].set_color('blue')
+    ax.set_xlabel(u"日期")
+    ax.set_ylabel(u"情绪指数")
+#    ax.set_ylim(-20,100)
     
+    right_ax = ax.twinx() 
+    right_ax.plot(mplDate, cStock.dayPriceClosedArray[-period:], '.-',label=u"收盘价",color="r")
+    right_ax.spines['right'].set_color('red')
+
     ax.xaxis.set_major_locator(mondays)
     ax.xaxis.set_minor_locator(alldays)
     ax.xaxis.set_major_formatter(weekFormatter)
     ax.autoscale_view()
     fig.autofmt_xdate()
-    
+
+    h1, l1 = ax.get_legend_handles_labels()
+    h2, l2 = right_ax.get_legend_handles_labels()
+    plt.legend(h1+h2, l1+l2, loc=2)
+   # plt.legend(loc=0,prop={'size':8}) 
     plt.title(u"{}情绪指数分析".format(cStock.stockID),color='r')
     plt.show()
 
