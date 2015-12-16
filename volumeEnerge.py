@@ -12,12 +12,25 @@ import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import matplotlib.cbook as cbook
 import matplotlib.ticker as ticker
+from matplotlib.ticker import Formatter
 from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, DayLocator, MONDAY,YearLocator , MonthLocator 
 mpl.rcParams['font.sans-serif'] = ['SimHei'] 
 mpl.rcParams['axes.unicode_minus'] = False  ## 负号问题
 
+class MyFormatter(Formatter):
+    def __init__(self, dates, fmt='%Y-%m-%d'):
+        self.dates = dates
+        self.fmt = fmt
+
+    def __call__(self, x, pos=0):
+        'Return the label for time x at position pos'
+        ind = int(round(x))
+        if ind >= len(self.dates) or ind < 0:
+            return ''
+
+        return self.dates[ind].strftime(self.fmt)
+
 def calMoodIndexBase(cStock,period=200):
-    print (u"{}日情绪指数分析".format(period))
     print ("-"*72)
 #   计算最近period个交易日内的量能排序,通过量能分析市场情绪 
     sortIndexList=cStock.dayTradeVolumeArray[-period:].argsort()
@@ -55,10 +68,15 @@ def moodIndex(stockID,period=200):
     moodIndexList=[]
     ##计算情绪指数
     for i in range(period,0,-1):
-        moodIndex=(cStock.dayTradeVolumeArray[-i]-tradeVolBase)/moodIndexBase
+        moodIndex=round( (cStock.dayTradeVolumeArray[-i]-tradeVolBase)/moodIndexBase , 2)
         moodIndexList.append(moodIndex)
-   #     print (u"{}情绪指数：{:.2f}\t次日涨幅:{}".format(cStock.dayStrList[-i],moodIndex,cStock.dayRiseRateFList[-i+1]))
     
+    print (u"近日情绪指数分析".format())
+    print(moodIndexList[-10:])
+    
+
+   
+
     mplDate=mpl.dates.date2num(cStock.dateList[-period:])
     mplData=moodIndexList
     mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
@@ -66,6 +84,9 @@ def moodIndex(stockID,period=200):
     weekFormatter = DateFormatter('%Y%m%d')  # e.g., Jan 12
     dayFormatter = DateFormatter('%d')      # e.g., 12
     fig, ax = plt.subplots()
+
+    
+
     ax.plot(mplDate, mplData, '.-',label=u"情绪指数",color="blue")
     ax.spines['left'].set_color('blue')
     ax.set_xlabel(u"日期")
@@ -81,6 +102,8 @@ def moodIndex(stockID,period=200):
     ax.xaxis.set_major_locator(mondays)
     ax.xaxis.set_minor_locator(alldays)
     ax.xaxis.set_major_formatter(weekFormatter)
+#    formatter = MyFormatter(mplDate)
+#    ax.xaxis.set_major_formatter(formatter)
     ax.autoscale_view()
     fig.autofmt_xdate()
 

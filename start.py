@@ -10,8 +10,10 @@ import stockTecSet
 import volumeEnerge
 import trendAna
 
+
 from PyQt4 import QtGui # Import the PyQt4 module we'll need
 from PyQt4.QtGui import *
+
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
 def calResistLine(cyclePeriod,keyPoint):
@@ -38,7 +40,7 @@ def main(stockID):
     print(u"近期市场分析：")
     for i in range(-5,0):
         weekDay=curStock.dateList[i].isoweekday() 
-        print(u"{}:星期{},涨幅{:.2f}%，量能比{:.2f}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
+        print(u"{}:星期{} 涨幅{:.2f}%\t量能比{:.2f}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i]))
      
     print(u"-"*72)
@@ -55,9 +57,9 @@ def main(stockID):
         indexLowPoint=curStock.dayPriceLowestFList.index(min(curStock.dayPriceLowestFList[-period:]))
         riseLowcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
         rateLowTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexLowPoint]
-        print(u"{}日高点{}，日期{}，距今{}个交易日,涨幅{:.2f}%，量能比{:.2f}".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
+        print(u"{}日高点{} 日期{} 距今{}个交易日, 涨幅:{:.2f}% 量能比：{:.2f}".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
                 curStock.dayStrList[indexHighPoint],len(curStock.dayStrList)-1-indexHighPoint,riseHighcurrent,rateHighTradeVolumecurrent))
-        print(u"{}日低点{}，日期{}，距今{}个交易日,涨幅{:.2f}%，量能比{:.2f}".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
+        print(u"{}日低点{} 日期{} 距今{}个交易日 涨幅:{:.2f}% 量能比：{:.2f}".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
                 curStock.dayStrList[indexLowPoint],len(curStock.dayStrList)-1-indexLowPoint,riseLowcurrent,rateLowTradeVolumecurrent))
 
     ## 时空分析,关键支撑分析
@@ -69,9 +71,10 @@ def main(stockID):
         cycleLow=curStock.dayPriceLowestArray[-period:].min()
         for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
-            print(u"{}日 低点:{}，高点:{}，{}线:{:.2f}".format(period,cycleLow,cycleHigh,keyPoint,resistLinePoint))
+            resultLine=u"{}日 低点:{} 高点:{} {}线:{:.2f}".format(period,cycleLow,cycleHigh,keyPoint,resistLinePoint)
             if(abs(curStock.dayPriceClosedFList[-1]-resistLinePoint)<=50):
-                print(u"注意压力位！")
+                resultLine+=u"\t注意压力位！"
+            print resultLine
 
     print(u"-"*72)
     print(u"2-当月趋势分析")

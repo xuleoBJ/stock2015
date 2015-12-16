@@ -15,8 +15,6 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy as np
 import matplotlib.mlab as mlab
 
-
-
 lineWritedList=[]
 
 def printResult(curStock,kMatchIndexList):

@@ -7,6 +7,15 @@ import sys
 import Cstock
 import ConfigParser
 import Ccomfunc 
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.mlab as mlab
+import matplotlib.cbook as cbook
+import matplotlib.ticker as ticker
+import datetime
+from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
+     DayLocator, MONDAY,YearLocator, MonthLocator
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -26,11 +35,33 @@ def trendOfMonthHistory(curStock):
     startYear=curStock.dateList[0].year
     today=datetime.date.today()
     currentYear=today.year
+    ymList=[]
+    riseRateList=[]
     for iYear in range(startYear,currentYear):
         iMonth=today.month
         strYM=str(iYear)+str(iMonth)
         findIndexStrYM=curStock.monthStrList.index(strYM)
-        print u"{}年{}月涨幅:{}".format(iYear,iMonth,curStock.monthRiseRateFList[findIndexStrYM])
+        riseOfmonth=curStock.monthRiseRateFList[findIndexStrYM]
+        if riseOfmonth>-100:
+            ymList.append(strYM)
+            riseRateList.append(riseOfmonth)
+            print u"{}年{}月涨幅:{}".format(iYear,iMonth,riseOfmonth)
+    valueLine='\t'.join(map(str,sorted(riseRateList)))
+    _median=np.median(riseRateList[:])
+    print( u"历年涨幅:{}\t中位数:{:.2f}".format(valueLine,_median) )
+    
+    ind = np.arange(len(ymList))    # the x locations for the groups
+    width = 0.35       # the width of the bars: can also be len(x) sequence
+    
+    barlist = plt.bar(ind, riseRateList[:], width, color='r')
+    for i in range(0,len(riseRateList)):
+        if riseRateList[i]<0:
+            barlist[i].set_color('g')
+    plt.ylabel('riseRate(%)')
+    plt.title('history month rise')
+    plt.xticks(ind + width/2., ymList[:])
+
+    plt.show()
 
 ##获得区间的最高点指数
 def getDateIndexHighestPoint(curStock,indexOfDateStart,indexOfDateEnd):
@@ -69,6 +100,6 @@ if __name__=="__main__":
    stockID="999999"
    curStock=Cstock.Stock(stockID)
    curStock.list2array()
-   print getDateIndexLowestPoint(curStock,-100,0)
+   print getDateIndexLowestPoint(curStock,-100,-1)
 
 

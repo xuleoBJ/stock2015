@@ -66,6 +66,16 @@ def getIndexByDate(_curStock,dateInput):
 def first_day_of_month( inputDate ):
     return datetime.date( inputDate.year, inputDate.month, 1 )
 
+## 根据输入的date，返回每个月的最后一天
+def last_day_of_month( inputDate ):
+    monthDays=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    curMonth = inputDate.month
+    curYear = inputDate.year
+    if curMonth==2 and curYear/4==0 and curYear/400!=0 :
+        return datetime.date( inputDate.year, inputDate.month, 29 )
+    else:
+        return datetime.date( inputDate.year, inputDate.month, monthDays[curMonth-1] )
+
 ## 根据输入的date，返回当周周1的日期
 def monday_of_week( inputDate ):
     return  getDayOfWeek( inputDate , 1 )
@@ -105,4 +115,6 @@ if __name__=="__main__":
     today=datetime.date.today()
     print today
     print monday_of_week(today)
+    print last_day_of_month(today)
+    print first_day_of_month(today)
 
