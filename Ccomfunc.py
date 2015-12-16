@@ -83,21 +83,23 @@ def calNatureDays( dateStr1 , dateStr2 ):
 
 def printInfor():
     ctypes.windll.user32.MessageBoxA(0, "1-What's your trade plan today?\n2-Every Trade is a complete chance?\n3-0-patience 1-time,2-volume,3-price.\n4-Some money is not in my system.", "infor", 1)
-    print("\n"+"#"*80)
-    print(u"0.市场是我的好朋友。")
-    print(u"1.朋友相处，需要耐心。")
+    print("-"*72)
+    print(u"0.市场是我的好朋友,朋友相处,需要耐心。")
+    print(u"1.价差还是时间差？大盘稳定的买点可以早盘10：00前 高点的98%或者98.5的位置。")
     print(u"2.减少交易频率，每次交易前要提醒自己，确定性机会，最好是下午2:45以后再买。")
     print(u"3.买卖交易之间必须有时间差！！！万不可盘中频繁的把一只票扔了，马上去买另一只票！买前想逻辑！")
     print(u"4.股市态度要认真,有的钱不去赚。")
     print(u"5.永远不要补仓去摊薄成本。")
-    print(u"6.普涨行情不适合追高，特别是行情好的时候，因为热点不突出。")
-    print("\n"+"#"*80)
+    print(u"6.交易侧重于时间，而不要重于价格。建议的交易时间为 9:45 10:45 11:15 1:45 2:45，希望严格遵守，参考15分钟K线，走平台价 不必要在乎分分毛毛。")
+    print("-"*72)
 
 def write2Text(goalFilePath,lineList):
     fileWrited=open(goalFilePath,'w')
     for line in lineList:
         fileWrited.write(line+'\n')
     fileWrited.close()
+    print("-"*72)
+    print(u"数据保存在{}".format(goalFilePath))
 
 if __name__=="__main__":
     today=datetime.date.today()

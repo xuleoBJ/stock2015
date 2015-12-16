@@ -73,12 +73,16 @@ def main(stockID,strDate=""):
     curMarketStock=Ccomfunc.getMarketStock(stockID)
     
     lineWrited=[]
-    headline="日期\tcur最低\tmarket最低\tcur最高\tmarket最高\tcur波动幅度\tmarket波动幅度"
+    headline="日期\tcur开盘\tcur收盘\tcur最低\tcur最高\tcur最低\tmarket最低\tcur最高\tmarket最高\tcur波动幅度\tmarket波动幅度"
     lineWrited.append( headline )
-    for i in range(-30,0):
+    for i in range(-60,0):
         j=curMarketStock.dayStrList.index( curStock.dayStrList[i] ) ## curStock 和 curMarketStock 不一定是相同指数，由于停牌等等原因
         wordList=[]
         wordList.append( str( curStock.dayStrList[i] ) )
+        wordList.append( str( curStock.dayPriceOpenArray[i] ) )
+        wordList.append( str( curStock.dayPriceLowestArray[i] ) )
+        wordList.append( str( curStock.dayPriceHighestArray[i] ) )
+        wordList.append( str( curStock.dayPriceClosedFList[i] ) )
         wordList.append( str( curStock.dayRiseRateLowestArray[i] ) )
         wordList.append( str( curMarketStock.dayRiseRateLowestArray[j] ) ) 
         wordList.append( str( curStock.dayRiseRateHighestArray[i] ) )
@@ -86,8 +90,9 @@ def main(stockID,strDate=""):
         wordList.append( str( curStock.dayWaveRateArray[i] ) )
         wordList.append( str( curMarketStock.dayWaveRateArray[j] ) )
         lineWrited.append("\t".join(wordList))
-
-    Ccomfunc.write2Text("ana.txt",lineWrited)
+    
+    goalFilePath="ana.txt"
+    Ccomfunc.write2Text(goalFilePath,lineWrited)
     indexDateStart=0
     indexDateEnd=len(curStock.dayStrList)
     
@@ -102,7 +107,6 @@ def main(stockID,strDate=""):
 
 def mainAppCall(strDate=""):
     main("002152") ##-1是最后一个交易日分析
-    
 
 
 if __name__=="__main__":

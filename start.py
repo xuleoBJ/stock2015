@@ -80,8 +80,7 @@ def main(stockID):
     print(u"月初到今日涨幅：{:.2f}".format(riseCurrentMonth))
     ##  分析近年同期走势
     print(u"-"*72)
-    numOfyear=10
-    trendAna.trendOfMonthHistory(curStock,numOfyear)
+    trendAna.trendOfMonthHistory(curStock)
 
     print(u"-"*72)
     print(u"3-市场情绪趋势分析")

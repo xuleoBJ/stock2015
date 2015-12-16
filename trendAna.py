@@ -21,15 +21,25 @@ def calRiseRateCurrentMonth1st2today(_curStock):
 
 
 ##  分析历年年同期走势
-def trendOfMonthHistory(curStock,numOfyear):
-    print (u"过去{}年同月涨幅：".format(numOfyear))
+def trendOfMonthHistory(curStock):
+    print (u"历年同月涨幅：".format())
+    startYear=curStock.dateList[0].year
     today=datetime.date.today()
-    for i in range(1,numOfyear):
-        currentYear=today.year-i
-        currentMonth=today.month
-        strYM=str(currentYear)+str(currentMonth)
+    currentYear=today.year
+    for iYear in range(startYear,currentYear):
+        iMonth=today.month
+        strYM=str(iYear)+str(iMonth)
         findIndexStrYM=curStock.monthStrList.index(strYM)
-        print u"{}年{}月涨幅:{}".format(currentYear,currentMonth,curStock.monthRiseRateFList[findIndexStrYM])
+        print u"{}年{}月涨幅:{}".format(iYear,iMonth,curStock.monthRiseRateFList[findIndexStrYM])
+
+##获得区间的最高点指数
+def getDateIndexHighestPoint(curStock,indexOfDateStart,indexOfDateEnd):
+    return indexOfDateStart+curStock.dayPriceHighestArray[indexOfDateStart:indexOfDateEnd].argmax()
+
+##获得区间的最低点指数
+def getDateIndexLowestPoint(curStock,indexOfDateStart,indexOfDateEnd):
+    return indexOfDateStart+curStock.dayPriceHighestArray[indexOfDateStart:indexOfDateEnd].argmin()
+
 ##计算两个交易日直接的涨幅
 def calRiseRate(curStock,indexOfDateStart,indexOfDateEnd):
     return 100*(curStock.dayPriceClosedFList[indexOfDateStart]-curStock.dayPriceClosedFList[indexOfDateEnd])/curStock.dayPriceClosedFList[indexOfDateEnd]
@@ -56,6 +66,9 @@ def printCalTrend(curStock,intervalDay):
     print(str(intervalDay)+u"个交易日日累计涨幅:"+str(round(calTrend(curStock,intervalDay),2))+"%")
 
 if __name__=="__main__":
-   pass 
+   stockID="999999"
+   curStock=Cstock.Stock(stockID)
+   curStock.list2array()
+   print getDateIndexLowestPoint(curStock,-100,0)
 
 

@@ -11,7 +11,7 @@ from matplotlib.finance import candlestick,\
      plot_day_summary, candlestick_ohlc,volume_overlay3
 from Cstock import Stock
 
-def drawCandleStick(curStock,dateFind):
+def drawCandleStick(curStock,dateFind,interval=10):
     mpl.rcParams['font.sans-serif'] = ['SimHei'] 
 
     mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
@@ -23,7 +23,7 @@ def drawCandleStick(curStock,dateFind):
     #...you convert them in float numbers....
     indexDate=curStock.dayStrList.index(dateFind)
     Prices=[]
-    for i in range(indexDate-10,indexDate+10):
+    for i in range(indexDate-interval,indexDate+interval):
         Date = date2num(datetime.strptime(curStock.dayStrList[i], "%Y/%m/%d"))
     #so redefining the Prices list of tuples... date open high lowest close
         openPrice=curStock.dayPriceOpenFList[i]

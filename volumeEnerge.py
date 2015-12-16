@@ -66,15 +66,17 @@ def moodIndex(stockID,period=200):
     weekFormatter = DateFormatter('%Y%m%d')  # e.g., Jan 12
     dayFormatter = DateFormatter('%d')      # e.g., 12
     fig, ax = plt.subplots()
-    ax.plot(mplDate, mplData, '--',label=u"情绪指数",color="blue")
+    ax.plot(mplDate, mplData, '.-',label=u"情绪指数",color="blue")
     ax.spines['left'].set_color('blue')
     ax.set_xlabel(u"日期")
     ax.set_ylabel(u"情绪指数")
+    
 #    ax.set_ylim(-20,100)
     
     right_ax = ax.twinx() 
-    right_ax.plot(mplDate, cStock.dayPriceClosedArray[-period:], '.-',label=u"收盘价",color="r")
+    right_ax.plot(mplDate, cStock.dayPriceClosedFList[-period:], '.-',label=u"收盘价",color="red")
     right_ax.spines['right'].set_color('red')
+    #right_ax.set_ylim(-10,10)
 
     ax.xaxis.set_major_locator(mondays)
     ax.xaxis.set_minor_locator(alldays)

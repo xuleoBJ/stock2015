@@ -45,11 +45,21 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         self.btnTradeInfor.clicked.connect(self.tradeWarn)
         self.btnPatternRecAna.clicked.connect(self.calPatternRec)
 
-        ##交易策略入库
+        ## 交易策略入库
         self.btnInertDataTradeTactics.clicked.connect(self.inertDataTradeTactics)
 
-        ##数据管理 目录管理
+        ## 数据管理 目录管理
         self.btnCopyData2Dir.clicked.connect(self.copyData2dir)
+
+        ## K线查看
+        self.btnAnaKpattern.clicked.connect(self.kPattern)
+    
+    ##查看K线
+    def kPattern(self):
+        sDate=str(self.lineEditTradeDate.text())
+        stockID=str(self.lineEditInputStockIDTrend.text())
+        curStock=Stock(stockID)
+        drawCandleStick(curStock,sDate,30)
     
     def inertDataTradeTactics(self):
         QMessageBox.about(self, u"提示",u"交易策略已入库")

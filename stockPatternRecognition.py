@@ -257,15 +257,14 @@ def mainAppCall(strDate=""):
 
     for stockID in configOS.stockIDMarketList: 
         main(stockID,strDate) ##-1是最后一个交易日分析
-    
-
 
     configOS.updatePetternRectDateList()
 
     for line in lineWritedList:
         print line
     goalFilePath="patternRec.txt" ##输出文件名
-    Ccomfunc.write2Text(goalFilePath,lineWritedList) 
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    os.startfile(goalFilePath)
 
 if __name__=="__main__":
     

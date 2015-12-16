@@ -31,7 +31,7 @@ def calRiseRateBetween2Date(myStrInput,interval):
         sList=[]
         sList.append(curStock.stockID)
         sList.append(curStock.stockName)
-        for year in [2011,2012,2013,2014]:
+        for year in [2011,2012,2013,2014,2015]:
             dateStr=str(year)+"/"+myStrInput
             print dateStr
             indexOfDate=Ccomfunc.getIndexByStrdate(curStock,dateStr)
@@ -91,7 +91,7 @@ if __name__=="__main__":
 
    #lineWritedList=selectStockByMonthRise() 
     
-    lineWritedList=calRiseRateBetween2Date("12/15",10) 
+    lineWritedList=calRiseRateBetween2Date("1/1",15) 
     
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     
