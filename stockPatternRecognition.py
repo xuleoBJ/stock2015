@@ -59,9 +59,10 @@ def printResult(curStock,kMatchIndexList):
         lineWritedList.append(resultLine)
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
-        for intervalDay in [-60,-30,-10,-5,3,5,8,13,21,44]:
-            resultLine=u"{}日涨幅:\t{:.2f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
-            lineWritedList.append(resultLine)
+        resultLine=u"   --趋势涨幅(日):"
+        for intervalDay in [-20,-10,-5,3,5,8,13]:
+            resultLine+=u" ({}){:.1f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
+        lineWritedList.append(resultLine)
 
 ##利用个股和对应大盘的同步性分析 进行模式识别
 ## matchDateIndex是要识别的strDate在序列中的指数位置 -1 是最新一个交易日
@@ -98,7 +99,7 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
     ##根据涨幅进行历史K线模式识别,iTradeDay curStock周期，kNum是K线组合个数
     ##需要增加从某一天开始的模式
     kMatchIndexList=[] ##匹配的模式个数
-    print ("-"*8+u"根据前{}涨幅，自动设置条件，模式识别：".format(kNum))
+    print ("-"*8+u"根据前{}涨幅,自动设置条件,模式识别：".format(kNum))
     for i in range(-iTradeDay+kNum,-1):
 	    iCount=0
 	    bSelect=True
@@ -110,29 +111,6 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
 		    iCount=iCount+1
 	    if bSelect==True:
 		    kMatchIndexList.append(i)
-            
-    ind = np.arange(len(kMatchIndexList))    # the x locations for the groups
-    dateTick=[]
-    dataDraw=[]
-    for iDateIndex in kMatchIndexList:
-        dateTick.append(curStock.dayStrList[iDateIndex])
-        dataDraw.append(curStock.dayRiseRateFList[iDateIndex])
-
-    num_bins = 10
-    # the histogram of the data
-    bins=[i*0.5 for i in range(-10,10)]
-    n, bins, patches = plt.hist(dataDraw, bins, normed=1, facecolor='green',alpha=0.5)
-    ax=plt.gca()  
-    xmajorLocator   = MultipleLocator(0.5) 
-    ax.xaxis.set_major_locator( xmajorLocator )  
-#    xminorLocator   = MultipleLocator(0.1) #将x轴次刻度标签设置为5的倍数
-#    ax.xaxis.set_minor_locator( xminorLocator )  
-    ymajorLocator   = MultipleLocator(1) 
-    ax.yaxis.set_major_locator( ymajorLocator )  
-    plt.xlabel('interval')
-    plt.ylabel('num')
-    plt.title( curStock.stockID )
-    plt.show()
     return kMatchIndexList
 
 ## 在利用K线组合的匹配的结果中，用开盘价进行过滤 
@@ -229,7 +207,7 @@ def main(stockID,strDate=""):
     
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{},星期{}\t涨幅:{}\t量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
+        resultLine=u"{},星期{}\t涨幅:{}\t 量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
         lineWritedList.append(resultLine)
     

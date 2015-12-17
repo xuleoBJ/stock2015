@@ -72,18 +72,12 @@ def main(stockID):
         for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             resultLine=u"{}日 低点:{} 高点:{} {}线:{:.2f}".format(period,cycleLow,cycleHigh,keyPoint,resistLinePoint)
-            if(abs(curStock.dayPriceClosedFList[-1]-resistLinePoint)<=50):
-                resultLine+=u"\t注意压力位！"
+            if 0.99<=curStock.dayPriceClosedFList[-1]/resistLinePoint<=1.01:
+                if curStock.dayPriceClosedFList[-1]<=resistLinePoint:
+                    resultLine+=u"\t注意压力位！"
+                if curStock.dayPriceClosedFList[-1]>=resistLinePoint:
+                    resultLine+=u"\t支撑位！"
             print resultLine
-
-    print(u"-"*72)
-    print(u"2-当月趋势分析")
-    ##  分析当月涨幅
-    riseCurrentMonth=trendAna.calRiseRateCurrentMonth1st2today(curStock)
-    print(u"月初到今日涨幅：{:.2f}".format(riseCurrentMonth))
-    ##  分析近年同期走势
-    print(u"-"*72)
-    trendAna.trendOfMonthHistory(curStock)
 
     print(u"-"*72)
     print(u"3-市场情绪趋势分析")

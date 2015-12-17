@@ -13,6 +13,7 @@ import configOS
 import stockPatternRecognition
 import copyFile2Dir
 import start
+import trendAna
 
 def updateListWidgetItem(listWidget,listStr):
     listWidget.clear()
@@ -53,6 +54,21 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
 
         ## K线查看
         self.btnAnaKpattern.clicked.connect(self.kPattern)
+    
+        ## 周期趋势
+        self.btnCycleTrend.clicked.connect(self.cycleTrend)
+
+    ##周期趋势
+    def cycleTrend(self):
+        print(u"-"*72)
+        ##  分析当月涨幅
+        stockID=str(self.lineEditInputStockIDTrend.text())
+        curStock=Stock(stockID)
+        riseCurrentMonth=trendAna.calRiseRateCurrentMonth1st2today(curStock)
+        print(u"月初到今日涨幅：{:.2f}".format(riseCurrentMonth))
+        ##  分析近年同期走势
+        print(u"-"*72)
+        trendAna.trendOfMonthHistory(curStock)
     
     ##查看K线
     def kPattern(self):
