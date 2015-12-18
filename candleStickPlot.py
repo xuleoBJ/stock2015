@@ -24,16 +24,14 @@ def drawCandleStick(curStock,dateFind,interval=10):
     indexDate=curStock.dayStrList.index(dateFind)
     Prices=[]
     for i in range(indexDate-interval,indexDate+interval):
-        Date = date2num(datetime.strptime(curStock.dayStrList[i], "%Y/%m/%d"))
+        mplDate = date2num(datetime.strptime(curStock.dayStrList[i], "%Y/%m/%d"))
     #so redefining the Prices list of tuples... date open high lowest close
         openPrice=curStock.dayPriceOpenFList[i]
         highestPrice=curStock.dayPriceHighestFList[i]
         lowestPrice=curStock.dayPriceLowestFList[i]
         closePrice=curStock.dayPriceClosedFList[i]
         tradeVolume=curStock.dayTradeVolumeFList[i]
-        Prices.append([Date,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume])
-    print Prices
-    
+        Prices.append([mplDate,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume])
     
     PricesArray=np.array(Prices)
     #and then following the official example. 

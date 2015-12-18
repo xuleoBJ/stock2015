@@ -49,29 +49,33 @@ def main(stockID):
     print(u"1-时空趋势分析")
     print (u"-"*72)
     print (u"正在进行时间趋势分析：")
-   
+    
+    headline=u"周期(日) 高(低)点\t日期\t交易日数\t涨幅%\t量能比"
+    print (headline)
     for period in [10,20,30,60,120]:
-        indexHighPoint=curStock.dayPriceHighestFList.index(max(curStock.dayPriceHighestFList[-period:]))
+        indexHighPoint=-period+curStock.dayPriceHighestArray[-period:].argmax()
         riseHighcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
         rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexHighPoint]
-        indexLowPoint=curStock.dayPriceLowestFList.index(min(curStock.dayPriceLowestFList[-period:]))
+        indexLowPoint=-period+curStock.dayPriceLowestArray[-period:].argmin()
         riseLowcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
         rateLowTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexLowPoint]
-        print(u"{}日高点{} 日期{} 距今{}个交易日, 涨幅:{:.2f}% 量能比：{:.2f}".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
-                curStock.dayStrList[indexHighPoint],len(curStock.dayStrList)-1-indexHighPoint,riseHighcurrent,rateHighTradeVolumecurrent))
-        print(u"{}日低点{} 日期{} 距今{}个交易日 涨幅:{:.2f}% 量能比：{:.2f}".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
-                curStock.dayStrList[indexLowPoint],len(curStock.dayStrList)-1-indexLowPoint,riseLowcurrent,rateLowTradeVolumecurrent))
+        print(u"{}日\t{}\t{}\t{}\t{:.2f}\t{:.2f}".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
+                curStock.dayStrList[indexHighPoint],-indexHighPoint,riseHighcurrent,rateHighTradeVolumecurrent))
+        print(u"{}日\t{}\t{}\t{}\t{:.2f}\t{:.2f}".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
+                curStock.dayStrList[indexLowPoint],-indexLowPoint,riseLowcurrent,rateLowTradeVolumecurrent))
 
     ## 时空分析,关键支撑分析
     print(u"-"*72)
     print(u"关键点位提示分析：")
     print(u"-"*72)
+    headline=u"周期(日)幅度\t低点\t高点\t点位"
+    print (headline)
     for period in [20,60,120,180]:
         cycleHigh=curStock.dayPriceHighestArray[-period:].max()
         cycleLow=curStock.dayPriceLowestArray[-period:].min()
         for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
-            resultLine=u"{}日 低点:{} 高点:{} {}线:{:.2f}".format(period,cycleLow,cycleHigh,keyPoint,resistLinePoint)
+            resultLine=u"{}\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
             if 0.99<=curStock.dayPriceClosedFList[-1]/resistLinePoint<=1.01:
                 if curStock.dayPriceClosedFList[-1]<=resistLinePoint:
                     resultLine+=u"\t注意压力位！"

@@ -6,6 +6,7 @@ import datetime
 import Cstock
 import Ccomfunc
 import pdb
+import trendAna
 ##计算按周期计算涨停幅度
 
 ##选票的条件
@@ -24,19 +25,21 @@ def calRiseRateBetween2Date(myStrInput,interval):
             stockIDList.append(os.path.splitext(fileItem)[0])
     lineWritedList=[]
     
+    shStock=Cstock.Stock("999999")
+    shStock.list2array()
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
         curStock.list2array()
-        sList=[]
+        sList = []
         sList.append(curStock.stockID)
         sList.append(curStock.stockName)
-        for year in [2011,2012,2013,2014,2015]:
+        iBig = 0 ##计数器，跟大盘涨幅对比
+        for year in [2010,2011,2012,2013,2014]:
             dateStr=str(year)+"/"+myStrInput
             print dateStr
             indexOfDate=Ccomfunc.getIndexByStrdate(curStock,dateStr)
     #        pdb.set_trace()
-
             ##减少运算量把停牌暴涨的删除了，另外 去掉数组越界的
             if indexOfDate<0:
                 pass
@@ -47,8 +50,13 @@ def calRiseRateBetween2Date(myStrInput,interval):
             else:
                 sList.append(curStock.dayStrList[indexOfDate])
                 sList.append(curStock.dayStrList[indexOfDate+interval])
-                rise= 100*(curStock.dayPriceClosedFList[indexOfDate+interval]-curStock.dayPriceClosedFList[indexOfDate])/curStock.dayPriceClosedFList[indexOfDate]
+                rise = trendAna.calRiseRate(curStock,indexOfDate,indexOfDate+interval)
+                riseSH = trendAna.calRiseRate(shStock,indexOfDate,indexOfDate+interval)
                 sList.append(str(round(rise,2)))
+                ##记录强于大盘的个数
+                if rise>=riseSH:
+                    iBig = iBig+1
+        sList.append(str(iBig))
         lineWritedList.append("\t".join(sList))
     goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
@@ -91,7 +99,7 @@ if __name__=="__main__":
 
    #lineWritedList=selectStockByMonthRise() 
     
-    lineWritedList=calRiseRateBetween2Date("1/1",15) 
+    lineWritedList=calRiseRateBetween2Date("12/10",15) 
     
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     

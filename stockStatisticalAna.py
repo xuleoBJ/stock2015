@@ -94,11 +94,16 @@ def main(stockID,strDate=""):
     indexDateStart=0
     indexDateEnd=len(curStock.dayStrList)
     
+
+    ##美股跌1.5以上
+
+    ##大盘高开0.5点以上统计
+
     ##手工设置条件，前日最低，前日最高，前日波动，今日开盘价，然后统计分析
     print("-"*72)
     kPatternList=[]
     for i in range(indexDateStart,indexDateEnd):
-        if curStock.dayOpenRateArray[i]<=-0.9 and -0.7<=curStock.dayPriceClosedArray[i-1]<=-0.5:
+        if curStock.dayOpenRateArray[i]>=0.5 and -999<=curStock.dayPriceClosedArray[i-1]<=-999:
             kPatternList.append(i)
     printResult(curStock,kPatternList)
     

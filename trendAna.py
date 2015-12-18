@@ -58,7 +58,7 @@ def trendOfMonthHistory(curStock):
         if riseRateList[i]<0:
             barlist[i].set_color('g')
     plt.ylabel('riseRate(%)')
-    plt.title('history month rise')
+    plt.title(curStock.stockName+'history month rise')
     plt.xticks(ind + width/2., ymList[:])
 
     plt.show()
