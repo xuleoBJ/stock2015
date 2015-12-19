@@ -39,12 +39,12 @@ def main(stockID):
     print(u"-"*72)
     print(u"近期市场分析：")
     for i in range(-5,0):
-        weekDay=curStock.dateList[i].isoweekday() 
-        print(u"{}:星期{} 涨幅{:.2f}%\t量能比{:.2f}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
-                curStock.dayRadioLinkOfTradeVolumeFList[i]))
-     
-    print(u"-"*72)
-
+        weekDay = curStock.dateList[i].isoweekday()
+        marketSumStr = trendAna.marketSum(curStock,i)
+        print(u"{}:星期{} 涨幅{:.2f}%\t量能比{:.2f}\t{}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i],marketSumStr))
+    
+    print (u"-"*72)
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     print(u"1-时空趋势分析")
     print (u"-"*72)
@@ -75,7 +75,7 @@ def main(stockID):
         cycleLow=curStock.dayPriceLowestArray[-period:].min()
         for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
-            resultLine=u"{}\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
+            resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
             if 0.99<=curStock.dayPriceClosedFList[-1]/resistLinePoint<=1.01:
                 if curStock.dayPriceClosedFList[-1]<=resistLinePoint:
                     resultLine+=u"\t注意压力位！"
@@ -83,10 +83,12 @@ def main(stockID):
                     resultLine+=u"\t支撑位！"
             print resultLine
 
-    print(u"-"*72)
-    print(u"3-市场情绪趋势分析")
-    volumeEnerge.moodIndex(stockID)
 
+    ## 市场情绪
+    if stockID=="999999":
+        volumeEnerge.moodIndexMarket(showDateInterval=90)
+    else:
+        volumeEnerge.showDateInterval(showDateInterval=90)
     
 ## 3.仓位控制和仓位止损控制
 ##长线止损

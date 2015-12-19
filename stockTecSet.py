@@ -67,9 +67,10 @@ def outPutPriceRef(cStock):
     print("\t".join(wordWrited))
 
 def main(cStock):
-    print ("买卖的目的：1 建仓 2 T价差 3 控制仓位 4 止损")
-    print ("卖的条件：1 价格到位 2 时间点")
-    print ("做T价格计算，做t是宁可错过，不能做错的方案，一定要有价差才能买入。。")
+    print ("一、 买卖的目的：1 建仓 2 T价差 3 控制仓位 4 止损")
+    print ("二、 卖的条件：1 价差 2 时间差 价差没到，时间差到了，也要卖。")
+    print ("三、 早盘买入要注意：1. 美股暴跌，10：30前不买。 2.高开10：30前不买")
+    print ("四、 周五，指数在压力位附近，必须卖。")
     print ("-"*72)
     
     outPutPriceRef(cStock)
@@ -160,31 +161,6 @@ def main(cStock):
     print("-"*72)
 ##----模块
 
-##----市场情绪法买卖价模块
-    print("-"*72)
-    print("\n市场情绪法计算：")
-    print("-"*72)
-##上涨
-    if cStock.dayRiseRateArray[-1]>0:
-        if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[-1]:
-            print("放巨量上涨。")
-        if 1<cStock.dayRadioLinkOfTradeVolumeArray[-1]<1.5:
-            print("微放量上涨。")
-        if cStock.dayRadioLinkOfTradeVolumeArray[-1]<1:
-            print("缩量上涨。")
-##下跌
-    if cStock.dayRiseRateArray[-1]<0:
-        if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[-1]:
-            print("巨放量下跌。")
-        if 1<cStock.dayRadioLinkOfTradeVolumeArray[-1]<1.5:
-            print("微放量下跌。")
-        if cStock.dayRadioLinkOfTradeVolumeArray[-1]<1:
-            print("缩量下跌。")
-    marketMood=1
-    if marketMood<=0.5:
-        print("3日T均价{:.2f}".format(priceLow3days*0.5+priceClose3days*0.5))
-
-##----市场情绪法买卖价模块
 
     print("-"*72)
     for i in range(-3,0): ##循环指数起始比匹配指数少1

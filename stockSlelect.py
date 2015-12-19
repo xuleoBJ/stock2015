@@ -16,7 +16,7 @@ import trendAna
 ##2 目标价位，支撑价位。
 
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
-def calRiseRateBetween2Date(myStrInput,interval):
+def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd):
     stockIDList=["999999","399001"]
     fileNames=os.listdir(Ccomfunc.src)
     for fileItem in fileNames:
@@ -36,26 +36,21 @@ def calRiseRateBetween2Date(myStrInput,interval):
         sList.append(curStock.stockName)
         iBig = 0 ##计数器，跟大盘涨幅对比
         for year in [2010,2011,2012,2013,2014]:
-            dateStr=str(year)+"/"+myStrInput
-            print dateStr
-            indexOfDate=Ccomfunc.getIndexByStrdate(curStock,dateStr)
+            dateStrStart=str(year)+"/"+inputMDDateStart
+            indexOfStartDate=Ccomfunc.getIndexByStrdate(curStock,dateStrStart)
+            dateStrEnd=str(year)+"/"+inputMDDateEnd
+            indexOfEndDate=Ccomfunc.getIndexByStrdate(curStock,dateStrEnd)
+            sList.append(curStock.dayStrList[indexOfStartDate])
+            sList.append(curStock.dayStrList[indexOfEndDate])
+            rise = -999
     #        pdb.set_trace()
-            ##减少运算量把停牌暴涨的删除了，另外 去掉数组越界的
-            if indexOfDate<0:
-                pass
-            elif len(curStock.dayStrList)<=indexOfDate+interval:
-                pass
-            elif (curStock.dateList[indexOfDate+interval]-curStock.dateList[indexOfDate]).days>interval*2: ##减少运算量把停牌暴涨的删除了
-                pass
-            else:
-                sList.append(curStock.dayStrList[indexOfDate])
-                sList.append(curStock.dayStrList[indexOfDate+interval])
-                rise = trendAna.calRiseRate(curStock,indexOfDate,indexOfDate+interval)
-                riseSH = trendAna.calRiseRate(shStock,indexOfDate,indexOfDate+interval)
-                sList.append(str(round(rise,2)))
+            if indexOfStartDate>=0:
+                rise = trendAna.calRiseRate(curStock,indexOfStartDate,indexOfEndDate)
+                riseSH = trendAna.calRiseRate(shStock,indexOfStartDate,indexOfEndDate)
                 ##记录强于大盘的个数
                 if rise>=riseSH:
                     iBig = iBig+1
+            sList.append(str(round(rise,2)))
         sList.append(str(iBig))
         lineWritedList.append("\t".join(sList))
     goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##输出文件名
@@ -99,7 +94,7 @@ if __name__=="__main__":
 
    #lineWritedList=selectStockByMonthRise() 
     
-    lineWritedList=calRiseRateBetween2Date("12/10",15) 
+    lineWritedList=selectStockByRiseRateBetween2Date("12/20","12/31") 
     
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     

@@ -20,6 +20,22 @@ from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+   ## 市场评价 
+def marketSum(_curStock,index):
+    if 1.5<=_curStock.dayRadioLinkOfTradeVolumeArray[index]:
+        strVolumeRadio = u"放巨量"
+    if 1.1<=_curStock.dayRadioLinkOfTradeVolumeArray[index]<1.5:
+        strVolumeRadio = u"放量"
+    if 1<_curStock.dayRadioLinkOfTradeVolumeArray[index]<1.1:
+        strVolumeRadio = u"微放量"
+    if _curStock.dayRadioLinkOfTradeVolumeArray[index]<1:
+        strVolumeRadio =u"缩量"
+    
+    if 0<=_curStock.dayRiseRateArray[index]:
+        resultLine =u"上涨"
+    if 0>_curStock.dayRiseRateArray[index]:
+        resultLine =u"下跌"
+    return strVolumeRadio+resultLine
 
 ##计算当月的涨幅
 def calRiseRateCurrentMonth1st2today(_curStock):
