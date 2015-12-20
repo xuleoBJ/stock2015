@@ -107,8 +107,13 @@ def moodIndex(cStock,showDateInterval=60,periodCalDaysOfMood=200):
     plt.title(u"{}情绪指数分析".format(cStock.stockID),color='r')
     plt.show()
 
+def make_patch_spines_invisible(ax):
+    ax.set_frame_on(True)
+    ax.patch.set_visible(False)
+    for sp in ax.spines.values():
+        sp.set_visible(False)
 
-def moodIndexMarket(showDateInterval=60,periodCalDaysOfMood=200):
+def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200):
     stockSH=Stock("999999")
     stockSH.list2array()
     tradeVolBaseSH,moodIndexBaseSH =  calMoodIndexBase(stockSH,periodCalDaysOfMood)
@@ -148,7 +153,7 @@ def moodIndexMarket(showDateInterval=60,periodCalDaysOfMood=200):
     weekFormatter = DateFormatter('%Y%m%d')  # e.g., Jan 12
     dayFormatter = DateFormatter('%d')      # e.g., 12
     # Three subplots sharing both x/y axes
-    fig, (ax, axSZ) = plt.subplots(2, sharex=True, sharey=True)
+    fig, (ax, axStock) = plt.subplots(2, sharex=True, sharey=True)
     ax.plot(mplDate, moodIndexSHList[-showDateInterval:], '.--',label=u"sh情绪指数",color="y")
     ax.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"sz情绪指数",color="m")
     ax.plot(mplDate, moodIndexCYBList[-showDateInterval:], '.--',label=u"cyb情绪指数",color="c")
@@ -173,29 +178,57 @@ def moodIndexMarket(showDateInterval=60,periodCalDaysOfMood=200):
     h1, l1 = ax.get_legend_handles_labels()
     h2, l2 = right_ax.get_legend_handles_labels()
     plt.legend(h1+h2, l1+l2, loc=2)
-    plt.title(u"{}情绪指数分析".format(stockSH.stockName),color='r')
+    plt.title(u"{}市场分析".format(stockSH.stockName),color='r')
 
     fig.subplots_adjust(hspace=0.1)
+   
+    cStock=stockSZ
+    if  stockID!="999999":
+        cStock=Stock(stockID)
+        cStock.list2array()
 
-    axSZ.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"情绪指数",color="blue")
-    axSZ.spines['left'].set_color('blue')
-    axSZ.set_xlabel(u"日期")
-    axSZ.set_ylabel(u"情绪指数") 
-    right_axSZ = axSZ.twinx() 
-    right_axSZ.plot(mplDate, stockSZ.dayPriceClosedFList[-showDateInterval:], '.-',label=u"收盘价",color="red")
-    right_axSZ.spines['right'].set_color('red')
+    tradeVolBase,moodIndexBase =  calMoodIndexBase(cStock,periodCalDaysOfMood)
+    moodIndexList=[]
+    ##计算情绪指数
+    for i in range(periodCalDaysOfMood,0,-1):
+        moodIndex=round( (cStock.dayTradeVolumeArray[-i]-tradeVolBase)/moodIndexBase , 2)
+        moodIndexList.append(moodIndex)
+    
+    axStock.plot(mplDate, moodIndexList[-showDateInterval:], '.-',label=u"MoodIndex",color="b")
+    axStock.spines['left'].set_color('blue')
+    axStock.set_xlabel(u"日期")
+    axStock.set_ylabel(u"情绪指数") 
+    right_axStock = axStock.twinx() 
+    right_axStock.plot(mplDate, cStock.day5TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA5",color="m")
+    right_axStock.plot(mplDate, cStock.day10TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA10",color="c")
+    right_axStock.plot(mplDate, cStock.day20TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA20",color="g")
+    right_axStock.plot(mplDate, cStock.day60TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA60",color="y")
+   # right_axStock.spines['right'].set_color('red')
+
+    rightAX2 = axStock.twinx()
+    offset = 1.02
+    rightAX2.spines["right"].set_position(("axes", offset))
+    # Having been created by twinx, rightAX2 has its frame off, so the line of its
+# detached spine is invisible.  First, activate the frame but make the patch
+# and spines invisible.
+    make_patch_spines_invisible(rightAX2)
+    # Second, show the right spine.
+    rightAX2.spines["right"].set_visible(True)
+    rightAX2.spines['right'].set_color('r')
+    rightAX2.plot(mplDate, cStock.dayPriceClosedArray[-showDateInterval:], '.-',label=u"price",color="r")
     
 
-    h1, l1 = axSZ.get_legend_handles_labels()
-    h2, l2 = right_axSZ.get_legend_handles_labels()
-    plt.legend(h1+h2, l1+l2, loc=2)
-    plt.title(u"{}情绪指数分析".format(stockSZ.stockName),color='r')
+    h1, l1 = axStock.get_legend_handles_labels()
+    h2, l2 = right_axStock.get_legend_handles_labels()
+    h3, l3 = rightAX2.get_legend_handles_labels()
+    plt.legend(h1+h2+h3, l1+l2+l3, loc=2)
+    plt.title(u"{}分析".format(cStock.stockName),color='r')
     plt.show()
 
 if __name__ == "__main__":
     print (u"市场情绪分析：")
     stockIDList=['999999',"399001"]
-    moodIndexMarket(showDateInterval=60)
+    moodIndexMarket(showDateInterval=200)
     
     print (u"市场整体情绪分析：")
 #    for stockID in stockIDList:

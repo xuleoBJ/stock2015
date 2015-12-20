@@ -103,7 +103,6 @@ def main(cStock):
 #    patternRecCalTPrice(cStock,dayRadioLinkPriceLowArray)
 ##----模式识别法买卖价计算模块
   
-
 ##----最优化方法买卖价计算模块
 ##仔细分析拟合算法
 ##利用3日的最低价做多项式拟合，周期选14。

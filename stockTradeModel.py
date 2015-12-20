@@ -5,83 +5,29 @@ import time
 import datetime
 import Ccomfunc
 import numpy as np
-import Cstock
+from Cstock import Stock
 import stockPatternRecognition
 import configOS
 import scipy.optimize as optimize
 
-
-
-def main(curStock):
-    print ("买卖的目的：1 建仓 2 T价差 3 控制仓位 4 止损")
-    print ("卖的条件：1 价格到位 2 时间点")
-    print ("做T价格计算，做t是宁可错过，不能做错的方案，一定要有价差才能买入。。")
-    print ("-"*72)
+def calTBuy(curStock):
+    priceTBuyDic={}
+    priceTBuyDic['CloseYesto'] = curStock.dayPriceClosedArray[-1]
+    priceTBuyDic['CloseDay5Ave'] = curStock.day5PriceAverageArray[-1]
+    priceTBuyDic['CloseDay98'] = curStock.dayPriceClosedArray[-1]*0.98
+    priceTBuyDic['Lowest5'] = curStock.dayPriceLowestArray[-5:].min()
+    priceTBuyDic['Lowest3'] = curStock.dayPriceLowestArray[-3:].min()
+    for key,value in sorted(priceTBuyDic.items(), key=lambda x:-x[1]):
+        print key,"\t",round(value,2)
    
-##  短线资金量及进出原则。
+##  周线趋势必须向上，判断原则 MACD RSI 
 
-## 买入价一定要 超出买入预期，卖出价要降标准 
-
-    
-##----中线资金量选股标的及进出原则计算模块
-    ## 利用匹配日求取买入价
-    ##用最近的一个匹配日的最低价的涨幅
-    print("-"*72)
-    print("\n中线资金计算：")
-    print("-"*72)
-#    patternRecCalTPrice(curStock,dayRadioLinkPriceLowArray)
-##----模式识别法买卖价计算模块
-  
-
-##----长线资金量计算模块
-##----end 长线资金量计算模块
-    
-    
-##----最优化方法买卖价
-
-    print("-"*72)
-##----市场情绪法买卖价模块
-    print("-"*72)
-    print("\n市场情绪法计算：")
-    print("-"*72)
-##上涨
-    if curStock.dayRiseRateArray[-1]>0:
-        if 1.5<=curStock.dayRadioLinkOfTradeVolumeArray[-1]:
-            print("放巨量上涨。")
-        if 1<curStock.dayRadioLinkOfTradeVolumeArray[-1]<1.5:
-            print("微放量上涨。")
-        if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1:
-            print("缩量上涨。")
-##下跌
-    if curStock.dayRiseRateArray[-1]<0:
-        if 1.5<=curStock.dayRadioLinkOfTradeVolumeArray[-1]:
-            print("巨放量下跌。")
-        if 1<curStock.dayRadioLinkOfTradeVolumeArray[-1]<1.5:
-            print("微放量下跌。")
-        if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1:
-            print("缩量下跌。")
-    marketMood=1
-    if marketMood<=0.5:
-        print("3日T均价{:.2f}".format(priceLow3days*0.5+priceClose3days*0.5))
-
-##----市场情绪法买卖价模块
-
-    
-    print ("严格的执行止损方案。")
+##  美股跌1.5以上，做T的级别降一级。
 
 if __name__=="__main__":
-    
-    print("\n"+"#"*80)
-    
-    print ("严格的执行止损方案。")
-    print ("手里的票不要超过5支。")
-    print ("严格的仓位控制")
-    
     startClock=time.clock() ##记录程序开始计算时间
-    for stockID in configOS.stockIDList:
-        curStock=Cstock.Stock(stockID)
-        curStock.list2array()
-        main(curStock)
-    
+    print ("严格的执行止损方案。")
+    curStock=Stock('002285')
+    calTBuy(curStock)
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

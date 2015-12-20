@@ -329,7 +329,7 @@
         <string>时空分析</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnTradeQuanlity">
+      <widget class="QPushButton" name="btnQuantitativeTrade">
        <property name="text">
         <string>量化交易</string>
        </property>

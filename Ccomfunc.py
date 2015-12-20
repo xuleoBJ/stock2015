@@ -92,8 +92,8 @@ def calNatureDays( dateStr1 , dateStr2 ):
     return (d1-d2).days
 
 def printInfor():
-    ctypes.windll.user32.MessageBoxA(0, "1-What's your trade plan today?\n2-Every Trade is a complete chance?\n3-0-patience 1-time,2-volume,3-price.\n4-Some money is not in my system.", "infor", 1)
     print("-"*72)
+    print(u"1-What's your trade plan today?\n2-Every Trade is a complete chance?\n3-0-patience 1-time,2-volume,3-price.\n4-Some money is not in my system.")
     print(u"0.市场是我的好朋友,朋友相处,需要耐心。")
     print(u"1.价差还是时间差？大盘稳定的买点可以早盘10：00前 高点的98%或者98.5的位置。")
     print(u"2.减少交易频率，每次交易前要提醒自己，确定性机会，最好是下午2:45以后再买。")

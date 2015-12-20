@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainUI.ui'
 #
-# Created: Wed Dec 16 16:55:27 2015
+# Created: Sun Dec 20 20:25:43 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -114,8 +114,8 @@ class Ui_MainWindow(object):
         self.btnCycleTrend.setObjectName(_fromUtf8("btnCycleTrend"))
         self.btnMarketAna = QtGui.QPushButton(self.splitter)
         self.btnMarketAna.setObjectName(_fromUtf8("btnMarketAna"))
-        self.btnTradeQuanlity = QtGui.QPushButton(self.splitter)
-        self.btnTradeQuanlity.setObjectName(_fromUtf8("btnTradeQuanlity"))
+        self.btnQuantitativeTrade = QtGui.QPushButton(self.splitter)
+        self.btnQuantitativeTrade.setObjectName(_fromUtf8("btnQuantitativeTrade"))
         self.label_13 = QtGui.QLabel(self.tbgAnaTrend)
         self.label_13.setGeometry(QtCore.QRect(10, 240, 201, 41))
         self.label_13.setObjectName(_fromUtf8("label_13"))
@@ -262,7 +262,7 @@ class Ui_MainWindow(object):
         self.btnTradeInfor.setText(_translate("MainWindow", "交易提示", None))
         self.btnCycleTrend.setText(_translate("MainWindow", "周期趋势", None))
         self.btnMarketAna.setText(_translate("MainWindow", "时空分析", None))
-        self.btnTradeQuanlity.setText(_translate("MainWindow", "量化交易", None))
+        self.btnQuantitativeTrade.setText(_translate("MainWindow", "量化交易", None))
         self.label_13.setText(_translate("MainWindow", "请输入交易日（2008/08/08）", None))
         self.lineEditTradeDate.setText(_translate("MainWindow", "2008/08/08", None))
         self.btnAnaKpattern.setText(_translate("MainWindow", "K线分析", None))

@@ -9,7 +9,7 @@ import stockPatternRecognition
 import stockTecSet
 import volumeEnerge
 import trendAna
-
+import ctypes 
 
 from PyQt4 import QtGui # Import the PyQt4 module we'll need
 from PyQt4.QtGui import *
@@ -28,10 +28,14 @@ def calGDG():
     AB_SZ=21.7
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
+def WarnBigEvent():
+    ctypes.windll.user32.MessageBoxA(0, "2016-1-8 Big Share Sells!", "infor", 1)
+
 def main(stockID):
+    WarnBigEvent() 
     curStock=Cstock.Stock(stockID)
     curStock.list2array()
-    ## 读取配置文件，获取相关信息，活得股票ID,实例化 curStock
+    ## 读取配置文件，获取相关信息，读取股票ID,实例化 curStock
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
     
@@ -44,7 +48,15 @@ def main(stockID):
         print(u"{}:星期{} 涨幅{:.2f}%\t量能比{:.2f}\t{}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i],marketSumStr))
     
+    ## 均价分析
     print (u"-"*72)
+    print (u"均价分析：")
+    headLine=u"\t3日\t5日\t10日\t20日"
+    print(headLine)
+    print(u"价 {}\t{}\t{}\t{}".format(curStock.day3PriceAverageArray[-1],curStock.day5PriceAverageArray[-1],curStock.day10PriceAverageArray[-1],curStock.day20PriceAverageArray[-1]) )
+    print(u"量 {}\t{}\t{}\t{}".format(curStock.day3TradeVolumeArray[-1],curStock.day5TradeVolumeArray[-1],curStock.day10TradeVolumeArray[-1],curStock.day20TradeVolumeArray[-1]) )
+    print (u"-"*72)
+    
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     print(u"1-时空趋势分析")
     print (u"-"*72)
@@ -52,7 +64,7 @@ def main(stockID):
     
     headline=u"周期(日) 高(低)点\t日期\t交易日数\t涨幅%\t量能比"
     print (headline)
-    for period in [10,20,30,60,120]:
+    for period in [5,10,20,30,60,120]:
         indexHighPoint=-period+curStock.dayPriceHighestArray[-period:].argmax()
         riseHighcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
         rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexHighPoint]
@@ -85,10 +97,7 @@ def main(stockID):
 
 
     ## 市场情绪
-    if stockID=="999999":
-        volumeEnerge.moodIndexMarket(showDateInterval=90)
-    else:
-        volumeEnerge.showDateInterval(showDateInterval=90)
+    volumeEnerge.moodIndexMarket(curStock.stockID,showDateInterval=90)
     
 ## 3.仓位控制和仓位止损控制
 ##长线止损

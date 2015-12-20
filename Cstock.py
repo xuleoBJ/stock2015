@@ -23,10 +23,40 @@ class Stock:
         self.dayOpenCloseRateArray=np.array(self.dayOpenCloseRateFList)	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势array
         self.dayRadioLinkOfTradeVolumeArray=np.array(self.dayRadioLinkOfTradeVolumeFList)  ##day成交量倍数价array
         
-#        self.day3PriceAverageFList=[]     ##3日均价
-#        self.day5PriceAverageFList=[]     ##5日均价
-#        self.day10PriceAverageFList=[]     ##10日均价
+    ##构造均价数据
+        self.day3PriceAverageArray=np.zeros(self.count)     ##3日均价
+        self.day5PriceAverageArray=np.zeros(self.count)     ##5日均价
+        self.day10PriceAverageArray=np.zeros(self.count)     ##10日均价
+        self.day20PriceAverageArray=np.zeros(self.count)     ##20日均价
+        self.day60PriceAverageArray=np.zeros(self.count)     ##60日均价
+        for i in range(3,self.count):
+            self.day3PriceAverageArray[i]= round(self.dayPriceClosedArray[i-3:i].mean(),2)
+            if i>=5:
+                self.day5PriceAverageArray[i] = round(self.dayPriceClosedArray[i-5:i].mean(),2)
+            if i>=10:
+                self.day10PriceAverageArray[i]= round(self.dayPriceClosedArray[i-10:i].mean(),2)
+            if i>=20:
+                self.day20PriceAverageArray[i]=round(self.dayPriceClosedArray[i-20:i].mean(),2)
+            if i>=60:
+                self.day60PriceAverageArray[i]=round(self.dayPriceClosedArray[i-60:i].mean(),2)
 
+    ##构造均成交量数据
+        self.day3TradeVolumeArray=np.zeros(self.count)     ##3日均价
+        self.day5TradeVolumeArray=np.zeros(self.count)     ##5日均价
+        self.day10TradeVolumeArray=np.zeros(self.count)     ##10日均价
+        self.day20TradeVolumeArray=np.zeros(self.count)     ##20日均价
+        self.day60TradeVolumeArray=np.zeros(self.count)     ##60日均价
+        for i in range(3,self.count):
+            self.day3TradeVolumeArray[i]= round(self.dayTradeVolumeArray[i-3:i].mean(),2)
+            if i>=5:
+                self.day5TradeVolumeArray[i] = round(self.dayTradeVolumeArray[i-5:i].mean(),2)
+            if i>=10:
+                self.day10TradeVolumeArray[i]= round(self.dayTradeVolumeArray[i-10:i].mean(),2)
+            if i>=20:
+                self.day20TradeVolumeArray[i]=round(self.dayTradeVolumeArray[i-20:i].mean(),2)
+            if i>=60:
+                self.day60TradeVolumeArray[i]=round(self.dayTradeVolumeArray[i-60:i].mean(),2)
+    
     ##构造周级别数据
     def initWeekData(self):
         self.weekPriceOpenFList=[]       ##week开盘价
@@ -135,12 +165,12 @@ class Stock:
         self.dayRiseRateHighestFList=[]        ##day价格涨幅
         self.dayWaveRateFList=[]        ##day波动涨幅
         self.dayOpenRateFList=[]	       ##day开盘幅度，主要分析高开、低开等
-        self.dayPriceAverageFList=[]     ##日均价
         self.dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
         self.dayRadioLinkOfTradeVolumeFList=[]  ##day成交量倍数
         self.dayRiseOfTurnOverFList=[]  ##day成交额倍数
        
         stockDataFile=os.path.join(stockDirData,stockID+'.txt')
+
         if os.path.exists(stockDataFile):
             fileOpened=open(stockDataFile,'r')
             ##从文件中读取日数据，并计算构造相关的日数据
@@ -163,13 +193,6 @@ class Stock:
                     self.dayTradeVolumeFList.append(tradeVolume)
                     turnOver=float(splitLine[6])
                     self.dayTurnOverFList.append(turnOver)
-                    
-                    ##计算均价
-                    if(tradeVolume>0):
-                        self.dayPriceAverageFList.append(round(turnOver/tradeVolume,2))
-                    else:
-                        self.dayPriceAverageFList.append(-999)
-
                     
                     ##计算涨幅和振幅
                     if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-2]>0:
@@ -210,6 +233,8 @@ class Stock:
                         "\tPriceClosedLastDay: "+str(self.dayPriceClosedFList[-1]))
             else:
                 print(u"数据列为空")
+            
+            self.list2array()
 
         else:
             print(stockID+"数据不存在")
@@ -229,9 +254,9 @@ if __name__=="__main__":
     print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
     print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
     print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
-    print curStock.dayPriceAverageFList[-10:]
     print curStock.dayRiseRateLowestArray[-10:]
     print curStock.monthStrList[-10:]
+    print curStock.day5PriceAverageArray[-10:]
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

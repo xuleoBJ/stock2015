@@ -16,6 +16,7 @@ import copyFile2Dir
 import start
 import trendAna
 import datetime
+import stockTradeModel
 
 def updateListWidgetItem(listWidget,listStr):
     listWidget.clear()
@@ -61,6 +62,16 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     
         ## 周期趋势
         self.btnCycleTrend.clicked.connect(self.cycleTrend)
+        
+        ## 量化交易
+        self.btnQuantitativeTrade.clicked.connect(self.quantitativeTrade)
+   
+    ##周期趋势
+    def quantitativeTrade(self):
+        print(u"-"*72)
+        stockID=str(self.lineEditInputStockIDTrend.text())
+        curStock=Stock(stockID)
+        stockTradeModel.calTBuy(curStock)
 
     ##周期趋势
     def cycleTrend(self):

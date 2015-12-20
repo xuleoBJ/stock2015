@@ -115,7 +115,6 @@ def printCalTrend(curStock,intervalDay):
 if __name__=="__main__":
    stockID="999999"
    curStock=Cstock.Stock(stockID)
-   curStock.list2array()
    print getDateIndexLowestPoint(curStock,-100,-1)
 
 
