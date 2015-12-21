@@ -9,9 +9,7 @@ import pdb
 import trendAna
 ##计算按周期计算涨停幅度
 
-##选票的条件
-
-##比较跟大盘的量能选票
+##根据量能选择股票
 def selectStockByVolume():
     stockIDList=["999999","399001"]
     fileNames=os.listdir(Ccomfunc.src)
@@ -22,14 +20,41 @@ def selectStockByVolume():
     lineWritedList=[]
     
     shStock=Cstock.Stock("999999")
-    
+    sIDList = []  
+    ##类型 1 放巨量 2 三日连续放量 3 三日连续缩量下跌
     for stockID in stockIDList:
         curStock=Cstock.Stock(stockID)
-        if curStock.dayStrList[-1]==shStock.dayStrList[-1]:
-            if curStock.dayRadioLinkOfTradeVolumeArray[-1]>=1.5:
-                if curStock.dayRadioLinkOfTradeVolumeArray[-1]-shStock.dayRadioLinkOfTradeVolumeArray[-1]>0.5:
-                    print stockID
-                    lineWritedList.append(stockID)
+        if curStock.count>0:  ##剔除数据项为空的 
+            ##3日缩量下跌
+            if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]<0:
+                if curStock.dayRadioLinkOfTradeVolumeArray[-2]<1 and curStock.dayRiseRateArray[-1]<0:
+                    if curStock.dayRadioLinkOfTradeVolumeArray[-3]<1 and curStock.dayRiseRateArray[-1]<0:
+                        sIDList.append(stockID)
+                        sIDList.append("3")
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-3]))
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-2]))
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
+            
+            ##3日放量上涨
+            if curStock.dayRadioLinkOfTradeVolumeArray[-1]>1 and curStock.dayRiseRateArray[-1]>0:
+                if curStock.dayRadioLinkOfTradeVolumeArray[-2]>1 and curStock.dayRiseRateArray[-1]>0:
+                    if curStock.dayRadioLinkOfTradeVolumeArray[-3]>1 and curStock.dayRiseRateArray[-1]>0:
+                        sIDList.append(stockID)
+                        sIDList.append("2")
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-3]))
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-2]))
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
+
+            ##比较大盘和个股的量能指标选择股票,选择放量的stockID
+            if curStock.dayStrList[-1]==shStock.dayStrList[-1]:
+                if curStock.dayRadioLinkOfTradeVolumeArray[-1]>=1.5:
+                    if curStock.dayRadioLinkOfTradeVolumeArray[-1]-shStock.dayRadioLinkOfTradeVolumeArray[-1]>0.5:
+                        sIDList.append(stockID)
+                        sIDList.append("1")
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-3]))
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-2]))
+                        sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
+            lineWritedList.append("\t".join(sIDList))
     print lineWritedList
     goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
@@ -52,30 +77,30 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd):
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
-        curStock.list2array()
-        sList = []
-        sList.append(curStock.stockID)
-        sList.append(curStock.stockName)
-        iBig = 0 ##计数器，跟大盘涨幅对比
-        for year in [2010,2011,2012,2013,2014]:
-            dateStrStart=str(year)+"/"+inputMDDateStart
-            indexOfStartDate=Ccomfunc.getIndexByStrdate(curStock,dateStrStart)
-            dateStrEnd=str(year)+"/"+inputMDDateEnd
-            indexOfEndDate=Ccomfunc.getIndexByStrdate(curStock,dateStrEnd)
-            sList.append(curStock.dayStrList[indexOfStartDate])
-            sList.append(curStock.dayStrList[indexOfEndDate])
-            rise = -999
-    #        pdb.set_trace()
-            if indexOfStartDate>=0:
-                rise = trendAna.calRiseRate(curStock,indexOfStartDate,indexOfEndDate)
-                riseSH = trendAna.calRiseRate(shStock,indexOfStartDate,indexOfEndDate)
-                ##记录强于大盘的个数
-                if rise>=riseSH:
-                    iBig = iBig+1
-            sList.append(str(round(rise,2)))
-        sList.append(str(iBig))
-        lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##输出文件名
+        if curStock.count>0:
+            sList = []
+            sList.append(curStock.stockID)
+            sList.append(curStock.stockName)
+            iBig = 0 ##计数器，跟大盘涨幅对比
+            for year in [2010,2011,2012,2013,2014]:
+                dateStrStart=str(year)+"/"+inputMDDateStart
+                indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
+                dateStrEnd=str(year)+"/"+inputMDDateEnd
+                indexOfEndDate=Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
+                sList.append(curStock.dayStrList[indexOfStartDate])
+                sList.append(curStock.dayStrList[indexOfEndDate])
+                rise = -999
+        #        pdb.set_trace()
+                if curStock.count>0 and indexOfStartDate>=0 and indexOfEndDate>0:
+                    rise = trendAna.calRiseRate(curStock,indexOfStartDate,indexOfEndDate)
+                    riseSH = trendAna.calRiseRate(shStock,indexOfStartDate,indexOfEndDate)
+                    ##记录强于大盘的个数
+                    if rise>=riseSH:
+                        iBig = iBig+1
+                sList.append(str(round(rise,2)))
+            sList.append(str(iBig))
+            lineWritedList.append("\t".join(sList))
+    goalFilePath=os.path.join(Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect.txt') ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
 ## 根据指数板块月涨幅选股
@@ -113,14 +138,15 @@ def selectStockByMonthRise():
 if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
-
-   #lineWritedList=selectStockByMonthRise() 
     
-   # lineWritedList=selectStockByRiseRateBetween2Date("12/20","12/31") 
-    selectStockByVolume()
+    case=2
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
-    
-    ##分析寻找涨幅最大板块中，连续3-5个交易日涨幅最大的个股
+    if case==1:
+        selectStockByMonthRise() 
+    if case==2:
+        selectStockByRiseRateBetween2Date("12/20","12/31") 
+    if case==3:
+        selectStockByVolume()
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

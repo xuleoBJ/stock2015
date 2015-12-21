@@ -89,6 +89,7 @@ def getDateIndexLowestPoint(curStock,indexOfDateStart,indexOfDateEnd):
 
 ##计算两个交易日直接的涨幅
 def calRiseRate(curStock,indexOfDateStart,indexOfDateEnd):
+#    print curStock.stockID,indexOfDateStart,indexOfDateEnd
     return 100*(curStock.dayPriceClosedFList[indexOfDateStart]-curStock.dayPriceClosedFList[indexOfDateEnd])/curStock.dayPriceClosedFList[indexOfDateEnd]
 
 ##计算两个交易日直接的涨幅indexOfDate是指数，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
