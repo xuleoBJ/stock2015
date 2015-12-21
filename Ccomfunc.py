@@ -51,7 +51,9 @@ def findIndexByDayStr(_curStock,dayStr="2015/01/05"):
         return -1
 
 ## 根据dateStr返回最接近的index，有就返回最近的指数，超出，返回-1
-def getIndexByStrdate(_curStock,_dateStr):
+def getIndexByStrDate(_curStock,_dateStr):
+    if _dateStr=="":
+        return -1
     dateInput=convertDateStr2Date(_dateStr)
     return getIndexByDate(_curStock,dateInput)
 

@@ -177,10 +177,8 @@ def addInforLine(inforLine):
 def main(stockID,strDate=""):
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
-    if strDate=="":
-        matchDateIndex=-1
-    else:
-        matchDateIndex=curStock.dayStrList.index(strDate)
+    
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
 
     lineWritedList.append("-"*72)
     lineWritedList.append(stockID)

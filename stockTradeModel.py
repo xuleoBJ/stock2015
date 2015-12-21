@@ -10,13 +10,14 @@ import stockPatternRecognition
 import configOS
 import scipy.optimize as optimize
 
-def calTBuy(curStock):
+def calTBuy(curStock,strDate=""):
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
     priceTBuyDic={}
-    priceTBuyDic['CloseYesto'] = curStock.dayPriceClosedArray[-1]
-    priceTBuyDic['CloseDay5Ave'] = curStock.day5PriceAverageArray[-1]
-    priceTBuyDic['CloseDay98'] = curStock.dayPriceClosedArray[-1]*0.98
-    priceTBuyDic['Lowest5'] = curStock.dayPriceLowestArray[-5:].min()
-    priceTBuyDic['Lowest3'] = curStock.dayPriceLowestArray[-3:].min()
+    priceTBuyDic['CloseYesto'] = curStock.dayPriceClosedArray[matchDateIndex]
+    priceTBuyDic['CloseDay5Ave'] = curStock.day5PriceAverageArray[matchDateIndex]
+    priceTBuyDic['CloseDay98'] = curStock.dayPriceClosedArray[matchDateIndex]*0.98
+    priceTBuyDic['Lowest5'] = curStock.dayPriceLowestArray[matchDateIndex-5:matchDateIndex].min()
+    priceTBuyDic['Lowest3'] = curStock.dayPriceLowestArray[matchDateIndex-3:matchDateIndex].min()
     for key,value in sorted(priceTBuyDic.items(), key=lambda x:-x[1]):
         print key,"\t",round(value,2)
    

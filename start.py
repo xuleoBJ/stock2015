@@ -31,18 +31,19 @@ def calGDG():
 def WarnBigEvent():
     ctypes.windll.user32.MessageBoxA(0, "2016-1-8 Big Share Sells!", "infor", 1)
 
-def main(stockID):
+def main(stockID,strDate=""):
     WarnBigEvent() 
     curStock=Cstock.Stock(stockID)
-    curStock.list2array()
     ## 读取配置文件，获取相关信息，读取股票ID,实例化 curStock
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
     
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
+
     today=datetime.date.today()
     print(u"-"*72)
     print(u"近期市场分析：")
-    for i in range(-5,0):
+    for i in range(matchDateIndex-5,matchDateIndex+1):
         weekDay = curStock.dateList[i].isoweekday()
         marketSumStr = trendAna.marketSum(curStock,i)
         print(u"{}:星期{} 涨幅{:.2f}%\t量能比{:.2f}\t{}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
@@ -53,8 +54,10 @@ def main(stockID):
     print (u"均价分析：")
     headLine=u"\t3日\t5日\t10日\t20日"
     print(headLine)
-    print(u"价 {}\t{}\t{}\t{}".format(curStock.day3PriceAverageArray[-1],curStock.day5PriceAverageArray[-1],curStock.day10PriceAverageArray[-1],curStock.day20PriceAverageArray[-1]) )
-    print(u"量 {}\t{}\t{}\t{}".format(curStock.day3TradeVolumeArray[-1],curStock.day5TradeVolumeArray[-1],curStock.day10TradeVolumeArray[-1],curStock.day20TradeVolumeArray[-1]) )
+    print(u"价 {}\t{}\t{}\t{}".format(curStock.day3PriceAverageArray[matchDateIndex],curStock.day5PriceAverageArray[matchDateIndex],\
+            curStock.day10PriceAverageArray[matchDateIndex],curStock.day20PriceAverageArray[matchDateIndex]) )
+    print(u"量 {}\t{}\t{}\t{}".format(curStock.day3TradeVolumeArray[matchDateIndex],curStock.day5TradeVolumeArray[matchDateIndex],\
+            curStock.day10TradeVolumeArray[matchDateIndex],curStock.day20TradeVolumeArray[matchDateIndex]) )
     print (u"-"*72)
     
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
@@ -65,16 +68,24 @@ def main(stockID):
     headline=u"周期(日) 高(低)点\t日期\t交易日数\t涨幅%\t量能比"
     print (headline)
     for period in [5,10,20,30,60,120]:
-        indexHighPoint=-period+curStock.dayPriceHighestArray[-period:].argmax()
-        riseHighcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
-        rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexHighPoint]
-        indexLowPoint=-period+curStock.dayPriceLowestArray[-period:].argmin()
-        riseLowcurrent=100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
-        rateLowTradeVolumecurrent=curStock.dayTradeVolumeFList[-1]/curStock.dayTradeVolumeFList[indexLowPoint]
+        indexHighPoint=matchDateIndex-period+curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].argmax()
+        riseHighcurrent=-999
+        if curStock.dayPriceHighestFList[indexHighPoint]!=0:
+            riseHighcurrent=100*(curStock.dayPriceClosedFList[matchDateIndex]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
+        rateHighTradeVolumecurrent=-999
+        if curStock.dayTradeVolumeFList[indexHighPoint]!=0:
+            rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[matchDateIndex]/curStock.dayTradeVolumeFList[indexHighPoint]
+        indexLowPoint=matchDateIndex-period+curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].argmin()
+        riseLowcurrent=-999
+        if curStock.dayPriceLowestFList[indexHighPoint]!=0:
+            riseLowcurrent=100*(curStock.dayPriceClosedFList[matchDateIndex]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
+        rateLowTradeVolumecurrent=-999
+        if curStock.dayTradeVolumeFList[indexHighPoint]!=0:
+            rateLowTradeVolumecurrent=curStock.dayTradeVolumeFList[matchDateIndex]/curStock.dayTradeVolumeFList[indexLowPoint]
         print(u"{}日\t{}\t{}\t{}\t{:.2f}\t{:.2f}".format(period,curStock.dayPriceHighestFList[indexHighPoint], \
-                curStock.dayStrList[indexHighPoint],-indexHighPoint,riseHighcurrent,rateHighTradeVolumecurrent))
+                curStock.dayStrList[indexHighPoint],matchDateIndex-indexHighPoint,riseHighcurrent,rateHighTradeVolumecurrent))
         print(u"{}日\t{}\t{}\t{}\t{:.2f}\t{:.2f}".format(period,curStock.dayPriceLowestFList[indexLowPoint], \
-                curStock.dayStrList[indexLowPoint],-indexLowPoint,riseLowcurrent,rateLowTradeVolumecurrent))
+                curStock.dayStrList[indexLowPoint],matchDateIndex-indexLowPoint,riseLowcurrent,rateLowTradeVolumecurrent))
 
     ## 时空分析,关键支撑分析
     print(u"-"*72)
@@ -83,15 +94,15 @@ def main(stockID):
     headline=u"周期(日)幅度\t低点\t高点\t点位"
     print (headline)
     for period in [20,60,120,180]:
-        cycleHigh=curStock.dayPriceHighestArray[-period:].max()
-        cycleLow=curStock.dayPriceLowestArray[-period:].min()
+        cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:].max()
+        cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:].min()
         for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
-            if 0.99<=curStock.dayPriceClosedFList[-1]/resistLinePoint<=1.01:
-                if curStock.dayPriceClosedFList[-1]<=resistLinePoint:
+            if 0.99<=curStock.dayPriceClosedFList[matchDateIndex-1]/resistLinePoint<=1.01:
+                if curStock.dayPriceClosedFList[matchDateIndex-1]<=resistLinePoint:
                     resultLine+=u"\t注意压力位！"
-                if curStock.dayPriceClosedFList[-1]>=resistLinePoint:
+                if curStock.dayPriceClosedFList[matchDateIndex-1]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
             print resultLine
 

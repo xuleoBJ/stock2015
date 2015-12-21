@@ -44,12 +44,15 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)
         
-        self.lineEditTradeDate.setText(QString(datetime.datetime.now().strftime("%Y/%m/%d")))
+        todayStr=datetime.datetime.now().strftime("%Y/%m/%d")
+        self.lineEditTradeDate.setText(QString(todayStr))
+        self.lineEditDateKHistory.setText(QString(todayStr))
+        self.lineEditDateRec.setText(QString(todayStr))
         
         self.pButtonSelect.clicked.connect(self.selectExe)  # When the button is pressed
         self.btnCalGDP.clicked.connect(self.calGDP)
-        self.btnTradeInfor.clicked.connect(self.tradeWarn)
-        self.btnPatternRecAna.clicked.connect(self.calPatternRec)
+        self.btnTradeInfor.clicked.connect(self.tradeStart)
+        self.btnPatternRecAna.clicked.connect(self.patternRec)
 
         ## 交易策略入库
         self.btnInertDataTradeTactics.clicked.connect(self.inertDataTradeTactics)
@@ -87,7 +90,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     
     ##查看K线
     def kPattern(self):
-        sDate=str(self.lineEditTradeDate.text())
+        sDate=str(self.lineEditDateKHistory.text())
         stockID=str(self.lineEditInputStockIDTrend.text())
         curStock=Stock(stockID)
         drawCandleStick(curStock,sDate,30)
@@ -99,14 +102,15 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         copyFile2Dir.copyData2Dir()
         QMessageBox.about(self, u"提示",u"数据已经复制到文件夹。")
 
-    def calPatternRec(self):
+    def patternRec(self):
         sDate=str(self.lineEditDateRec.text())
         print sDate
         stockPatternRecognition.mainAppCall(sDate)
 
-    def tradeWarn(self):
+    def tradeStart(self):
         stockID=str(self.lineEditInputStockIDTrend.text())
-        start.main(stockID)
+        sDate=str(self.lineEditTradeDate.text())
+        start.main(stockID,sDate)
     
     def setupListWidget(self,iItem):
         stockIDselect=self.comboBoxStockID.itemText(iItem)
