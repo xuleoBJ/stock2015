@@ -15,7 +15,7 @@ import stockPatternRecognition
 import copyFile2Dir
 import start
 import trendAna
-import datetime
+from datetime import datetime,timedelta 
 import stockTradeModel
 
 def updateListWidgetItem(listWidget,listStr):
@@ -43,11 +43,22 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         for iDate in dateList:
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)
+
+        now =  datetime.now()
+        inputDate = now 
+
+        if now.hour<15: ##时间小于下午3点 用昨日数据
+            inputDate = now-timedelta(days=1)
+        if now.hour<15 and now.isoweekday()==1: ##时间小于下午3点 且周一 用上周5数据
+            inputDate = now-timedelta(days=3)
+        if now.isoweekday()==6 or now.isoweekday()==7:  ##周六周日 <F5>用上周5数据
+            inputDate = now-timedelta(days=now.isoweekday()-5)
         
-        todayStr=datetime.datetime.now().strftime("%Y/%m/%d")
-        self.lineEditTradeDate.setText(QString(todayStr))
-        self.lineEditDateKHistory.setText(QString(todayStr))
-        self.lineEditDateRec.setText(QString(todayStr))
+        inputAnaStrDate=inputDate.strftime("%Y/%m/%d")
+        
+        self.lineEditTradeDate.setText(QString(inputAnaStrDate))
+        self.lineEditDateKHistory.setText(QString((inputDate-timedelta(days=365)).strftime("%Y/%m/%d")))
+        self.lineEditDateRec.setText(QString(inputAnaStrDate))
         
         self.pButtonSelect.clicked.connect(self.selectExe)  # When the button is pressed
         self.btnCalGDP.clicked.connect(self.calGDP)

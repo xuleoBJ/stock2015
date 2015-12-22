@@ -44,11 +44,6 @@ def convertDateStr2Date(dateStr):
     return datetime.date(int(split1[0]),int(split1[1]),int(split1[2]))
 
 
-def findIndexByDayStr(_curStock,dayStr="2015/01/05"):
-    if dayStr in _curStock.dayStrList:
-        return _curStock.dayStrList.index(dayStr)
-    else:
-        return -1
 
 ## 根据dateStr返回最接近的index，有就返回最近的指数，超出，返回-1
 def getIndexByStrDate(_curStock,_dateStr):

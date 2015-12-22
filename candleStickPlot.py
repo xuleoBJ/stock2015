@@ -10,8 +10,9 @@ from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
 from matplotlib.finance import candlestick,\
      plot_day_summary, candlestick_ohlc,volume_overlay3
 from Cstock import Stock
+import Ccomfunc
 
-def drawCandleStick(curStock,dateFind,interval=10):
+def drawCandleStick(curStock,dateStrInput,interval=10):
     mpl.rcParams['font.sans-serif'] = ['SimHei'] 
 
     mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
@@ -21,7 +22,7 @@ def drawCandleStick(curStock,dateFind,interval=10):
 
     #starting from dates expressed as strings...
     #...you convert them in float numbers....
-    indexDate=curStock.dayStrList.index(dateFind)
+    indexDate=Ccomfunc.getIndexByStrDate(curStock,dateStrInput)
     Prices=[]
     for i in range(indexDate-interval,indexDate+interval):
         mplDate = date2num(datetime.strptime(curStock.dayStrList[i], "%Y/%m/%d"))
@@ -66,7 +67,7 @@ def drawCandleStick(curStock,dateFind,interval=10):
     axVol.set_position(matplotlib.transforms.Bbox([[0.125,0.05],[0.9,0.2]]))
 
     plt.setp( plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-    plt.title(u"{} {} 20日K".format(curStock.stockID,dateFind),color='r')
+    plt.title(u"{} {} 20日K".format(curStock.stockID,dateStrInput),color='r')
 
 
     plt.show()
