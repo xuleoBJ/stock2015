@@ -30,7 +30,7 @@
      <bool>true</bool>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tbgImportInfor">
      <attribute name="title">
@@ -302,50 +302,11 @@
        <string>请输入交易代码：</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_13">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>240</y>
-        <width>201</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>请输入交易日（2008/08/08）</string>
-      </property>
-     </widget>
      <widget class="QLineEdit" name="lineEditTradeDate">
       <property name="geometry">
        <rect>
         <x>140</x>
         <y>80</y>
-        <width>121</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>2008/08/08</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btnAnaKpattern">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>280</y>
-        <width>131</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>K线分析</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditDateKHistory">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>280</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -419,46 +380,16 @@
        <string>时空分析</string>
       </property>
      </widget>
-     <zorder>splitter</zorder>
+     <zorder>btnTradeInfor</zorder>
+     <zorder>btnMarketAna</zorder>
      <zorder>groupBox_2</zorder>
      <zorder>groupBox</zorder>
      <zorder>lineEditInputStockIDTrend</zorder>
      <zorder>label_12</zorder>
-     <zorder>label_13</zorder>
      <zorder>lineEditTradeDate</zorder>
-     <zorder>btnAnaKpattern</zorder>
-     <zorder>lineEditDateKHistory</zorder>
      <zorder>btnCycleTrend</zorder>
      <zorder>btnQuantitativeTrade</zorder>
      <zorder>label_14</zorder>
-    </widget>
-    <widget class="QWidget" name="tbgAnaHistory">
-     <attribute name="title">
-      <string>历史分析</string>
-     </attribute>
-     <widget class="QLineEdit" name="lineEditStockID_2">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>50</y>
-        <width>121</width>
-        <height>31</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>47</y>
-        <width>131</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>请输入交易代码：</string>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="tbgStockSelect">
      <attribute name="title">
@@ -615,6 +546,68 @@
       </property>
       <property name="title">
        <string>基本面选票</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnAnaKpattern">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>530</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>K线分析</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditDateKHistory">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>530</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>2008/08/08</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>520</y>
+        <width>201</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>请输入交易日（2008/08/08）</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>520</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>请输入交易代码：</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditStockID_2">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>530</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
       </property>
      </widget>
     </widget>
