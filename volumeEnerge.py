@@ -89,7 +89,7 @@ def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200
     for i in range(periodCalDaysOfMood,0,-1):
         moodIndexSH=round( (stockSH.dayTradeVolumeArray[i]-tradeVolBaseSH)/moodIndexBaseSH , 2)
         moodIndexSHList.append(moodIndexSH)
-        moodIndexSZ=round( (stockSH.dayTradeVolumeArray[i]-tradeVolBaseSZ)/moodIndexBaseSZ , 2)
+        moodIndexSZ=round( (stockSZ.dayTradeVolumeArray[i]-tradeVolBaseSZ)/moodIndexBaseSZ , 2)
         moodIndexSZList.append(moodIndexSZ)
         moodIndexCYB=round( (stockCYB.dayTradeVolumeArray[i]-tradeVolBaseCYB)/moodIndexBaseCYB , 2)
         moodIndexCYBList.append(moodIndexCYB)
@@ -110,7 +110,7 @@ def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200
     # Three subplots sharing both x/y axes
     fig, (ax, axStock) = plt.subplots(2, sharex=True, sharey=True)
     ax.plot(mplDate, moodIndexSHList[-showDateInterval:], '.--',label=u"sh情绪指数",color="y")
-    ax.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"sz情绪指数",color="m")
+    ax.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"sz情绪指数",color="g")
     ax.plot(mplDate, moodIndexCYBList[-showDateInterval:], '.--',label=u"cyb情绪指数",color="c")
     ax.spines['left'].set_color('blue')
     ax.set_xlabel(u"日期")

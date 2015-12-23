@@ -68,14 +68,14 @@ def main(stockID,strDate=""):
     headline=u"周期(日) 高(低)点\t日期\t交易日数\t涨幅%\t量能比"
     print (headline)
     for period in [5,10,20,30,60,120]:
-        indexHighPoint=matchDateIndex-period+curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].argmax()
+        indexHighPoint=matchDateIndex-period+1+curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].argmax()
         riseHighcurrent=-999
         if curStock.dayPriceHighestFList[indexHighPoint]!=0:
             riseHighcurrent=100*(curStock.dayPriceClosedFList[matchDateIndex]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
         rateHighTradeVolumecurrent=-999
         if curStock.dayTradeVolumeFList[indexHighPoint]!=0:
             rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[matchDateIndex]/curStock.dayTradeVolumeFList[indexHighPoint]
-        indexLowPoint=matchDateIndex-period+curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].argmin()
+        indexLowPoint=matchDateIndex-period+1+curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].argmin()
         riseLowcurrent=-999
         if curStock.dayPriceLowestFList[indexHighPoint]!=0:
             riseLowcurrent=100*(curStock.dayPriceClosedFList[matchDateIndex]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
