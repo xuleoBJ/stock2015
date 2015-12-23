@@ -239,6 +239,67 @@ class Stock:
         else:
             print(stockID+"数据不存在")
     
+##构造和输入数据统一时间的stock对象。
+class StockUniDate:
+    def __init__(self,stockID,inputStockDateStrList,stockDirData="C:\\new_dxzq_v6\\T0002\\export\\"):
+        self.stockName=""
+        self.stockID=stockID
+        self.count = len(inputStockDateStrList)
+        print("-"*72)
+        self.dayStrList=inputStockDateStrList          ##day日期，string
+        for i in range(self.count):
+            self.dateList.append(Ccomfunc.convertDateStr2Date(self.dayStrList[i]))##date日期，date格式
+        ##日级别
+        self.dayPriceOpenArray=np.array(np.zeros(self.count))    ##day开盘价array
+        self.dayPriceClosedArray=np.array(np.zeros(self.count))    ##day收盘价array
+        self.dayPriceHighestArray=np.array(np.zeros(self.count))    ##day最高价array
+        self.dayPriceLowestArray=np.array(np.zeros(self.count))     ##day最低array
+        self.dayTradeVolumeArray=np.array(np.zeros(self.count))     ##day成交量array
+        self.dayTurnOverArray=np.array(np.zeros(self.count))       ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题array
+        self.dayRiseRateArray=np.array(np.zeros(self.count))        ##day价格涨幅array
+        self.dayRiseRateLowestArray=np.array(np.zeros(self.count))        ##day最低价涨幅array
+        self.dayRiseRateHighestArray=np.array(np.zeros(self.count))        ##day最低价涨幅array
+        self.dayWaveRateArray=np.array(np.zeros(self.count))       ##day波动涨幅array
+        self.dayOpenRateArray=np.array(np.zeros(self.count))       ##day开盘幅度，主要分析高开、低开等array
+        self.dayOpenCloseRateArray=np.array(np.zeros(self.count))	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势array
+        self.dayRadioLinkOfTradeVolumeArray=np.array(np.zeros(self.count))  ##day成交量倍数价array
+        self.day3TradeVolumeArray=np.zeros(self.count)     ##3日均价
+        self.day5TradeVolumeArray=np.zeros(self.count)     ##5日均价
+        self.day10TradeVolumeArray=np.zeros(self.count)     ##10日均价
+        self.day20TradeVolumeArray=np.zeros(self.count)     ##20日均价
+        self.day60TradeVolumeArray=np.zeros(self.count)     ##60日均价
+       
+        stockDataFile=os.path.join(stockDirData,stockID+'.txt')
+
+        if os.path.exists(stockDataFile):
+            fileOpened=open(stockDataFile,'r')
+            ##从文件中读取日数据，并计算构造相关的日数据
+            lineIndex=0
+            for line in fileOpened.readlines():
+                lineIndex=lineIndex+1
+                splitLine=line.split()
+                if lineIndex==1:
+                    self.stockName=splitLine[1]
+                    print "{},{}".format(self.stockID,self.stockName)
+                if line!="" and lineIndex>=3 and len(splitLine)>=5:
+                    indexOfdate = self.dayStrList.index(splitLine[0])
+                    self.dayPriceOpenArray[indexOfdate] = float(splitLine[1])
+                    self.dayPriceHighestArray[indexOfdate]=float(splitLine[2])
+                    self.dayPriceLowestArray[indexOfdate]=float(splitLine[3])
+                    self.dayPriceClosedArray[indexOfdate] = float(splitLine[4])
+                    self.dayTradeVolumeArray[indexOfdate] = float(splitLine[5])
+                    self.dayTurnOverArray[indexOfdate] = float(splitLine[6])
+            fileOpened.close()
+            
+            if len(self.dayStrList)>0:
+                self.count=len(self.dayStrList)
+                print("DateStart: "+self.dayStrList[0]+"\tDateEnd: "+self.dayStrList[-1]+ \
+                        "\tPriceClosedLastDay: "+str(self.dayPriceClosedFList[-1]))
+            else:
+                print(u"数据列为空")
+            
+        else:
+            print(stockID+"数据不存在")
 
 if __name__=="__main__":
     print("\n"+"#"*80)
