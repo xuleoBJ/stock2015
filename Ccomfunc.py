@@ -3,6 +3,7 @@ import os
 import shutil
 import time
 import datetime
+from datetime import timedelta
 import sys
 import Cstock
 import ctypes 
@@ -24,13 +25,27 @@ resultDir="resultDir"
 if not os.path.exists(resultDir):
     os.makedirs(resultDir)
 
+
+def defaultDateInput():
+    now =  datetime.datetime.now()
+    inputDate = now 
+    if now.hour<15: ##时间小于下午3点 用昨日数据
+        inputDate = now-timedelta(days=1)
+    if now.hour<15 and now.isoweekday()==1: ##时间小于下午3点 且周一 用上周5数据
+        inputDate = now-timedelta(days=3)
+    if now.isoweekday()==6 or now.isoweekday()==7:  ##周六周日 <F5>用上周5数据
+        inputDate = now-timedelta(days=now.isoweekday()-5)
+    return inputDate
+
+def defaultDateInputStr():
+    return defaultDateInput().strftime("%Y/%m/%d")
+
 ##根据输入的股票ID，返回对应的stockMarktet
 def getMarketStock(curStockID):
     marketID='999999'
     if not curStockID.startswith('6'):
         marketID='399001'
     curMarket=Cstock.Stock(marketID)
-    curMarket.list2array()
     return curMarket
     
 ##寻找最后一个匹配值 
@@ -98,6 +113,7 @@ def printInfor():
     print(u"4.股市态度要认真,有的钱不去赚。")
     print(u"5.永远不要补仓去摊薄成本。")
     print(u"6.交易侧重于时间，而不要重于价格。建议的交易时间为 9:45 10:45 11:15 1:45 2:45，希望严格遵守，参考15分钟K线，走平台价 不必要在乎分分毛毛。")
+    print(u"7.追求绝对的安全边际。")
     print("-"*72)
 
 def write2Text(goalFilePath,lineList):

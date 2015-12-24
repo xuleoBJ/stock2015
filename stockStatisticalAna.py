@@ -60,20 +60,30 @@ def printResult(curStock,kMatchIndexList):
         plt.subplots_adjust(left=0.15)
         plt.show()
 
+def specialDateSatis(stockID):
+    curStock=Cstock.Stock(stockID)
+    for iYear in range(2000,2015):
+        inputStr="/".join([str(iYear),"01","04"])
+        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
+        resultLine= u"{}\t涨幅{}".format(curStock.dayStrList[index],curStock.dayRiseRateFList[index])
+        print resultLine
+
 def addInforLine(inforLine):
     lineWritedList.append("-"*72)
     lineWritedList.append(inforLine)
 
-def main(stockID,strDate=""):
+def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
+    print strDate
     curStock=Cstock.Stock(stockID)
-    curStock.list2array()
-    
     curMarketStock=Ccomfunc.getMarketStock(stockID)
-    
+    indexDate=Ccomfunc.getIndexByStrDate(curMarketStock,strDate)
+    print indexDate
+
     lineWrited=[]
     headline="日期\tcur开盘\tcur收盘\tcur最低\tcur最高\tcur最低\tmarket最低\tcur最高\tmarket最高\tcur波动幅度\tmarket波动幅度"
     lineWrited.append( headline )
-    for i in range(-60,0):
+
+    for i in range(indexDate-60,indexDate):
         j=curMarketStock.dayStrList.index( curStock.dayStrList[i] ) ## curStock 和 curMarketStock 不一定是相同指数，由于停牌等等原因
         wordList=[]
         wordList.append( str( curStock.dayStrList[i] ) )
@@ -94,7 +104,6 @@ def main(stockID,strDate=""):
     indexDateStart=0
     indexDateEnd=len(curStock.dayStrList)
     
-
     ##美股跌1.5以上
 
     ##大盘高开0.5点以上统计
@@ -108,15 +117,16 @@ def main(stockID,strDate=""):
     printResult(curStock,kPatternList)
     
 
-def mainAppCall(strDate=""):
-    main("002152") ##-1是最后一个交易日分析
+def mainAppCall():
+    main("600031") 
 
 
 if __name__=="__main__":
     
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
-    mainAppCall()
+    stockID="999999"
+    specialDateSatis(stockID)
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

@@ -14,7 +14,7 @@ import configOS
 import stockPatternRecognition
 import copyFile2Dir
 import start
-import trendAna
+import Ccomfunc,trendAna
 from datetime import datetime,timedelta 
 import stockTradeModel
 
@@ -44,15 +44,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
             item = QListWidgetItem(iDate)
             self.listWidgetMatchDate.addItem(item)
 
-        now =  datetime.now()
-        inputDate = now 
-
-        if now.hour<15: ##时间小于下午3点 用昨日数据
-            inputDate = now-timedelta(days=1)
-        if now.hour<15 and now.isoweekday()==1: ##时间小于下午3点 且周一 用上周5数据
-            inputDate = now-timedelta(days=3)
-        if now.isoweekday()==6 or now.isoweekday()==7:  ##周六周日 <F5>用上周5数据
-            inputDate = now-timedelta(days=now.isoweekday()-5)
+        inputDate=Ccomfunc.defaultDateInput()
         
         inputAnaStrDate=inputDate.strftime("%Y/%m/%d")
         
