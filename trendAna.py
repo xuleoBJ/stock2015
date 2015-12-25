@@ -20,8 +20,8 @@ from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-   ## 市场评价 
-def marketSum(_curStock,index):
+## 市场评价 
+def marketSummary(_curStock,index):
     if 1.5<=_curStock.dayRadioLinkOfTradeVolumeArray[index]:
         strVolumeRadio = u"放巨量"
     if 1.1<=_curStock.dayRadioLinkOfTradeVolumeArray[index]<1.5:
@@ -87,10 +87,13 @@ def getDateIndexHighestPoint(curStock,indexOfDateStart,indexOfDateEnd):
 def getDateIndexLowestPoint(curStock,indexOfDateStart,indexOfDateEnd):
     return indexOfDateStart+curStock.dayPriceHighestArray[indexOfDateStart:indexOfDateEnd].argmin()
 
-##计算两个交易日直接的涨幅
-def calRiseRate(curStock,indexOfDateStart,indexOfDateEnd):
-#    print curStock.stockID,indexOfDateStart,indexOfDateEnd
-    return 100*(curStock.dayPriceClosedFList[indexOfDateStart]-curStock.dayPriceClosedFList[indexOfDateEnd])/curStock.dayPriceClosedFList[indexOfDateEnd]
+##计算两个交易日收盘涨幅
+def calRiseRateClosed(curStock,indexOfDateStart,indexOfDateEnd):
+    return 100*(curStock.dayPriceClosedFList[indexOfDateEnd]-curStock.dayPriceClosedFList[indexOfDateStart])/curStock.dayPriceClosedFList[indexOfDateStart]
+
+def calRiseRate(dataArray,indexOfDateStart,indexOfDateEnd):
+    return 100*(dataArray[indexOfDateEnd]-dataArray[indexOfDateStart])/dataArray[indexOfDateStart]
+
 
 ##计算两个交易日直接的涨幅indexOfDate是指数，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
 def calRiseRateInterval(curStock,indexOfDate,intervalDay):

@@ -33,12 +33,13 @@ class MyFormatter(Formatter):
         return self.dates[ind].strftime(self.fmt)
 
 ##用periodCalDaysOfMood个交易日的交易量的 5个最大值的均值和5个最小值的均值的差的1/100作为基准值
-def calMoodIndexBase(cStock,periodCalDaysOfMood=200):
+def calMoodIndexBase(cStock,periodCalDaysOfMood=100):
     print ("-"*72)
-    dayTradeArray=cStock.dayTradeVolumeArray[-periodCalDaysOfMood:]
+    tradeVolumeArray=cStock.dayTradeVolumeArray[-periodCalDaysOfMood:]
 #   计算最近periodCalDaysOfMood个交易日内的量能排序,通过量能分析市场情绪 
-    sortIndexList=dayTradeArray.argsort()
-    print sortIndexList 
+    sortIndexList=tradeVolumeArray.argsort()
+    sortedArray=np.array(sorted(tradeVolumeArray))
+ #   print sortIndexList 
     
     ##计算情绪指数选取的参数天数,由于有可能有极地量
     numOfmoodDay=5
@@ -46,22 +47,18 @@ def calMoodIndexBase(cStock,periodCalDaysOfMood=200):
         numOfmoodDay=3
 
     print (u"{}个交易量最大的交易日：".format(numOfmoodDay))
-    tradeVolMaxRef=0
+    tradeVolMaxRef=sortedArray[-numOfmoodDay:].mean()
     for item in sortIndexList[-numOfmoodDay:]:
-        tradeVolMaxRef=tradeVolMaxRef+dayTradeArray[item]
         print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
-    tradeVolMaxRef=tradeVolMaxRef/numOfmoodDay
     
-    tradeVolMinRef=0
+    tradeVolMinRef=sortedArray[:numOfmoodDay].mean()
     print (u"{}个交易量最小的交易日：".format(numOfmoodDay))
     for item in sortIndexList[:numOfmoodDay]:
-        tradeVolMinRef=tradeVolMinRef+dayTradeArray[item]
         print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
-    tradeVolMinRef=tradeVolMinRef/numOfmoodDay
     print ("-"*72)
-
     ##规定(tradeVolMaxRef-tradeVolMinRef)*0.01量作为基准情绪基数，
     moodIndexBase=(tradeVolMaxRef-tradeVolMinRef)*0.01
+#    print tradeVolMaxRef,tradeVolMinRef,moodIndexBase
     return tradeVolMinRef,moodIndexBase
 
 
@@ -73,7 +70,7 @@ def make_patch_spines_invisible(ax):
 
 ##period 是量能情绪控制周期，为选取的计算量能统计的时间范围,showDate
 ##由于创业板和股票发行日期的起始日期不同，只能选用 -1 倒数的指数方式
-def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200):
+def moodIndexMarket(stockID="399001",showDateInterval=60,periodCalDaysOfMood=200):
     stockSH=Stock("999999")
     tradeVolBaseSH,moodIndexBaseSH =  calMoodIndexBase(stockSH,periodCalDaysOfMood)
     
@@ -88,7 +85,7 @@ def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200
     moodIndexCYBList=[]
 
     ##计算情绪指数 moodIndexSHList 长度是 periodCalDaysOfMood
-    for i in range(periodCalDaysOfMood,0,-1):
+    for i in range(-periodCalDaysOfMood,0):
         moodIndexSH=round( (stockSH.dayTradeVolumeArray[i]-tradeVolBaseSH)/moodIndexBaseSH , 2)
         moodIndexSHList.append(moodIndexSH)
         moodIndexSZ=round( (stockSZ.dayTradeVolumeArray[i]-tradeVolBaseSZ)/moodIndexBaseSZ , 2)
@@ -111,7 +108,7 @@ def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200
     dayFormatter = DateFormatter('%d')      # e.g., 12
     # Three subplots sharing both x/y axes
     fig, (ax, axStock) = plt.subplots(2, sharex=True, sharey=True)
-    ax.plot(mplDate, moodIndexSHList[-showDateInterval:], '.--',label=u"sh情绪指数",color="y")
+    ax.plot(mplDate, moodIndexSHList[-showDateInterval:], '.--',label=u"sh情绪指数",color="b")
     ax.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"sz情绪指数",color="g")
     ax.plot(mplDate, moodIndexCYBList[-showDateInterval:], '.--',label=u"cyb情绪指数",color="c")
     ax.spines['left'].set_color('blue')
@@ -139,27 +136,26 @@ def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200
 
     fig.subplots_adjust(hspace=0.1)
    
-    cStock=stockSZ
+    curStock=stockSZ
     if  stockID!="999999":
-        cStock=Stock(stockID)
-        cStock.list2array()
+        curStock=Stock(stockID)
 
-    tradeVolBase,moodIndexBase =  calMoodIndexBase(cStock,periodCalDaysOfMood)
+    tradeVolBase,moodIndexBase = calMoodIndexBase(curStock,periodCalDaysOfMood)
     moodIndexList=[]
     ##计算情绪指数
-    for i in range(periodCalDaysOfMood,0,-1):
-        moodIndex=round( (cStock.dayTradeVolumeArray[i]-tradeVolBase)/moodIndexBase , 2)
+    for i in range(-periodCalDaysOfMood,0):
+        moodIndex=round( (curStock.dayTradeVolumeArray[i]-tradeVolBase)/moodIndexBase , 2)
         moodIndexList.append(moodIndex)
     
-    axStock.plot(mplDate, moodIndexList[-showDateInterval:], '.-',label=u"MoodIndex",color="b")
+    axStock.plot(mplDate, moodIndexList[-showDateInterval:], '.--',label=u"MoodIndex",color="b")
     axStock.spines['left'].set_color('blue')
     axStock.set_xlabel(u"日期")
     axStock.set_ylabel(u"情绪指数") 
     right_axStock = axStock.twinx() 
-    right_axStock.plot(mplDate, cStock.day5TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA5",color="m")
-    right_axStock.plot(mplDate, cStock.day10TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA10",color="c")
-    right_axStock.plot(mplDate, cStock.day20TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA20",color="g")
-    right_axStock.plot(mplDate, cStock.day60TradeVolumeArray[-showDateInterval:], '.--',label=u"VolumeMA60",color="y")
+    right_axStock.plot(mplDate, curStock.day5TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA5",color="m")
+    right_axStock.plot(mplDate, curStock.day10TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA10",color="c")
+    right_axStock.plot(mplDate, curStock.day20TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA20",color="g")
+    right_axStock.plot(mplDate, curStock.day60TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA60",color="y")
    # right_axStock.spines['right'].set_color('red')
 
     rightAX2 = axStock.twinx()
@@ -172,32 +168,19 @@ def moodIndexMarket(stockID="999999",showDateInterval=60,periodCalDaysOfMood=200
     # Second, show the right spine.
     rightAX2.spines["right"].set_visible(True)
     rightAX2.spines['right'].set_color('r')
-    rightAX2.plot(mplDate, cStock.dayPriceClosedArray[-showDateInterval:], '.-',label=u"price",color="r")
+    rightAX2.plot(mplDate, curStock.dayPriceClosedArray[-showDateInterval:], '.-',label=u"price",color="r")
     
 
     h1, l1 = axStock.get_legend_handles_labels()
     h2, l2 = right_axStock.get_legend_handles_labels()
     h3, l3 = rightAX2.get_legend_handles_labels()
     plt.legend(h1+h2+h3, l1+l2+l3, loc=2)
-    plt.title(u"{}分析".format(cStock.stockName),color='r')
+    plt.title(u"{}分析".format(curStock.stockName),color='r')
     plt.show()
 
 if __name__ == "__main__":
     print (u"市场情绪分析：")
-    stockIDList=['999999',"399001"]
-    now =  datetime.now()
-    inputAnaStrDate=now.strftime("%Y/%m/%d")
-    if now.hour<15: ##时间小于下午3点 用昨日数据
-        inputAnaStrDate=(now-timedelta(days=1)).strftime("%Y/%m/%d")
-    moodIndexMarket(showDateInterval=200)
+    moodIndexMarket("399001",showDateInterval=100)
     
-    print (u"市场整体情绪分析：")
-#    for stockID in stockIDList:
-#        cStock=Stock(stockID)
-#        cStock.list2array()
-#        ## 应该考虑长期情绪指数和短期情绪指数
-#        moodIndex(cStock,200)
-    ## 蓝筹市场、中小创市场判断,主要看 上证和深市的涨幅和人气对比
-
 
 

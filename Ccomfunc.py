@@ -72,6 +72,8 @@ def getIndexByDate(_curStock,dateInput):
     for i in range(0,_curStock.count-1):
         if _curStock.dateList[i]<=dateInput<_curStock.dateList[i+1]:
             return i
+    if _curStock.dateList[-1]==dateInput:
+        return _curStock.count-1
     return -1
 
 ## 根据输入的date，返回每个月的1号
@@ -105,15 +107,11 @@ def calNatureDays( dateStr1 , dateStr2 ):
 
 def printInfor():
     print("-"*72)
-    print(u"1-What's your trade plan today?\n2-Every Trade is a complete chance?\n3-0-patience 1-time,2-volume,3-price.\n4-Some money is not in my system.")
-    print(u"0.市场是我的好朋友,朋友相处,需要耐心。")
-    print(u"1.价差还是时间差？大盘稳定的买点可以早盘10：00前 高点的98%或者98.5的位置。")
-    print(u"2.减少交易频率，每次交易前要提醒自己，确定性机会，最好是下午2:45以后再买。")
-    print(u"3.买卖交易之间必须有时间差！！！万不可盘中频繁的把一只票扔了，马上去买另一只票！买前想逻辑！")
-    print(u"4.股市态度要认真,有的钱不去赚。")
-    print(u"5.永远不要补仓去摊薄成本。")
-    print(u"6.交易侧重于时间，而不要重于价格。建议的交易时间为 9:45 10:45 11:15 1:45 2:45，希望严格遵守，参考15分钟K线，走平台价 不必要在乎分分毛毛。")
-    print(u"7.追求绝对的安全边际。")
+    print(u"0.耐心，耐心，还是耐心!")
+    print(u"1.交易计划，多看少动")
+    print(u"2.减少交易频率，绝对的安全边际，本次交易的盈利模式和防守措施是什么,逻辑是什么")
+    print(u"3.永远不要补仓去摊薄成本，短线不能做成长线")
+    print(u"4.交易侧重于时间，而不要重于价格。建议的交易时间为 10:30 11:30 1:45 2:45，希望严格遵守，参考15分钟K线，走平台价 不必要在乎分分毛毛。")
     print("-"*72)
 
 def write2Text(goalFilePath,lineList):

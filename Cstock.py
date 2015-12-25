@@ -209,9 +209,11 @@ class Stock:
 						##(当日收盘-当日开盘)/上一日收盘
                         self.dayOpenCloseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceOpenFList[-1])/self.dayPriceClosedFList[-2],2))
                     else:
+                        self.dayOpenRateFList.append(-999)
+                        self.dayRiseRateLowestFList.append(-999)
+                        self.dayRiseRateHighestFList.append(-999)
                         self.dayRiseRateFList.append(-999)
                         self.dayWaveRateFList.append(-999)
-                        self.dayOpenRateFList.append(-999)
                         self.dayOpenCloseRateFList.append(-999)
                     ##计算成交量涨幅
                     if len(self.dayTradeVolumeFList)>=2 and self.dayTradeVolumeFList[-2]>0:

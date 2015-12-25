@@ -31,23 +31,26 @@ def calGDG():
 def WarnBigEvent():
     ctypes.windll.user32.MessageBoxA(0, "2016-1-8 Big Share Sells!", "infor", 1)
 
-def main(stockID,strDate=""):
+def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
+    ##近期事务提醒，希望建立数据库
     WarnBigEvent() 
     curStock=Cstock.Stock(stockID)
-    ## 读取配置文件，获取相关信息，读取股票ID,实例化 curStock
-    config = ConfigParser.ConfigParser()
-    config.read('config.ini')
     
     matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
+    print (u"分析日期：{}".format(curStock.dayStrList[matchDateIndex]))
 
-    today=datetime.date.today()
     print(u"-"*72)
     print(u"近期市场分析：")
+    headLine=u"日期  \t星期\t  涨幅\t  量能\t  描述\t最大涨幅\t最小涨幅"
+    print(headLine)
     for i in range(matchDateIndex-5,matchDateIndex+1):
         weekDay = curStock.dateList[i].isoweekday()
-        marketSumStr = trendAna.marketSum(curStock,i)
-        print(u"{}:星期{} 涨幅{:.2f}%\t量能比{:.2f}\t{}".format(curStock.dayStrList[i], weekDay ,curStock.dayRiseRateFList[i],\
-                curStock.dayRadioLinkOfTradeVolumeFList[i],marketSumStr))
+        marketSummaryStr = trendAna.marketSummary(curStock,i)
+        print(u"{} {} {:.1f}({:.2f}%)\t{:.2f} {} {:.1f}({:.2f}%) {:.1f}({:.2f}%)".format(curStock.dayStrList[i], weekDay ,\
+                curStock.dayPriceClosedFList[i], curStock.dayRiseRateFList[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i],marketSummaryStr,\
+                curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
+                curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i]))
     
     ## 均价分析
     print (u"-"*72)
@@ -68,14 +71,14 @@ def main(stockID,strDate=""):
     headline=u"周期(日) 高(低)点\t日期\t交易日数\t涨幅%\t量能比"
     print (headline)
     for period in [5,10,20,30,60,120]:
-        indexHighPoint=matchDateIndex-period+1+curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].argmax()
+        indexHighPoint=matchDateIndex-period+curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex+1].argmax()
         riseHighcurrent=-999
         if curStock.dayPriceHighestFList[indexHighPoint]!=0:
             riseHighcurrent=100*(curStock.dayPriceClosedFList[matchDateIndex]-curStock.dayPriceHighestFList[indexHighPoint])/curStock.dayPriceHighestFList[indexHighPoint]
         rateHighTradeVolumecurrent=-999
         if curStock.dayTradeVolumeFList[indexHighPoint]!=0:
             rateHighTradeVolumecurrent=curStock.dayTradeVolumeFList[matchDateIndex]/curStock.dayTradeVolumeFList[indexHighPoint]
-        indexLowPoint=matchDateIndex-period+1+curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].argmin()
+        indexLowPoint=matchDateIndex-period+curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].argmin()
         riseLowcurrent=-999
         if curStock.dayPriceLowestFList[indexHighPoint]!=0:
             riseLowcurrent=100*(curStock.dayPriceClosedFList[matchDateIndex]-curStock.dayPriceLowestFList[indexLowPoint])/curStock.dayPriceLowestFList[indexLowPoint]
