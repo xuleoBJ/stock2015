@@ -32,35 +32,37 @@ class MyFormatter(Formatter):
 
         return self.dates[ind].strftime(self.fmt)
 
+##用periodCalDaysOfMood个交易日的交易量的 5个最大值的均值和5个最小值的均值的差的1/100作为基准值
 def calMoodIndexBase(cStock,periodCalDaysOfMood=200):
     print ("-"*72)
+    dayTradeArray=cStock.dayTradeVolumeArray[-periodCalDaysOfMood:]
 #   计算最近periodCalDaysOfMood个交易日内的量能排序,通过量能分析市场情绪 
-    sortIndexList=cStock.dayTradeVolumeArray[-periodCalDaysOfMood:].argsort()
-#    print sortIndexList 
+    sortIndexList=dayTradeArray.argsort()
+    print sortIndexList 
     
-    ##正情绪指数选取的参数天数
+    ##计算情绪指数选取的参数天数,由于有可能有极地量
     numOfmoodDay=5
     if periodCalDaysOfMood<20:
         numOfmoodDay=3
 
-#    print (u"{}个交易量最大的交易日：".format(numOfmoodDay))
-    tradeVolmax=0
-    for item in sortIndexList[:numOfmoodDay]:
-        tradeVolmax=tradeVolmax+cStock.dayTradeVolumeArray[periodCalDaysOfMood:][item]
-#        print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
-    tradeVolmax=tradeVolmax/numOfmoodDay
+    print (u"{}个交易量最大的交易日：".format(numOfmoodDay))
+    tradeVolMaxRef=0
+    for item in sortIndexList[-numOfmoodDay:]:
+        tradeVolMaxRef=tradeVolMaxRef+dayTradeArray[item]
+        print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
+    tradeVolMaxRef=tradeVolMaxRef/numOfmoodDay
     
-    tradeVolmin=0
-#    print (u"{}个交易量最小的交易日：".format(numOfmoodDay))
+    tradeVolMinRef=0
+    print (u"{}个交易量最小的交易日：".format(numOfmoodDay))
     for item in sortIndexList[:numOfmoodDay]:
-        tradeVolmin=tradeVolmax+cStock.dayTradeVolumeArray[periodCalDaysOfMood:][item]
-#        print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
-    tradeVolmin=tradeVolmin/numOfmoodDay
+        tradeVolMinRef=tradeVolMinRef+dayTradeArray[item]
+        print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
+    tradeVolMinRef=tradeVolMinRef/numOfmoodDay
     print ("-"*72)
 
-    ##规定(tradeVolmax-tradeVolmin)*0.01量作为基准情绪基数，
-    moodIndexBase=(tradeVolmax-tradeVolmin)*0.01
-    return tradeVolmin,moodIndexBase
+    ##规定(tradeVolMaxRef-tradeVolMinRef)*0.01量作为基准情绪基数，
+    moodIndexBase=(tradeVolMaxRef-tradeVolMinRef)*0.01
+    return tradeVolMinRef,moodIndexBase
 
 
 def make_patch_spines_invisible(ax):
