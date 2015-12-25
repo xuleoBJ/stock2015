@@ -6,9 +6,10 @@ import datetime
 import sys
 import Cstock
 import Ccomfunc
+import trendAna
 
 
-stockID="002001"
+stockID="999999"
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -216,14 +217,10 @@ def analysisScale(stockID,dateStrStart,dateStrEnd):
 
 if __name__=="__main__":
    
-    Ccomfunc.printInfor()
-
     startClock=time.clock() ##记录程序开始计算时间
     
-
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
-    
 
     ##设置分析周期,如果日期大于1000（4年就取1000），否则取最大
     iDaysPeriodUser=len(curStock.dayStrList) if len(curStock.dayStrList)<=1000 else 1000
@@ -231,11 +228,6 @@ if __name__=="__main__":
     dateStrStart=curStock.dayStrList[-iDaysPeriodUser]
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
-
-    print ("正在进行趋势分析：")
-    for dayPeriod in [3,5,10,20,30,60,90,120]:
-	 Ccomfunc.printCalTrend(curStock,-dayPeriod)
-	   
 
     print ("正在进行历史时空分析：")
     for dayPeriod in [3,5,10,20,30,60,90,120,250]:

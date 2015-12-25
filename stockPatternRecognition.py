@@ -6,28 +6,51 @@ import datetime
 import math
 import Cstock
 import sys
-import Ccomfunc
+import Ccomfunc,trendAna
 import configOS
-
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter  
 
 lineWritedList=[]
 
 def printResult(curStock,kMatchIndexList):
     ##识别结果统计分析
     dateList=[]
+    riseRateNextList=[]
+    riseRateHighestNextList=[]
+    riseRateLowestNextList=[]
     for i in kMatchIndexList:
         dateList.append(curStock.dayStrList[i])
+        riseRateNextList.append(curStock.dayRiseRateFList[i+1])
+        riseRateHighestNextList.append(curStock.dayRiseRateHighestFList[i+1])
+        riseRateLowestNextList.append(curStock.dayRiseRateLowestFList[i+1])
         if curStock.stockID=="999999" and (not curStock.dayStrList[i] in configOS.patternRecDateListSH) :
             configOS.patternRecDateListSH.append(curStock.dayStrList[i])
-        
-    lineWritedList.append(u"识别结果：{},涨幅> ".format(len(dateList)))
-    dateStrLine='\t'.join(dateList)
-    lineWritedList.append(dateStrLine)
-
-
-
+        if curStock.stockID=="399001" and (not curStock.dayStrList[i] in configOS.patternRecDateListSZ) :
+            configOS.patternRecDateListSZ.append(curStock.dayStrList[i])
+    
+    matchNum=len(kMatchIndexList)
+    value0_smaller0=len(filter(lambda x:x<=0,riseRateNextList))
+    value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
+    value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
+    if matchNum>0:
+        lineWritedList.append("-"*72)
+        lineWritedList.append(u"识别结果：{}, 涨幅<=0个数: {}({:.2f}%), 涨幅>=1个数: {}, 涨幅<-1个数: {}".format( \
+                matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
+        valueLine='\t'.join(map(str,sorted(riseRateNextList)))
+        _median=np.median(riseRateNextList)
+        lineWritedList.append(u"收盘涨幅:{}\t中位数:{:.2f}".format(valueLine,_median))
+        valueHighestLine='\t'.join(map(str,sorted(riseRateHighestNextList)))
+        _median=np.median(riseRateHighestNextList)
+        lineWritedList.append(u"最高涨幅:{}\t中位数:{:.2f}".format(valueHighestLine,_median))
+        valueLowestLine='\t'.join(map(str,sorted(riseRateLowestNextList)))
+        _median=np.median(riseRateLowestNextList)
+        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
+    lineWritedList.append("-"*72)
+    
     for index in kMatchIndexList: 
-        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday() 
+        weekDay=curStock.dateList[index].isoweekday() 
         resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
@@ -36,9 +59,10 @@ def printResult(curStock,kMatchIndexList):
         lineWritedList.append(resultLine)
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
-        for intervalDay in [-60,-30,-10,-5,3,5,8,13,21,44]:
-            resultLine=u"{}日涨幅{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,index,intervalDay))
-            lineWritedList.append(resultLine)
+        resultLine=u"   --趋势涨幅(日):"
+        for intervalDay in [-20,-10,-5,3,5,8,13]:
+            resultLine+=u" ({}){:.1f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
+        lineWritedList.append(resultLine)
 
 ##利用个股和对应大盘的同步性分析 进行模式识别
 ## matchDateIndex是要识别的strDate在序列中的指数位置 -1 是最新一个交易日
@@ -75,7 +99,7 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
     ##根据涨幅进行历史K线模式识别,iTradeDay curStock周期，kNum是K线组合个数
     ##需要增加从某一天开始的模式
     kMatchIndexList=[] ##匹配的模式个数
-    print ("-"*8+u"根据前{}涨幅，自动设置条件，模式识别：".format(kNum))
+    print ("-"*8+u"根据前{}涨幅,自动设置条件,模式识别：".format(kNum))
     for i in range(-iTradeDay+kNum,-1):
 	    iCount=0
 	    bSelect=True
@@ -150,9 +174,11 @@ def addInforLine(inforLine):
     lineWritedList.append(inforLine)
 
     ## 默认的是最后一个交易日作匹配模型
-def main(stockID,matchDateIndex=-1):
+def main(stockID,strDate=""):
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
+    
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
 
     lineWritedList.append("-"*72)
     lineWritedList.append(stockID)
@@ -171,7 +197,7 @@ def main(stockID,matchDateIndex=-1):
     
     kNum=3 ##需要分析的K线天数
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
-    if stockID not in ["999999","399001"] :
+    if stockID not in ["999999"] :
         bias=1.0
     
     inforLine="-"*8+u"最近交易日的相关数据："
@@ -179,7 +205,7 @@ def main(stockID,matchDateIndex=-1):
     
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{},星期{}\t涨幅:{}\t量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
+        resultLine=u"{},星期{}\t涨幅:{}\t 量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
         lineWritedList.append(resultLine)
     
@@ -200,28 +226,27 @@ def main(stockID,matchDateIndex=-1):
     patterRecByVolume(curStock,matchDateIndex,kPatternList,kNum)
 	
 
-if __name__=="__main__":
-    
-    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
-    startClock=time.clock() ##记录程序开始计算时间
-    
-    stockIDList=["999999"]
-    stockIDList.append("399001")
-    stockIDList.append("002001")
+def mainAppCall(strDate=""):
     del configOS.patternRecDateListSH[:]
     del configOS.patternRecDateListSZ[:]
     del configOS.patternRecDateListCYB[:]
 
-
-    for stockID in stockIDList: 
-        main(stockID,-1) ##-1是最后一个交易日分析
+    for stockID in configOS.stockIDMarketList: 
+        main(stockID,strDate) ##-1是最后一个交易日分析
 
     configOS.updatePetternRectDateList()
 
     for line in lineWritedList:
         print line
     goalFilePath="patternRec.txt" ##输出文件名
-    Ccomfunc.write2Text(goalFilePath,lineWritedList) 
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    os.startfile(goalFilePath)
+
+if __name__=="__main__":
+    
+    ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
+    startClock=time.clock() ##记录程序开始计算时间
+    mainAppCall()
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

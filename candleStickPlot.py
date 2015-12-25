@@ -10,8 +10,9 @@ from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
 from matplotlib.finance import candlestick,\
      plot_day_summary, candlestick_ohlc,volume_overlay3
 from Cstock import Stock
+import Ccomfunc
 
-def drawCandleStick(curStock,dateFind):
+def drawCandleStick(curStock,dateStrInput,interval=10):
     mpl.rcParams['font.sans-serif'] = ['SimHei'] 
 
     mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
@@ -21,18 +22,17 @@ def drawCandleStick(curStock,dateFind):
 
     #starting from dates expressed as strings...
     #...you convert them in float numbers....
-    indexDate=curStock.dayStrList.index(dateFind)
+    indexDate=Ccomfunc.getIndexByStrDate(curStock,dateStrInput)
     Prices=[]
-    for i in range(indexDate-10,indexDate+10):
-        Date = date2num(datetime.strptime(curStock.dayStrList[i], "%Y/%m/%d"))
+    for i in range(indexDate-interval,indexDate+interval):
+        mplDate = date2num(datetime.strptime(curStock.dayStrList[i], "%Y/%m/%d"))
     #so redefining the Prices list of tuples... date open high lowest close
         openPrice=curStock.dayPriceOpenFList[i]
         highestPrice=curStock.dayPriceHighestFList[i]
         lowestPrice=curStock.dayPriceLowestFList[i]
         closePrice=curStock.dayPriceClosedFList[i]
         tradeVolume=curStock.dayTradeVolumeFList[i]
-        Prices.append([Date,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume])
-    print Prices
+        Prices.append([mplDate,openPrice,highestPrice, lowestPrice, closePrice,tradeVolume])
     
     PricesArray=np.array(Prices)
     #and then following the official example. 
@@ -52,7 +52,6 @@ def drawCandleStick(curStock,dateFind):
     ax.xaxis_date()
     ax.autoscale_view()
 
-
     axVol = ax.twinx()
 ##
     dates = PricesArray[:,0]
@@ -66,19 +65,11 @@ def drawCandleStick(curStock,dateFind):
     axVol.bar(dates[pos],volume[pos],color='red',width=0.5,align='center')
     axVol.bar(dates[neg],volume[neg],color='green',width=0.5,align='center')
     axVol.set_position(matplotlib.transforms.Bbox([[0.125,0.05],[0.9,0.2]]))
-# Plot the volume overlay
-#    bc = volume_overlay3(axVol, Prices,colorup='r', colordown='g', width=4, alpha=1.0)
-#    yticks = axVol.get_yticks()
-#    ymax=max(curStock.dayTradeVolumeFList[indexDate-10:indexDate+10])*1.5
-#    axVol.set_ylim([0,ymax])
-#    axVol.yaxis.set_label_position("right")
-#    axVol.add_collection(bc)
-#    corners = (0, 0), (len(bars), max(volumes))
-#    axVol.update_datalim(corners)
 
-    
     plt.setp( plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-    plt.title(u"{} {} 20日K".format(curStock.stockID,dateFind),color='r')
+    plt.title(u"{} {} 20日K".format(curStock.stockID,dateStrInput),color='r')
+
+
     plt.show()
 
 if __name__=="__main__":
