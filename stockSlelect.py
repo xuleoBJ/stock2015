@@ -64,7 +64,7 @@ def selectStockByVolume():
 ##2 目标价位，支撑价位。
 
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
-def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2010,2011,2012,2013,2014,2015],selectScale=2):
+def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2015,2014,2013,2012,2011,2010],selectScale=2):
     stockIDList=["999999","399001"]
     if selectScale == 1: ##限选
         with open('stockIDList.txt') as fOpen:

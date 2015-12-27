@@ -51,7 +51,7 @@ def printResult(curStock,kMatchIndexList):
     
     for index in kMatchIndexList: 
         weekDay=curStock.dateList[index].isoweekday() 
-        resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量幅{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
+        resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量能{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index],\

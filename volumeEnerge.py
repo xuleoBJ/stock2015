@@ -108,9 +108,9 @@ def moodIndexMarket(stockID="399001",showDateInterval=60,periodCalDaysOfMood=200
     dayFormatter = DateFormatter('%d')      # e.g., 12
     # Three subplots sharing both x/y axes
     fig, (ax, axStock) = plt.subplots(2, sharex=True, sharey=True)
-    ax.plot(mplDate, moodIndexSHList[-showDateInterval:], '.--',label=u"sh情绪指数",color="b")
-    ax.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"sz情绪指数",color="g")
-    ax.plot(mplDate, moodIndexCYBList[-showDateInterval:], '.--',label=u"cyb情绪指数",color="c")
+    ax.plot(mplDate, moodIndexSHList[-showDateInterval:], '.--',label=u"shMI",color="b")
+    ax.plot(mplDate, moodIndexSZList[-showDateInterval:], '.--',label=u"szMI",color="g")
+    ax.plot(mplDate, moodIndexCYBList[-showDateInterval:], '.--',label=u"cybMI",color="c")
     ax.spines['left'].set_color('blue')
     ax.set_xlabel(u"日期")
     ax.set_ylabel(u"情绪指数")
@@ -147,15 +147,15 @@ def moodIndexMarket(stockID="399001",showDateInterval=60,periodCalDaysOfMood=200
         moodIndex=round( (curStock.dayTradeVolumeArray[i]-tradeVolBase)/moodIndexBase , 2)
         moodIndexList.append(moodIndex)
     
-    axStock.plot(mplDate, moodIndexList[-showDateInterval:], '.--',label=u"MoodIndex",color="b")
+    axStock.plot(mplDate, moodIndexList[-showDateInterval:], '.--',label=curStock.stockID+u"MI",color="b")
     axStock.spines['left'].set_color('blue')
     axStock.set_xlabel(u"日期")
     axStock.set_ylabel(u"情绪指数") 
     right_axStock = axStock.twinx() 
-    right_axStock.plot(mplDate, curStock.day5TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA5",color="m")
-    right_axStock.plot(mplDate, curStock.day10TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA10",color="c")
-    right_axStock.plot(mplDate, curStock.day20TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA20",color="g")
-    right_axStock.plot(mplDate, curStock.day60TradeVolumeArray[-showDateInterval:], '.-',label=u"VolumeMA60",color="y")
+    right_axStock.plot(mplDate, curStock.day5TradeVolumeArray[-showDateInterval:], '.-',label=u"V_MA5",color="m")
+    right_axStock.plot(mplDate, curStock.day10TradeVolumeArray[-showDateInterval:], '.-',label=u"V_MA10",color="c")
+    right_axStock.plot(mplDate, curStock.day20TradeVolumeArray[-showDateInterval:], '.-',label=u"V_MA20",color="g")
+    right_axStock.plot(mplDate, curStock.day60TradeVolumeArray[-showDateInterval:], '.-',label=u"V_MA60",color="y")
    # right_axStock.spines['right'].set_color('red')
 
     rightAX2 = axStock.twinx()
