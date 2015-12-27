@@ -94,7 +94,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     ##查看K线
     def kPattern(self):
         sDate=str(self.lineEditDateKHistory.text())
-        stockID=str(self.lineEditInputStockIDTrend.text())
+        stockID=str(self.lineEditInputStockIDkHistory.text())
         curStock=Stock(stockID)
         drawCandleStick(curStock,sDate,30)
     

@@ -4,16 +4,25 @@ def drawSVG(case=1,saveSVGFileName='sample.svg'):
     # create an SVG XML element (see the SVG specification for attribute details)
     doc = et.Element('svg', width='210mm', height='297mm', version='1.1', xmlns='http://www.w3.org/2000/svg')
 
+    if case=="A":
+        for i in range(10): 
+            for j in range(0,26):
+                text = et.Element('text', x=str(10+200/10*i)+"mm", y=str(10+290/26*j)+'mm', fill='black',  \
+                        style='font-family:Sans;font-size:42px;text-anchor:middle;dominant-baseline:top;stroke-width:1;')
+                if i>0:
+                    text.set('fill-opacity', '0.2')
+                text.text = chr(65+j)
+                doc.append(text)
     #5x5
     cd=15 
-    if case==5:
+    if case=="5":
         for i in range(5): 
             for j in range(0,3*6):
                 if j%6 != 0:
                     et.SubElement(doc, 'rect', x=str(10+cd*i)+"mm", y=str(cd*j)+'mm', width=str(cd)+'mm', height=str(cd)+'mm', style="fill:none;stroke:black;stroke-width:1;" )
                     et.SubElement(doc, 'rect', x=str(210/2+cd*i)+"mm", y=str(cd*j)+'mm', width=str(cd)+'mm', height=str(cd)+'mm', style="fill:none;stroke:black;stroke-width:1;" )
     #4x4
-    if case==4:
+    if case=="4":
         for i in range(4): 
             for j in range(0,3*5):
                 if j%5 != 0:
@@ -21,7 +30,7 @@ def drawSVG(case=1,saveSVGFileName='sample.svg'):
                     et.SubElement(doc, 'rect', x=str(210/2+cd*i)+"mm", y=str(cd*j)+'mm', width=str(cd)+'mm', height=str(cd)+'mm', style="fill:none;stroke:black;stroke-width:1;" )
 
     #3x3
-    if case==3:
+    if case=="3":
         for i in range(3): 
             for j in range(0,4*4):
                 if j%4 != 0:
@@ -29,7 +38,7 @@ def drawSVG(case=1,saveSVGFileName='sample.svg'):
                     et.SubElement(doc, 'rect', x=str(210/3+cd*i)+"mm", y=str(cd*j)+'mm', width=str(cd)+'mm', height=str(cd)+'mm', style="fill:none;stroke:black;stroke-width:1;" )
                     et.SubElement(doc, 'rect', x=str(210*2/3+cd*i)+"mm", y=str(cd*j)+'mm', width=str(cd)+'mm', height=str(cd)+'mm', style="fill:none;stroke:black;stroke-width:1;" )
     intervalBlank=10
-    if case==1:
+    if case=="1":
         _width=(210-intervalBlank*4)/3
         _height=(297-intervalBlank*5)/4
         for j in range(0,4):
@@ -49,7 +58,7 @@ def drawSVG(case=1,saveSVGFileName='sample.svg'):
     f.close()
 
 if __name__ == "__main__":
-    case=5
+    case="A"
     drawSVG(case,saveSVGFileName=str(case)+'.svg')
  
 

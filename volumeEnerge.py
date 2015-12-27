@@ -46,13 +46,13 @@ def calMoodIndexBase(cStock,periodCalDaysOfMood=100):
     if periodCalDaysOfMood<20:
         numOfmoodDay=3
 
-    print (u"{}个交易量最大的交易日：".format(numOfmoodDay))
+    print (u"{} {}个交易量最大的交易日：".format(cStock.stockID,numOfmoodDay))
     tradeVolMaxRef=sortedArray[-numOfmoodDay:].mean()
     for item in sortIndexList[-numOfmoodDay:]:
         print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
     
     tradeVolMinRef=sortedArray[:numOfmoodDay].mean()
-    print (u"{}个交易量最小的交易日：".format(numOfmoodDay))
+    print (u"{} {}个交易量最小的交易日：".format(cStock.stockID,numOfmoodDay))
     for item in sortIndexList[:numOfmoodDay]:
         print( cStock.dayStrList[-periodCalDaysOfMood:][item] )
     print ("-"*72)
@@ -132,7 +132,7 @@ def moodIndexMarket(stockID="399001",showDateInterval=60,periodCalDaysOfMood=200
     h1, l1 = ax.get_legend_handles_labels()
     h2, l2 = right_ax.get_legend_handles_labels()
     plt.legend(h1+h2, l1+l2, loc=2)
-    plt.title(u"{}市场分析".format(stockSH.stockName),color='r')
+    plt.title(u"{}市场分析".format(stockSH.stockID),color='r')
 
     fig.subplots_adjust(hspace=0.1)
    
@@ -175,7 +175,7 @@ def moodIndexMarket(stockID="399001",showDateInterval=60,periodCalDaysOfMood=200
     h2, l2 = right_axStock.get_legend_handles_labels()
     h3, l3 = rightAX2.get_legend_handles_labels()
     plt.legend(h1+h2+h3, l1+l2+l3, loc=2)
-    plt.title(u"{}分析".format(curStock.stockName),color='r')
+    plt.title(u"{}分析".format(curStock.stockID),color='r')
     plt.show()
 
 if __name__ == "__main__":

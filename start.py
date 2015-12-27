@@ -41,16 +41,16 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
 
     print(u"-"*72)
     print(u"近期市场分析：")
-    headLine=u"日期  \t星期\t  涨幅\t  量能\t  描述\t最大涨幅\t最小涨幅"
+    headLine=u"日期\t星期\t涨幅\t最高\t最低\t量能\t描述"
     print(headLine)
     for i in range(matchDateIndex-5,matchDateIndex+1):
         weekDay = curStock.dateList[i].isoweekday()
         marketSummaryStr = trendAna.marketSummary(curStock,i)
-        print(u"{} {} {:.1f}({:.2f}%)\t{:.2f} {} {:.1f}({:.2f}%) {:.1f}({:.2f}%)".format(curStock.dayStrList[i], weekDay ,\
-                curStock.dayPriceClosedFList[i], curStock.dayRiseRateFList[i],\
-                curStock.dayRadioLinkOfTradeVolumeFList[i],marketSummaryStr,\
+        print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
+                curStock.dayRiseRateFList[i],curStock.dayPriceClosedFList[i],\
                 curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
-                curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i]))
+                curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
     
     ## 均价分析
     print (u"-"*72)

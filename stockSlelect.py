@@ -64,19 +64,18 @@ def selectStockByVolume():
 ##2 目标价位，支撑价位。
 
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
-def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd):
+def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2010,2011,2012,2013,2014,2015],selectScale=2):
     stockIDList=["999999","399001"]
-    case = 2 
-    if case == 1: ##限选
+    if selectScale == 1: ##限选
         with open('stockIDList.txt') as fOpen:
             for line in fOpen:
-                inner_list = [elt.strip() for elt in line.split(',')]
+                inner_list = [elt.strip() for elt in line.split(' ')]
                 stockIDList.append(inner_list[0])
-    if case == 2 :  ##海选
+    if selectScale == 2 :  ##海选
         fileNames=os.listdir(Ccomfunc.src)
         for fileItem in fileNames:
             ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
-            if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") :
+            if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") or os.path.basename(fileItem).startswith("8") :
                 stockIDList.append(os.path.splitext(fileItem)[0])
     lineWritedList=[]
     
@@ -91,24 +90,26 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd):
             riseList=[]
             riseSHList=[]
             iBig = 0 ##计数器，跟大盘涨幅对比
-            for year in [2010,2011,2012,2013,2014,2015]:
+            for year in yearList:
                 dateStrStart=str(year)+"/"+inputMDDateStart
                 indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
+                indexOfStartDateSH=Ccomfunc.getIndexByStrDate(shStock,dateStrStart)
                 dateStrEnd=str(year)+"/"+inputMDDateEnd
                 indexOfEndDate=Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
-                sList.append(curStock.dayStrList[indexOfStartDate])
-                sList.append(curStock.dayStrList[indexOfEndDate])
-                rise = -999
-        #        pdb.set_trace()
+                indexOfEndDateSH=Ccomfunc.getIndexByStrDate(shStock,dateStrEnd)
+                print indexOfStartDate,curStock.dayStrList[indexOfStartDate],indexOfEndDate,curStock.dayStrList[indexOfEndDate]
                 if curStock.count>0 and indexOfStartDate>=0 and indexOfEndDate>0:
-                    rise = trendAna.calRiseRate(curStock,indexOfStartDate,indexOfEndDate)
+                    sList.append(curStock.dayStrList[indexOfStartDate])
+                    sList.append(curStock.dayStrList[indexOfEndDate])
+                    rise = -999
+                    rise = trendAna.calRiseRateClosed(curStock,indexOfStartDate,indexOfEndDate)
                     riseList.append(rise)
-                    riseSH = trendAna.calRiseRate(shStock,indexOfStartDate,indexOfEndDate)
+                    riseSH = trendAna.calRiseRateClosed(shStock,indexOfStartDateSH,indexOfEndDateSH)
                     riseSHList.append(riseSH)
                     ##记录强于大盘的个数
                     if rise>=riseSH:
                         iBig = iBig+1
-                sList.append(str(round(rise,2)))
+                    sList.append(str(round(rise,2)))
             sList.append(str(iBig))
             if stockID=="999999":
                 sList.append(str(round(np.array(riseSHList).mean(),2)))
@@ -160,8 +161,9 @@ if __name__=="__main__":
     if case==1:
         selectStockByMonthRise() 
     if case==2:
+        selectStockByRiseRateBetween2Date("12/25","12/31") 
         selectStockByRiseRateBetween2Date("01/01","01/15") 
-        selectStockByRiseRateBetween2Date("01/15","01/31") 
+        selectStockByRiseRateBetween2Date("01/01","01/31") 
     if case==3:
         selectStockByVolume()
    

@@ -5,6 +5,7 @@ ehthumbs.db
 #xuleo filters
 *.txt
 *.xls
+*.svg
 *.*~
 resultDir/
 *.swp

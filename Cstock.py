@@ -226,7 +226,7 @@ class Stock:
                     else:
                         self.dayRiseOfTurnOverFList.append(-999)
             fileOpened.close()
-            self.count
+            self.count=len(self.dayStrList)
             self.initMonthData() 
             
             if len(self.dayStrList)>0:

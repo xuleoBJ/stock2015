@@ -35,6 +35,12 @@ def marketSummary(_curStock,index):
         resultLine =u"上涨"
     if 0>_curStock.dayRiseRateArray[index]:
         resultLine =u"下跌"
+
+    if _curStock.dayPriceClosedArray[index]<=_curStock.day5PriceAverageArray[index]:
+        resultLine=resultLine+ " 小于MA5"
+    else:
+        resultLine=resultLine+ " 大于MA5"
+
     return strVolumeRadio+resultLine
 
 ##计算当月的涨幅
@@ -89,10 +95,16 @@ def getDateIndexLowestPoint(curStock,indexOfDateStart,indexOfDateEnd):
 
 ##计算两个交易日收盘涨幅
 def calRiseRateClosed(curStock,indexOfDateStart,indexOfDateEnd):
-    return 100*(curStock.dayPriceClosedFList[indexOfDateEnd]-curStock.dayPriceClosedFList[indexOfDateStart])/curStock.dayPriceClosedFList[indexOfDateStart]
+    if curStock.dayPriceClosedFList[indexOfDateStart]>0:
+        return 100*(curStock.dayPriceClosedFList[indexOfDateEnd]-curStock.dayPriceClosedFList[indexOfDateStart])/curStock.dayPriceClosedFList[indexOfDateStart]
+    else:
+        return -999
 
 def calRiseRate(dataArray,indexOfDateStart,indexOfDateEnd):
-    return 100*(dataArray[indexOfDateEnd]-dataArray[indexOfDateStart])/dataArray[indexOfDateStart]
+    if dataArray[indexOfDateStart]>0:
+        return 100*(dataArray[indexOfDateEnd]-dataArray[indexOfDateStart])/dataArray[indexOfDateStart]
+    else:
+        return -999
 
 
 ##计算两个交易日直接的涨幅indexOfDate是指数，interValDay是间隔数，-5就是交易日的前5天与今天的涨幅，+3 就是三日后比今天的涨幅，
