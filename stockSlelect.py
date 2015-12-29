@@ -130,7 +130,6 @@ def selectStockByMonthRise():
             if os.path.basename(fileItem).startswith("8") or os.path.basename(fileItem).startswith("9") :
                 stockIDList.append(os.path.splitext(fileItem)[0])
     
-   
     print ("正在根据条件筛选股票：")
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     lineWritedList=[]

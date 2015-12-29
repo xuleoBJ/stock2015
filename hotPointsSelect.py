@@ -40,7 +40,7 @@ if __name__=="__main__":
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
-        if curStock.dayRiseRateFList[-3]<= curStock.dayRiseRateFList[-2]<=curStock.dayRiseRateFList[-1]<0 and curStock.priceCloseingFList[-3]>curStock.priceCloseingFList[-2]>curStock.priceCloseingFList[-1]:
+        if curStock.dayRiseRateCloseFList[-3]<= curStock.dayRiseRateCloseFList[-2]<=curStock.dayRiseRateCloseFList[-1]<0 and curStock.priceCloseingFList[-3]>curStock.priceCloseingFList[-2]>curStock.priceCloseingFList[-1]:
                if curStock.dayTradeVolumeFList[-3]>curStock.dayTradeVolumeFList[i-2]>curStock.dayTradeVolumeFList[-1]: ## 成交量
                 print(stockID)
                 fileWrited.write(stockID+'\n')

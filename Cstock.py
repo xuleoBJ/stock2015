@@ -15,11 +15,11 @@ class Stock:
         self.dayPriceLowestArray=np.array(self.dayPriceLowestFList)     ##day最低array
         self.dayTradeVolumeArray=np.array(self.dayTradeVolumeFList)     ##day成交量array
         self.dayTurnOverArray=np.array(self.dayTurnOverFList)       ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题array
-        self.dayRiseRateArray=np.array(self.dayRiseRateFList)        ##day价格涨幅array
+        self.dayRiseRateCloseArray=np.array(self.dayRiseRateCloseFList)        ##day价格涨幅array
         self.dayRiseRateLowestArray=np.array(self.dayRiseRateLowestFList)        ##day最低价涨幅array
         self.dayRiseRateHighestArray=np.array(self.dayRiseRateHighestFList)        ##day最低价涨幅array
         self.dayWaveRateArray=np.array(self.dayWaveRateFList)       ##day波动涨幅array
-        self.dayOpenRateArray=np.array(self.dayOpenRateFList)       ##day开盘幅度，主要分析高开、低开等array
+        self.dayRiseRateOpenArray=np.array(self.dayRiseRateOpenFList)       ##day开盘幅度，主要分析高开、低开等array
         self.dayOpenCloseRateArray=np.array(self.dayOpenCloseRateFList)	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势array
         self.dayRadioLinkOfTradeVolumeArray=np.array(self.dayRadioLinkOfTradeVolumeFList)  ##day成交量倍数价array
         
@@ -160,11 +160,11 @@ class Stock:
         self.dayPriceLowestFList=[]     ##day最低价
         self.dayTradeVolumeFList=[]     ##day成交量
         self.dayTurnOverFList=[]        ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题
-        self.dayRiseRateFList=[]        ##day价格涨幅
+        self.dayRiseRateCloseFList=[]        ##day价格涨幅
         self.dayRiseRateLowestFList=[]        ##day价格涨幅
         self.dayRiseRateHighestFList=[]        ##day价格涨幅
         self.dayWaveRateFList=[]        ##day波动涨幅
-        self.dayOpenRateFList=[]	       ##day开盘幅度，主要分析高开、低开等
+        self.dayRiseRateOpenFList=[]	       ##day开盘幅度，主要分析高开、低开等
         self.dayOpenCloseRateFList=[]	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势
         self.dayRadioLinkOfTradeVolumeFList=[]  ##day成交量倍数
         self.dayRiseOfTurnOverFList=[]  ##day成交额倍数
@@ -197,7 +197,7 @@ class Stock:
                     ##计算涨幅和振幅
                     if len(self.dayPriceClosedFList)>=2 and self.dayPriceClosedFList[-2]>0:
 						##(当日收盘-上日收盘)/上一日收盘
-                        self.dayRiseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
+                        self.dayRiseRateCloseFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
 						##(当日最低-上日收盘)/上一日收盘
                         self.dayRiseRateLowestFList.append(round(100*(self.dayPriceLowestFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
 						##(当日最高-上日收盘)/上一日收盘
@@ -205,14 +205,14 @@ class Stock:
 						##(当日最高-当日最低)/上一日收盘
                         self.dayWaveRateFList.append(round(100*(self.dayPriceHighestFList[-1]-self.dayPriceLowestFList[-1])/self.dayPriceClosedFList[-2],2))
 						##(当日开盘-上日收盘)/上一日收盘
-                        self.dayOpenRateFList.append(round(100*(self.dayPriceOpenFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
+                        self.dayRiseRateOpenFList.append(round(100*(self.dayPriceOpenFList[-1]-self.dayPriceClosedFList[-2])/self.dayPriceClosedFList[-2],2))
 						##(当日收盘-当日开盘)/上一日收盘
                         self.dayOpenCloseRateFList.append(round(100*(self.dayPriceClosedFList[-1]-self.dayPriceOpenFList[-1])/self.dayPriceClosedFList[-2],2))
                     else:
-                        self.dayOpenRateFList.append(-999)
+                        self.dayRiseRateOpenFList.append(-999)
                         self.dayRiseRateLowestFList.append(-999)
                         self.dayRiseRateHighestFList.append(-999)
-                        self.dayRiseRateFList.append(-999)
+                        self.dayRiseRateCloseFList.append(-999)
                         self.dayWaveRateFList.append(-999)
                         self.dayOpenCloseRateFList.append(-999)
                     ##计算成交量涨幅
@@ -258,11 +258,11 @@ class StockUniDate:
         self.dayPriceLowestArray=np.array(np.zeros(self.count))     ##day最低array
         self.dayTradeVolumeArray=np.array(np.zeros(self.count))     ##day成交量array
         self.dayTurnOverArray=np.array(np.zeros(self.count))       ##day成交额  注意有的数据没有成交金额 成交量又有送股除权的问题array
-        self.dayRiseRateArray=np.array(np.zeros(self.count))        ##day价格涨幅array
+        self.dayRiseRateCloseArray=np.array(np.zeros(self.count))        ##day价格涨幅array
         self.dayRiseRateLowestArray=np.array(np.zeros(self.count))        ##day最低价涨幅array
         self.dayRiseRateHighestArray=np.array(np.zeros(self.count))        ##day最低价涨幅array
         self.dayWaveRateArray=np.array(np.zeros(self.count))       ##day波动涨幅array
-        self.dayOpenRateArray=np.array(np.zeros(self.count))       ##day开盘幅度，主要分析高开、低开等array
+        self.dayRiseRateOpenArray=np.array(np.zeros(self.count))       ##day开盘幅度，主要分析高开、低开等array
         self.dayOpenCloseRateArray=np.array(np.zeros(self.count))	##day收盘价和开盘价的波动幅度，主要分析高开低走，低开高走等趋势array
         self.dayRadioLinkOfTradeVolumeArray=np.array(np.zeros(self.count))  ##day成交量倍数价array
         self.day3TradeVolumeArray=np.zeros(self.count)     ##3日均价

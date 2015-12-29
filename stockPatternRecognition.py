@@ -22,7 +22,7 @@ def printResult(curStock,kMatchIndexList):
     riseRateLowestNextList=[]
     for i in kMatchIndexList:
         dateList.append(curStock.dayStrList[i])
-        riseRateNextList.append(curStock.dayRiseRateFList[i+1])
+        riseRateNextList.append(curStock.dayRiseRateCloseFList[i+1])
         riseRateHighestNextList.append(curStock.dayRiseRateHighestFList[i+1])
         riseRateLowestNextList.append(curStock.dayRiseRateLowestFList[i+1])
         if curStock.stockID=="999999" and (not curStock.dayStrList[i] in configOS.patternRecDateListSH) :
@@ -52,10 +52,10 @@ def printResult(curStock,kMatchIndexList):
     for index in kMatchIndexList: 
         weekDay=curStock.dateList[index].isoweekday() 
         resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量能{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
-                        curStock.dayRiseRateFList[index-2],curStock.dayRiseRateFList[index-1],curStock.dayRiseRateFList[index],\
+                        curStock.dayRiseRateCloseFList[index-2],curStock.dayRiseRateCloseFList[index-1],curStock.dayRiseRateCloseFList[index],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index],\
-                        curStock.dayRiseRateFList[index+1],curStock.dayOpenRateFList[index+1])
+                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1])
         lineWritedList.append(resultLine)
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
@@ -78,16 +78,16 @@ def patternRecByMarketAndStock(curMarket,curStock,matchDateIndex):
 	    indexMarket=curMarket.dayStrList.index(curStock.dayStrList[i])
 	    while iCount<=2 and bSelect==True:
 		    ## 考虑大盘
-		    valueRate=math.floor(curMarket.dayRiseRateFList[matchDateIndex-iCount]/bias)*bias
-		    if not valueRate<=curMarket.dayRiseRateFList[indexMarket-iCount]<=valueRate+bias:
+		    valueRate=math.floor(curMarket.dayRiseRateCloseFList[matchDateIndex-iCount]/bias)*bias
+		    if not valueRate<=curMarket.dayRiseRateCloseFList[indexMarket-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
 	    bias=0.5
 	    iCount=0
 	    while iCount<=2 and bSelect==True:
 		    ## 考虑个股
-		    valueRate=math.floor(curStock.dayRiseRateFList[matchDateIndex-iCount]/bias)*bias
-		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
+		    valueRate=math.floor(curStock.dayRiseRateCloseFList[matchDateIndex-iCount]/bias)*bias
+		    if not valueRate<=curStock.dayRiseRateCloseFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
@@ -105,8 +105,8 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
 	    bSelect=True
 	    while iCount<=kNum-1 and bSelect==True:
 		    ## 考虑涨幅
-		    valueRate=math.floor(curStock.dayRiseRateFList[matchDateIndex-iCount]/bias)*bias
-		    if not valueRate<=curStock.dayRiseRateFList[i-iCount]<=valueRate+bias:
+		    valueRate=math.floor(curStock.dayRiseRateCloseFList[matchDateIndex-iCount]/bias)*bias
+		    if not valueRate<=curStock.dayRiseRateCloseFList[i-iCount]<=valueRate+bias:
 			    bSelect=False
 		    iCount=iCount+1
 	    if bSelect==True:
@@ -153,20 +153,20 @@ def patterRecByVolume(curStock,matchDateIndex,kMatchIndexList,kNum):
 def patterRecByHandSet(curStock,iTradeDay,kNum):
     ## 手动设置查找条件
     print ("-"*8+u"手动设置条件查找历史K线：")
-    riseRate_i=int(curStock.dayRiseRateFList[-1])
-    riseRate_i_1=int(curStock.dayRiseRateFList[-2])
+    riseRate_i=int(curStock.dayRiseRateCloseFList[-1])
+    riseRate_i_1=int(curStock.dayRiseRateCloseFList[-2])
     for i in range(-iTradeDay+2,-1):
         bSelect=False
         ##自动设置条件，用最后两个交易日做基准
-        if  riseRate_i_1<=curStock.dayRiseRateFList[i-1]<=1+riseRate_i_1 and riseRate_i<=curStock.dayRiseRateFList[i]<=1+riseRate_i:
+        if  riseRate_i_1<=curStock.dayRiseRateCloseFList[i-1]<=1+riseRate_i_1 and riseRate_i<=curStock.dayRiseRateCloseFList[i]<=1+riseRate_i:
         ##手工设置if条件
-#        if  curStock.dayRiseRateFList[i-1]<=0 and 5<=curStock.dayRiseRateFList[i]<=7:
+#        if  curStock.dayRiseRateCloseFList[i-1]<=0 and 5<=curStock.dayRiseRateCloseFList[i]<=7:
             bSelect=True
         if  bSelect==True:
             weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-            print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.dayRiseRateFList[i+1]))
-            print(u"{},星期{},次日涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i+1]))
-            print("_"*30+"riseRate",curStock.dayRiseRateFList[i-2],curStock.dayRiseRateFList[i-1],curStock.dayRiseRateFList[i])
+            print(curStock.dayStrList[i],"weekDay_"+str(weekDay),"RiseRateofNextTradeDay: "+str(curStock.dayRiseRateCloseFList[i+1]))
+            print(u"{},星期{},次日涨幅:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i+1]))
+            print("_"*30+"riseRate",curStock.dayRiseRateCloseFList[i-2],curStock.dayRiseRateCloseFList[i-1],curStock.dayRiseRateCloseFList[i])
             print("_"*30+"turnOverRate=",curStock.dayRiseOfTurnOverFList[i-2],curStock.dayRiseOfTurnOverFList[i-1],curStock.dayRiseOfTurnOverFList[i-1])
 
 def addInforLine(inforLine):
@@ -205,7 +205,7 @@ def main(stockID,strDate=""):
     
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{},星期{}\t涨幅:{}\t 量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateFList[i],\
+        resultLine=u"{},星期{}\t涨幅:{}\t 量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
         lineWritedList.append(resultLine)
     

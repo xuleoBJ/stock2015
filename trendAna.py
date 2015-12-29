@@ -20,35 +20,55 @@ from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+##趋势分析
+def UpDownStastic(cStock,indexStart,indexStartEnd):
+     ##趋势定义 
+     ##跳水定义：收盘价比最高价低1个点，或者最低价比开盘价低1个点定义为一次跳水
+     ##爬升定义：收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
+    fValueTrend=2.0
+    iCountUp=0
+    iCountDown=0
+    if cStock.stockID in ["999999","399001"]:
+        fValueTrend=1.0
+    for i in range(indexStart,indexStartEnd+1):
+        ##收盘价比最高价低1个点，或者最低价比开盘价低1个点定义为盘中有跳水
+        if cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateHighestArray[i]<=-fValueTrend or \
+                cStock.dayRiseRateLowestArray[i]-cStock.dayRiseRateOpenArray[i]<=-fValueTrend:
+            iCountDown=iCountDown+1
+        ##收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
+        if cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateLowestArray[i]>=fValueTrend or \
+                cStock.dayRiseRateHighestArray[i]-cStock.dayRiseRateOpenArray[i]>=fValueTrend:
+            iCountUp=iCountUp+1
+    print cStock.stockID,cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd]," up=",iCountUp," down=",iCountDown
+
 ## 市场评价 
-def marketSummary(_curStock,index):
-    if 1.5<=_curStock.dayRadioLinkOfTradeVolumeArray[index]:
+def marketSummary(cStock,index):
+    if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
         strVolumeRadio = u"放巨量"
-    if 1.1<=_curStock.dayRadioLinkOfTradeVolumeArray[index]<1.5:
+    if 1.1<=cStock.dayRadioLinkOfTradeVolumeArray[index]<1.5:
         strVolumeRadio = u"放量"
-    if 1<_curStock.dayRadioLinkOfTradeVolumeArray[index]<1.1:
+    if 1<cStock.dayRadioLinkOfTradeVolumeArray[index]<1.1:
         strVolumeRadio = u"微放量"
-    if _curStock.dayRadioLinkOfTradeVolumeArray[index]<1:
+    if cStock.dayRadioLinkOfTradeVolumeArray[index]<1:
         strVolumeRadio =u"缩量"
     
-    if 0<=_curStock.dayRiseRateArray[index]:
+    if 0<=cStock.dayRiseRateCloseArray[index]:
         resultLine =u"上涨"
-    if 0>_curStock.dayRiseRateArray[index]:
+    if 0>cStock.dayRiseRateCloseArray[index]:
         resultLine =u"下跌"
 
-    if _curStock.dayPriceClosedArray[index]<=_curStock.day5PriceAverageArray[index]:
+    if cStock.dayPriceClosedArray[index]<=cStock.day5PriceAverageArray[index]:
         resultLine=resultLine+ " 小于MA5"
     else:
         resultLine=resultLine+ " 大于MA5"
-
     return strVolumeRadio+resultLine
 
 ##计算当月的涨幅
-def calRiseRateCurrentMonth1st2today(_curStock):
+def calRiseRateCurrentMonth1st2today(cStock):
     firstDay=Ccomfunc.first_day_of_month(datetime.date.today())
-    indexStart=Ccomfunc.getIndexByDate(_curStock,firstDay)
-    indexEnd=Ccomfunc.getIndexByDate(_curStock,datetime.date.today())
-    return calRiseRate(_curStock,indexStart,indexEnd)
+    indexStart=Ccomfunc.getIndexByDate(cStock,firstDay)
+    indexEnd=Ccomfunc.getIndexByDate(cStock,datetime.date.today())
+    return calRiseRate(cStock,indexStart,indexEnd)
 
 
 ##  分析历年年同期走势

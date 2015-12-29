@@ -47,10 +47,18 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
         weekDay = curStock.dateList[i].isoweekday()
         marketSummaryStr = trendAna.marketSummary(curStock,i)
         print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
-                curStock.dayRiseRateFList[i],curStock.dayPriceClosedFList[i],\
+                curStock.dayRiseRateCloseFList[i],curStock.dayPriceClosedFList[i],\
                 curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
                 curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
+    
+    ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
+    ## 近期跳水、爬升统计分析,已7天作为一个周期：
+    print(u"-"*72)
+    iDay=7
+    for i in range(matchDateIndex-60,matchDateIndex+1):
+        trendAna.UpDownStastic(curStock,i-iDay,i)
+    print(u"-"*72)
     
     ## 均价分析
     print (u"-"*72)
@@ -63,7 +71,6 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
             curStock.day10TradeVolumeArray[matchDateIndex],curStock.day20TradeVolumeArray[matchDateIndex]) )
     print (u"-"*72)
     
-    ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     print(u"1-时空趋势分析")
     print (u"-"*72)
     print (u"正在进行时间趋势分析：")
@@ -97,15 +104,15 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     headline=u"周期(日)幅度\t低点\t高点\t点位"
     print (headline)
     for period in [20,60,120,180]:
-        cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:].max()
-        cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:].min()
+        cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex+1].max()
+        cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].min()
         for keyPoint in [0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
-            if 0.99<=curStock.dayPriceClosedFList[matchDateIndex-1]/resistLinePoint<=1.01:
-                if curStock.dayPriceClosedFList[matchDateIndex-1]<=resistLinePoint:
+            if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:
+                if curStock.dayPriceClosedFList[matchDateIndex]<=resistLinePoint:
                     resultLine+=u"\t注意压力位！"
-                if curStock.dayPriceClosedFList[matchDateIndex-1]>=resistLinePoint:
+                if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
             print resultLine
 
@@ -117,8 +124,6 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
 ##长线止损
 ##中线止损
 ##短线止损
-
-##  止损位设计
 
 if __name__ == "__main__":
  

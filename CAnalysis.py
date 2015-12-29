@@ -14,7 +14,6 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     
-    shStock=Cstock.StockSH()
     
     stockID="601318"
     curStock=Cstock.Stock(stockID)
@@ -63,7 +62,7 @@ if __name__=="__main__":
         down=0
         for i in range(-numTradeDay,-1):
             ##curStock.dayTradeVolumeFList[i]<=curStock.dayTradeVolumeFList[i-1]
-            if curStock.dayRiseRateFList[i]<=scale :
+            if curStock.dayRiseRateCloseFList[i]<=scale :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]>curStock.priceCloseingFList[i]:
                     up=up+1
@@ -77,7 +76,7 @@ if __name__=="__main__":
         down=0
         for i in range(-numTradeDay,-1):
             ##  curStock.dayTradeVolumeFList[i]>= curStock.dayTradeVolumeFList[i-1]
-            if curStock.dayRiseRateFList[i]>=scale  :
+            if curStock.dayRiseRateCloseFList[i]>=scale  :
                 numdays=numdays+1
                 if curStock.priceCloseingFList[i+1]> curStock.priceCloseingFList[i]:
                     up=up+1

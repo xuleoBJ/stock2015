@@ -109,9 +109,9 @@ def statisticsRiselrate(cStock,iYearStart,iYearEnd,sMDStart,sMDEnd):## sMDStart=
         headLine=str(year)+"年"+sMDStart+"-"+sMDEnd+"高点和低点出现统计分析："
         print(headLine)
         dateStrStart=str(year)+"/"+sMDStart
-        indexOfStart=Ccomfunc.getIndexByStrdate(cStock,dateStrStart)
+        indexOfStart=Ccomfunc.getIndexByStrDate(cStock,dateStrStart)
         dateStrEnd=str(year)+"/"+sMDEnd
-        indexOfEnd=Ccomfunc.getIndexByStrdate(cStock,dateStrEnd)
+        indexOfEnd=Ccomfunc.getIndexByStrDate(cStock,dateStrEnd)
         ##区间涨幅
         rise= 100*(cStock.dayPriceClosedFList[indexOfEnd]-cStock.dayPriceClosedFList[indexOfStart-1])/cStock.dayPriceClosedFList[indexOfStart-1]
         dataDraw.append(rise)
