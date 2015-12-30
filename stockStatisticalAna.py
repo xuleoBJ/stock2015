@@ -32,9 +32,9 @@ def printResult(curStock,kMatchIndexList):
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[index]).isoweekday()
         riseRate3B=trendAna.calRiseRateInterval(curStock,index,-3)
         riseRate5B=trendAna.calRiseRateInterval(curStock,index,-5)
-        dataX.append(curStock.dayRiseRateFList[index-1])
+        dataX.append(curStock.dayRiseRateCloseFList[index-1])
         resultLine= u"{}\t星期{}\t{}\t{}\t{}\t{:.2f}\t{:.2f}".format(curStock.dayStrList[index],weekDay,\
-                        curStock.dayRiseRateFList[index-1],curStock.dayRadioLinkOfTradeVolumeFList[index-1],curStock.dayRiseRateFList[index],\
+                        curStock.dayRiseRateCloseFList[index-1],curStock.dayRadioLinkOfTradeVolumeFList[index-1],curStock.dayRiseRateCloseFList[index],\
                         riseRate3B,riseRate5B)
         lineWritedList.append(resultLine)
 
@@ -63,9 +63,9 @@ def printResult(curStock,kMatchIndexList):
 def specialDateSatis(stockID):
     curStock=Cstock.Stock(stockID)
     for iYear in range(2000,2015):
-        inputStr="/".join([str(iYear),"01","04"])
+        inputStr="/".join([str(iYear),"12","31"])
         index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
-        resultLine= u"{}\t涨幅{}".format(curStock.dayStrList[index],curStock.dayRiseRateFList[index])
+        resultLine= u"{}\t涨幅{}".format(curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index])
         print resultLine
 
 def addInforLine(inforLine):
