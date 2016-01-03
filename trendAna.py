@@ -26,21 +26,27 @@ def UpDownStastic(cStock,indexStart,indexStartEnd):
      ##跳水定义：收盘价比最高价低1个点，或者最低价比开盘价低1个点定义为一次跳水
      ##爬升定义：收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
     fValueTrend=2.0
-    iCountUp=0
-    iCountDown=0
+    ListDown=[]
+    ListUp=[]
     if cStock.stockID in ["999999","399001"]:
         fValueTrend=1.0
-    for i in range(indexStart,indexStartEnd+1):
+        for i in range(indexStart,indexStartEnd+1):
+	    deltaCloseHigh = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateHighestArray[i]
+	    deltaLowOpen = cStock.dayRiseRateLowestArray[i]-cStock.dayRiseRateOpenArray[i]
         ##收盘价比最高价低1个点，或者最低价比开盘价低1个点定义为盘中有跳水
-        if cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateHighestArray[i]<=-fValueTrend or \
-                cStock.dayRiseRateLowestArray[i]-cStock.dayRiseRateOpenArray[i]<=-fValueTrend:
-            iCountDown=iCountDown+1
-        ##收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
-        if cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateLowestArray[i]>=fValueTrend or \
-                cStock.dayRiseRateHighestArray[i]-cStock.dayRiseRateOpenArray[i]>=fValueTrend:
-            iCountUp=iCountUp+1
-    print cStock.stockID,cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd]," up=",iCountUp," down=",iCountDown
-
+            if deltaCloseHigh<=-fValueTrend: 
+                ListDown.append(deltaCloseHigh)   
+            if deltaLowOpen<=-fValueTrend:
+                ListDown.append(deltaLowOpen) 
+            ##收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
+            deltaHighOpen = cStock.dayRiseRateHighestArray[i]-cStock.dayRiseRateOpenArray[i]
+            deltaCloseLow = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateLowestArray[i]
+            if deltaHighOpen>=fValueTrend :
+                ListUp.append(deltaHighOpen)
+            if deltaCloseLow>=fValueTrend:
+                ListUp.append(deltaCloseLow)
+    print cStock.stockID,cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
+            " sum(up)","down=",sum(ListUp),sum(ListDown),sum(ListUp)+sum(ListDown),"up:down",len(ListUp),len(ListDown)
 ## 市场评价 
 def marketSummary(cStock,index):
     if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
@@ -52,10 +58,18 @@ def marketSummary(cStock,index):
     if cStock.dayRadioLinkOfTradeVolumeArray[index]<1:
         strVolumeRadio =u"缩量"
     
-    if 0<=cStock.dayRiseRateCloseArray[index]:
+    if 0<=cStock.dayRiseRateCloseArray[index]<0.5:
+        resultLine =u"微涨"
+    if 0.5<=cStock.dayRiseRateCloseArray[index]<1:
         resultLine =u"上涨"
-    if 0>cStock.dayRiseRateCloseArray[index]:
+    if 1<cStock.dayRiseRateCloseArray[index]:
+        resultLine =u"大涨"
+    if 0>cStock.dayRiseRateCloseArray[index]>=-0.5:
+        resultLine =u"微跌"
+    if -0.5>cStock.dayRiseRateCloseArray[index]>-1:
         resultLine =u"下跌"
+    if -1>cStock.dayRiseRateCloseArray[index]:
+        resultLine =u"大跌"
 
     if cStock.dayPriceClosedArray[index]<=cStock.day5PriceAverageArray[index]:
         resultLine=resultLine+ " 小于MA5"
