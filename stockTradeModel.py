@@ -25,7 +25,7 @@ def calTBuy(curStock,strDate=Ccomfunc.defaultDateInputStr()):
     for period in [5,10,20,60]:
         cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].max()
         cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].min()
-        for keyPoint in [0.33,0.5,0.825]:
+        for keyPoint in [0.25,0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             resultLine="{}»’\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
             if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:

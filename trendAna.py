@@ -46,7 +46,7 @@ def UpDownStastic(cStock,indexStart,indexStartEnd):
             if deltaCloseLow>=fValueTrend:
                 ListUp.append(deltaCloseLow)
     print cStock.stockID,cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
-            " sum(up)","down=",sum(ListUp),sum(ListDown),sum(ListUp)+sum(ListDown),"up:down",len(ListUp),len(ListDown)
+            "+:-",len(ListUp),len(ListDown),sum(ListUp),sum(ListDown),"sum",sum(ListUp)+sum(ListDown)
 ## 市场评价 
 def marketSummary(cStock,index):
     if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
@@ -83,7 +83,6 @@ def calRiseRateCurrentMonth1st2today(cStock):
     indexStart=Ccomfunc.getIndexByDate(cStock,firstDay)
     indexEnd=Ccomfunc.getIndexByDate(cStock,datetime.date.today())
     return calRiseRate(cStock,indexStart,indexEnd)
-
 
 ##  分析历年年同期走势
 def trendOfMonthHistory(curStock):

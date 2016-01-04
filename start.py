@@ -35,7 +35,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ##近期事务提醒，希望建立数据库
     WarnBigEvent() 
     curStock=Cstock.Stock(stockID)
-    
+   
     matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
     print (u"分析日期：{}".format(curStock.dayStrList[matchDateIndex]))
 
@@ -55,7 +55,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     ## 近期跳水、爬升统计分析,已7天作为一个周期：
     print(u"-"*72)
-    iDay=7
+    iDay=5
     for i in range(matchDateIndex-60,matchDateIndex+1):
         trendAna.UpDownStastic(curStock,i-iDay,i)
     print(u"-"*72)
