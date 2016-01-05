@@ -55,9 +55,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     ## 近期跳水、爬升统计分析,已7天作为一个周期：
     print(u"-"*72)
-    iDay=5
-    for i in range(matchDateIndex-60,matchDateIndex+1):
-        trendAna.UpDownStastic(curStock,i-iDay,i)
+    trendAna.UpDownStasticFor(curStock,matchDateIndex)
     print(u"-"*72)
     
     ## 均价分析
@@ -106,7 +104,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     for period in [20,60,120,180]:
         cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex+1].max()
         cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].min()
-        for keyPoint in [0.33,0.5,0.825]:
+        for keyPoint in [0.25,0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
             if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:

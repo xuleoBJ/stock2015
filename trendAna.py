@@ -20,33 +20,42 @@ from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+def UpDownStasticFor(cStock,matchDateIndex,iDayCycle=60):
+    print u"起始\t结束\t爬升:跳水\t累加幅度\t差额\t次日涨幅"
+    iDay=5
+    for i in range(matchDateIndex-iDayCycle,matchDateIndex+1):
+        UpDownStastic(cStock,i-iDay,i)
 ##趋势分析
 def UpDownStastic(cStock,indexStart,indexStartEnd):
      ##趋势定义 
      ##跳水定义：收盘价比最高价低1个点，或者最低价比开盘价低1个点定义为一次跳水
      ##爬升定义：收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
+     ##低开低走和高开高走的情况重复计算了。不过放大效应是好事。
     fValueTrend=2.0
     ListDown=[]
     ListUp=[]
     if cStock.stockID in ["999999","399001"]:
         fValueTrend=1.0
-        for i in range(indexStart,indexStartEnd+1):
-	    deltaCloseHigh = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateHighestArray[i]
-	    deltaLowOpen = cStock.dayRiseRateLowestArray[i]-cStock.dayRiseRateOpenArray[i]
+    for i in range(indexStart,indexStartEnd+1):
+        deltaCloseHigh = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateHighestArray[i]
+        deltaLowOpen = cStock.dayRiseRateLowestArray[i]-cStock.dayRiseRateOpenArray[i]
         ##收盘价比最高价低1个点，或者最低价比开盘价低1个点定义为盘中有跳水
-            if deltaCloseHigh<=-fValueTrend: 
-                ListDown.append(deltaCloseHigh)   
-            if deltaLowOpen<=-fValueTrend:
-                ListDown.append(deltaLowOpen) 
-            ##收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
-            deltaHighOpen = cStock.dayRiseRateHighestArray[i]-cStock.dayRiseRateOpenArray[i]
-            deltaCloseLow = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateLowestArray[i]
-            if deltaHighOpen>=fValueTrend :
-                ListUp.append(deltaHighOpen)
-            if deltaCloseLow>=fValueTrend:
-                ListUp.append(deltaCloseLow)
-    print cStock.stockID,cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
-            "+:-",len(ListUp),len(ListDown),sum(ListUp),sum(ListDown),"sum",sum(ListUp)+sum(ListDown)
+        if deltaCloseHigh<=-fValueTrend: 
+            ListDown.append(deltaCloseHigh)   
+        if deltaLowOpen<=-fValueTrend:
+            ListDown.append(deltaLowOpen) 
+        ##收盘价比最低价高1个点，或者最高价比开盘价高1个点定义为盘中有拉升
+        deltaHighOpen = cStock.dayRiseRateHighestArray[i]-cStock.dayRiseRateOpenArray[i]
+        deltaCloseLow = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateLowestArray[i]
+        if deltaHighOpen>=fValueTrend :
+            ListUp.append(deltaHighOpen)
+        if deltaCloseLow>=fValueTrend:
+            ListUp.append(deltaCloseLow)
+    riseRate=-999
+    if indexStartEnd<cStock.count-1:
+        riseRate=cStock.dayRiseRateCloseArray[indexStartEnd+1]
+    print u"{}\t{}\t{}:{}\t{}:{}\t{}\t{}".format(cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
+            len(ListUp),len(ListDown),sum(ListUp),sum(ListDown),sum(ListUp)+sum(ListDown),riseRate)
 ## 市场评价 
 def marketSummary(cStock,index):
     if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
