@@ -17,6 +17,7 @@ import start
 import Ccomfunc,trendAna
 from datetime import datetime,timedelta 
 import stockTradeModel
+import stockPeak
 
 def updateListWidgetItem(listWidget,listStr):
     listWidget.clear()
@@ -71,8 +72,18 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
         
         ## 量化交易
         self.btnQuantitativeTrade.clicked.connect(self.quantitativeTrade)
+        
+        ## 时空分析
+        self.btnAnaSpaceTime.clicked.connect(self.anaTimeAndSpace)
    
-    ##周期趋势
+    ##时空分析
+    def anaTimeAndSpace(self):
+        print(u"-"*72)
+        stockID=str(self.lineEditInputStockIDTrend.text())
+        curStock=Stock(stockID)
+        stockPeak.mainApp(curStock)
+   
+   ##量化交易
     def quantitativeTrade(self):
         print(u"-"*72)
         stockID=str(self.lineEditInputStockIDTrend.text())

@@ -20,7 +20,7 @@ def getDateOfPrice(price,priceFList,dayStrList):
     indexPrice=priceFList.index(price)
     return dayStrList[indexPrice]
 
-def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFList,curPriceLowestFList,curPriceClosedFList):
+def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFList,curPriceLowestFList,curPriceClosedFList,resultDir="resultDir"):
     print('进行价格峰值分析，分析周期(天):'+str(dayPeriod))
     goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisPrice.txt') ##输出文件名
     lineWritedList=[]
@@ -214,6 +214,16 @@ def analysisScale(stockID,dateStrStart,dateStrEnd):
     print("涨跌幅超过5%:\t"+str(len(zhangdiefuFList))+"\t起始日期是："+strDate)
 
 
+def mainApp(curStock):
+    resultDir="resultDir"
+    if not os.path.exists(resultDir):
+        os.makedirs(resultDir)
+    print ("正在进行历史时空分析：")
+    for dayPeriod in [3,5,10,20,30,60,90,120,250]:
+        findPeakPrice(dayPeriod,curStock.dayStrList,curStock.dayPriceOpenFList,curStock.dayPriceHighestFList,curStock.dayPriceLowestFList,curStock.dayPriceClosedFList)
+#        findPeakVolume(dayPeriod,curStock.dayStrList,curStock.dayTradeVolumeFList)
+#        findPeakTurnover(dayPeriod,curStock.dayStrList,curStock.dayTurnOverFList)
+
 
 if __name__=="__main__":
    
@@ -229,17 +239,8 @@ if __name__=="__main__":
     ##终了分析日期 dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
-    print ("正在进行历史时空分析：")
-    for dayPeriod in [3,5,10,20,30,60,90,120,250]:
-        resultDir="resultDir"
-        if not os.path.exists(resultDir):
-            os.makedirs(resultDir)
-       
-        findPeakPrice(dayPeriod,curStock.dayStrList,curStock.dayPriceOpenFList,curStock.dayPriceHighestFList,curStock.dayPriceLowestFList,curStock.dayPriceClosedFList)
-#        findPeakVolume(dayPeriod,curStock.dayStrList,curStock.dayTradeVolumeFList)
-#        findPeakTurnover(dayPeriod,curStock.dayStrList,curStock.dayTurnOverFList)
-        
-    
+    mainApp(curStock)
+
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
 
