@@ -3,7 +3,6 @@ import datetime
 import smtplib
 import socket
 from email.mime.text import MIMEText
-import socket
 
 #========================================== 
 # send_mail no proxy 

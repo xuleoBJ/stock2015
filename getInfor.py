@@ -5,10 +5,12 @@ import lxml.html
 import ConfigParser
 import time,sched,os,urllib2,re,string
 import ctypes
+import socket
 
 resultDir="resultDir"
 s = sched.scheduler(time.time,time.sleep)
 newsList=[]
+
 def writeConfig(websites):
     cf=ConfigParser.ConfigParser()
     configFilePath="config.ini"
@@ -22,7 +24,10 @@ def writeConfig(websites):
 '''
 set proxy here
 '''
-enable_proxy = 1  
+enable_proxy=0
+ip = socket.gethostbyname(socket.gethostname())
+if ip=="10.122.105.83":
+    enable_proxy=1
 proxy_handler = urllib2.ProxyHandler({"http" : '10.22.96.29:8080'})  
 null_proxy_handler = urllib2.ProxyHandler({})  
 if enable_proxy:  
@@ -38,7 +43,7 @@ storeDir=datetime.date.today().strftime("%Y%m%d")
 
 def event_func_gwy():
     num=1
-    urlLink="http://www.gov.cn/xinwen/xw_rd.htm"
+    urlLink="http://www.gov.cn/xinwen/index.htm"
     lineList=[]
     try:
         currentTimeStr= time.strftime('%Y-%m-%d %A %X %Z',time.localtime(time.time()))
@@ -51,10 +56,10 @@ def event_func_gwy():
             parsed_html = lxml.html.fromstring(html)
             ##修改xpath，得到相关新闻对应的xpath语法
             for elem in parsed_html.xpath("//div/div/div/div/ul/li/a"):
-                newOne=elem.text_content()
+                newOne=elem.text_content().strip()
                 if not newOne in newsList:
                     newsList.append(elem.text_content())
-                    print num,newOne
+                    print (u"{},{}".format(num,newOne))
                     now = datetime.datetime.now()
                     startTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
                     endTime= now.replace(hour=17, minute=0, second=0, microsecond=0)
