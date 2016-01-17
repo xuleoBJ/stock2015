@@ -29,7 +29,7 @@ def calGDG():
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
 def WarnBigEvent():
-    ctypes.windll.user32.MessageBoxA(0, "2016-1-8 Big Share Sells!", "infor", 1)
+    ctypes.windll.user32.MessageBoxA(0, "goal:3200,sell:1/2", "infor", 1)
 
 def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ##近期事务提醒，希望建立数据库

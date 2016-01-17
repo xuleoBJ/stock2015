@@ -21,7 +21,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 def UpDownStasticFor(cStock,matchDateIndex,iDayCycle=60):
-    print u"起始\t结束\t爬升:跳水\t累加幅度\t差额\t次日涨幅"
+    print u"起始\t结束\tNup:Ndown\tSup:Sdown\tVup:Vdown\t次日涨幅"
     iDay=5
     for i in range(matchDateIndex-iDayCycle,matchDateIndex+1):
         UpDownStastic(cStock,i-iDay,i)
@@ -34,7 +34,7 @@ def UpDownStastic(cStock,indexStart,indexStartEnd):
     fValueTrend=2.0
     ListDown=[]
     ListUp=[]
-    if cStock.stockID in ["999999","399001"]:
+    if cStock.stockID in ["999999","399001","000300"]:
         fValueTrend=1.0
     for i in range(indexStart,indexStartEnd+1):
         deltaCloseHigh = cStock.dayRiseRateCloseArray[i]-cStock.dayRiseRateHighestArray[i]
@@ -52,10 +52,12 @@ def UpDownStastic(cStock,indexStart,indexStartEnd):
         if deltaCloseLow>=fValueTrend:
             ListUp.append(deltaCloseLow)
     riseRate=-999
+    downArray=np.array(ListDown)
+    upArray=np.array(ListUp)
     if indexStartEnd<cStock.count-1:
         riseRate=cStock.dayRiseRateCloseArray[indexStartEnd+1]
-    print u"{}\t{}\t{}:{}\t{}:{}\t{}\t{}".format(cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
-            len(ListUp),len(ListDown),sum(ListUp),sum(ListDown),sum(ListUp)+sum(ListDown),riseRate)
+    print u"{}\t{}\t{}:{}\t{}:{}\t{:.2f}:{:.2f}\t{}".format(cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
+            len(upArray),len(downArray),upArray.sum(),downArray.sum(),upArray.mean(),downArray.mean(),riseRate)
 ## 市场评价 
 def marketSummary(cStock,index):
     if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
