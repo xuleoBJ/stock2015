@@ -21,7 +21,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 def UpDownStasticFor(cStock,matchDateIndex,iDayCycle=60):
-    print u"起始\t结束\tNup:Ndown\tSup:Sdown\tVup:Vdown\t次日涨幅"
+    print u"起始\t结束\t数up:Ndown\t和up:Sdown\t均值up:Vdown"
     iDay=5
     for i in range(matchDateIndex-iDayCycle,matchDateIndex+1):
         UpDownStastic(cStock,i-iDay,i)
@@ -56,8 +56,8 @@ def UpDownStastic(cStock,indexStart,indexStartEnd):
     upArray=np.array(ListUp)
     if indexStartEnd<cStock.count-1:
         riseRate=cStock.dayRiseRateCloseArray[indexStartEnd+1]
-    print u"{}\t{}\t{}:{}\t{}:{}\t{:.2f}:{:.2f}\t{}".format(cStock.dayStrList[indexStart],cStock.dayStrList[indexStartEnd], \
-            len(upArray),len(downArray),upArray.sum(),downArray.sum(),upArray.mean(),downArray.mean(),riseRate)
+    print u"{}\t{}\t{}:{}\t{}:{}({})\t{:.2f}:{:.2f}".format(cStock.dayStrList[indexStartEnd], cStock.dayStrList[indexStart],\
+            len(upArray),len(downArray),upArray.sum(),downArray.sum(),upArray.sum()+downArray.sum(),upArray.mean(),downArray.mean())
 ## 市场评价 
 def marketSummary(cStock,index):
     if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
