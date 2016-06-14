@@ -60,6 +60,7 @@ def printResult(curStock,kMatchIndexList):
         plt.subplots_adjust(left=0.15)
         plt.show()
 
+#统计某一个特殊日期的涨幅，比如元旦前或者5-1 后
 def specialDateSatis(stockID):
     curStock=Cstock.Stock(stockID)
     for iYear in range(2000,2015):

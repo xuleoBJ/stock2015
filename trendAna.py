@@ -58,7 +58,8 @@ def UpDownStastic(cStock,indexStart,indexStartEnd):
         riseRate=cStock.dayRiseRateCloseArray[indexStartEnd+1]
     print u"{}\t{}\t{}:{}\t{}:{}({})\t{:.2f}:{:.2f}".format(cStock.dayStrList[indexStartEnd], cStock.dayStrList[indexStart],\
             len(upArray),len(downArray),upArray.sum(),downArray.sum(),upArray.sum()+downArray.sum(),upArray.mean(),downArray.mean())
-## 市场评价 
+
+## 根据成交量和涨幅进行市场评价 
 def marketSummary(cStock,index):
     if 1.5<=cStock.dayRadioLinkOfTradeVolumeArray[index]:
         strVolumeRadio = u"放巨量"
