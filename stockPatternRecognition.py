@@ -174,7 +174,7 @@ def addInforLine(inforLine):
     lineWritedList.append(inforLine)
 
     ## 默认的是最后一个交易日作匹配模型
-def main(stockID,strDate=""):
+def recogitionPattern(stockID,strDate=""):
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
     
@@ -224,6 +224,8 @@ def main(stockID,strDate=""):
     inforLine=u"增加成交量匹配条件："
     addInforLine(inforLine)
     patterRecByVolume(curStock,matchDateIndex,kPatternList,kNum)
+    
+    inforLine=u"收盘提前10分钟预测："
 	
 
 def mainAppCall(strDate=""):
@@ -232,7 +234,7 @@ def mainAppCall(strDate=""):
     del configOS.patternRecDateListCYB[:]
 
     for stockID in configOS.stockIDMarketList: 
-        main(stockID,strDate) ##-1是最后一个交易日分析
+        recogitionPattern(stockID,strDate) ##-1是最后一个交易日分析
 
     configOS.updatePetternRectDateList()
 

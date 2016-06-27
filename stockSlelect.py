@@ -160,9 +160,9 @@ if __name__=="__main__":
     if case==1:
         selectStockByMonthRise() 
     if case==2:
-        selectStockByRiseRateBetween2Date("04/28","05/15") 
-        selectStockByRiseRateBetween2Date("05/01","05/31") 
-        selectStockByRiseRateBetween2Date("04/28","05/07") 
+        selectStockByRiseRateBetween2Date("06/28","07/15") 
+        selectStockByRiseRateBetween2Date("07/01","07/31") 
+        selectStockByRiseRateBetween2Date("06/28","07/05") 
     if case==3:
         selectStockByVolume()
    

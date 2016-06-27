@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# stock track model 
+# conditions for trading
+# 
+# 1 recogenize the pattern and get the possible model
+# 2 analisys the openPrice model
+# 3 you can miss it but no make mistake.
+
+# according to market trending,  
 import os
 import shutil
 import time
@@ -46,6 +54,10 @@ def calTBuy(curStock,strDate=Ccomfunc.defaultDateInputStr()):
 ##  周线趋势必须向上，判断原则 MACD RSI 
 
 ##  美股跌1.5以上，做T的级别降一级。
+
+## 1 分析大盘走势，大盘走势不好，不买票
+## 2 根据预测模型，确定买点和价位
+## 3 
 
 if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
