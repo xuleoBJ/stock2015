@@ -7,7 +7,6 @@ import Ccomfunc
 import configOS
 import stockPatternRecognition
 import stockTecSet
-import volumeEnerge
 import trendAna
 import ctypes 
 
@@ -113,10 +112,6 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                 if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
             print resultLine
-
-
-    ## 市场情绪
-    volumeEnerge.moodIndexMarket(curStock.stockID,showDateInterval=90)
     
 ## 3.仓位控制和仓位止损控制
 ##长线止损

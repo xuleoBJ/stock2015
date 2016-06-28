@@ -59,7 +59,6 @@ def convertDateStr2Date(dateStr):
     return datetime.date(int(split1[0]),int(split1[1]),int(split1[2]))
 
 
-
 ## 根据dateStr返回最接近的index，有就返回最近的指数，超出，返回-1
 def getIndexByStrDate(_curStock,_dateStr):
     if _dateStr=="":

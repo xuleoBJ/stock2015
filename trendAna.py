@@ -138,7 +138,7 @@ def getDateIndexHighestPoint(curStock,indexOfDateStart,indexOfDateEnd):
 def getDateIndexLowestPoint(curStock,indexOfDateStart,indexOfDateEnd):
     return indexOfDateStart+curStock.dayPriceHighestArray[indexOfDateStart:indexOfDateEnd].argmin()
 
-##计算两个交易日收盘涨幅
+##读取curStock，,indexOfDateStart,indexOfDateEnd，计算 两个交易日收盘涨幅
 def calRiseRateClosed(curStock,indexOfDateStart,indexOfDateEnd):
     if curStock.dayPriceClosedFList[indexOfDateStart]>0:
         return 100*(curStock.dayPriceClosedFList[indexOfDateEnd]-curStock.dayPriceClosedFList[indexOfDateStart])/curStock.dayPriceClosedFList[indexOfDateStart]
