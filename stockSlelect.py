@@ -66,6 +66,8 @@ def selectStockByVolume():
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
 def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2015,2014,2013,2012,2011,2010],selectScale=2):
     stockIDList=["999999","399001"]
+## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
+    stockIDType=["8","3","6","0"]
     if selectScale == 1: ##限选
         with open('stockIDList.txt') as fOpen:
             for line in fOpen:
@@ -74,8 +76,8 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
     if selectScale == 2 :  ##海选
         fileNames=os.listdir(Ccomfunc.src)
         for fileItem in fileNames:
-            ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
-            if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") or os.path.basename(fileItem).startswith("8") :
+## 根据文件名的第一个字符区分股票类别 
+            if os.path.basename(fileItem)[0] in stockIDType:
                 stockIDList.append(os.path.splitext(fileItem)[0])
     lineWritedList=[]
     
@@ -133,7 +135,8 @@ def selectStockByMonthRise():
     print ("正在根据条件筛选股票：")
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     lineWritedList=[]
-    monthStrList=["201112","201212","201312","201412"]
+    strMonth="07"
+    monthStrList=[ strMonth+ele for ele in ["2011","2012","2013","2014","2015"]]
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
@@ -155,7 +158,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    case=2
+    case=1
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     if case==1:
         selectStockByMonthRise() 

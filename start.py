@@ -54,7 +54,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     ## 近期跳水、爬升统计分析,已7天作为一个周期：
     print(u"-"*72)
-    trendAna.UpDownStasticFor(curStock,matchDateIndex)
+    trendAna.UpDownStasticFor(curStock,matchDateIndex,10)
     print(u"-"*72)
     
     ## 均价分析
