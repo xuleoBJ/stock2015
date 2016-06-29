@@ -176,6 +176,23 @@ def printCalTrend(curStock,intervalDay):
 if __name__=="__main__":
    stockID="999999"
    curStock=Cstock.Stock(stockID)
-   print getDateIndexLowestPoint(curStock,-100,-1)
+   strMonth="07"
+   lineWritedList=[]
+## 按月统计涨幅 振幅 最大波动幅度，最小波动幅度
+   for year in range(2000,2016):
+            dateStrStart = str(year)+"/"+strMonth+"/"+"01"
+            indexOfStartDate = Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
+            dateStrEnd = str(year)+"/"+strMonth+"/"+"31"
+            indexOfDateEnd = Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
+            riseRateMonth =  calRiseRateClosed(curStock,indexOfStartDate,indexOfDateEnd)
+            lineOut = u"{}年{}月\t{:.2f}".format(year,strMonth,riseRateMonth)
+            lineWritedList.append(lineOut)
+            print(lineOut)
+   
+   goalFilePath = "result.txt" 
+   Ccomfunc.write2Text(goalFilePath,lineWritedList)
+   os.startfile(goalFilePath)
+
+ #  print getDateIndexLowestPoint(curStock,-100,-1)
 
 

@@ -64,7 +64,7 @@ def printResult(curStock,kMatchIndexList):
 def specialDateSatis(stockID):
     curStock=Cstock.Stock(stockID)
     for iYear in range(2000,2015):
-        inputStr="/".join([str(iYear),"12","31"])
+        inputStr="/".join([str(iYear),"06","30"])
         index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
         resultLine= u"{}\t涨幅{}".format(curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index])
         print resultLine

@@ -30,6 +30,16 @@ def calGDG():
 def WarnBigEvent():
     ctypes.windll.user32.MessageBoxA(0, "goal:3200,sell:1/2", "infor", 1)
 
+##历史上的今天
+def specialDateSatis(curStock,strDate):
+    print strDate
+    split = strDate.split('/')
+    for iYear in range(2000,2016):
+        inputStr="/".join([str(iYear),split[1],split[2]])
+        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
+        resultLine= u"{}\t{}\t当日涨幅{}\t次日涨幅{}".format(curStock.stockID,curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index],curStock.dayRiseRateCloseFList[index+1])
+        print resultLine
+
 def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ##近期事务提醒，希望建立数据库
     WarnBigEvent() 
@@ -51,6 +61,24 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                 curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
     
+  
+    for i in range(matchDateIndex-5,matchDateIndex+1):
+        weekDay = curStock.dateList[i].isoweekday()
+        marketSummaryStr = trendAna.marketSummary(curStock,i)
+        print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
+                curStock.dayRiseRateCloseFList[i],curStock.dayPriceClosedFList[i],\
+                curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
+                curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
+                curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
+    
+    ## 历史上的今天
+    print (u"-"*72)
+    headLine=u"历史上今天的涨幅:"
+    print(headLine)
+    specialDateSatis(curStock,strDate)
+   
+   
+    ## 近期跳水、爬升统计分析,已7天作为一个周期：
     ## 1. 首先要做趋势分析！趋势分为长期，中期，短期趋势
     ## 近期跳水、爬升统计分析,已7天作为一个周期：
     print(u"-"*72)
