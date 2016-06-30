@@ -37,35 +37,34 @@ def printResult(curStock,kMatchIndexList):
     if matchNum>0:
         lineWritedList.append("-"*72)
         lineWritedList.append(u"模式识别结果统计:")
-        lineWritedList.append(u"涨幅<=0个数:\t涨幅>=1个数:\t 涨幅<-1个数:")
-        lineWritedList.append(u"{}\t{}({:.2f}%)\t{}\t {}".format( \
+        lineWritedList.append(u"总数\t涨幅<=0(比例%)\t涨幅>=1\t涨幅<-1")
+        lineWritedList.append(u"{:2d}\t{:2d}({:.2f}%)\t{}\t{}".format( \
                 matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
         valueLine='\t'.join(map(str,sorted(riseRateNextList)))
         _median=np.median(riseRateNextList)
-        lineWritedList.append(u"收盘涨幅:{}\t中位数:{:.2f}".format(valueLine,_median))
-        valueHighestLine='\t'.join(map(str,sorted(riseRateHighestNextList)))
-        _median=np.median(riseRateHighestNextList)
-        lineWritedList.append(u"最高涨幅:{}\t中位数:{:.2f}".format(valueHighestLine,_median))
-        valueLowestLine='\t'.join(map(str,sorted(riseRateLowestNextList)))
-        _median=np.median(riseRateLowestNextList)
-        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
+        lineWritedList.append(u"收盘涨幅:{}".format(valueLine))
+        lineWritedList.append(u"收盘涨幅中位数:{:.2f}".format(_median))
+#        valueHighestLine='\t'.join(map(str,sorted(riseRateHighestNextList)))
+#        _median=np.median(riseRateHighestNextList)
+#        lineWritedList.append(u"最高涨幅:{}\t中位数:{:.2f}".format(valueHighestLine,_median))
+#        valueLowestLine='\t'.join(map(str,sorted(riseRateLowestNextList)))
+#        _median=np.median(riseRateLowestNextList)
+#        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
     
-    lineWritedList.append(u"日期\t星期\t前3日涨幅\t量能\t次日涨幅\t次日开盘")
+    lineWritedList.append(u"日期    \t星期\t次日涨幅\t次日开盘\t量能\t")
     for index in kMatchIndexList: 
         weekDay=curStock.dateList[index].isoweekday() 
-        resultLine= u"{0}\t{1}\t{2},{3},{4}\t{5},{6},{7}\t{8}\t{9:.2f}".format(curStock.dayStrList[index],weekDay,\
-                        curStock.dayRiseRateCloseFList[index-2],curStock.dayRiseRateCloseFList[index-1],curStock.dayRiseRateCloseFList[index],\
-                        curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
-                        curStock.dayRadioLinkOfTradeVolumeFList[index],\
-                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1])
+        resultLine= u"{0:<10}\t{1}\t{2}\t{3}\t{4}\t".format(curStock.dayStrList[index],weekDay,\
+                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1], \
+                        curStock.dayRadioLinkOfTradeVolumeFList[index]\
+                       )
         lineWritedList.append(resultLine)
-#                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
-#                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
-        resultLine=u"------趋势涨幅(日):"
-        for intervalDay in [-20,-10,-5,3,5,8,13]:
-            resultLine+=u" ({}){:.1f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
-        lineWritedList.append(resultLine)
+##趋势日涨幅
+#        resultLine=u"------趋势涨幅(日):"
+#        for intervalDay in [-20,-10,-5,3,5,8,13]:
+#            resultLine+=u" ({}){:.1f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
+#        lineWritedList.append(resultLine)
 
 ##利用个股和对应大盘的同步性分析 进行模式识别
 ## matchDateIndex是要识别的strDate在序列中的指数位置 -1 是最新一个交易日

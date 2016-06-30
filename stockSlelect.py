@@ -9,14 +9,27 @@ import pdb
 import trendAna
 import numpy as np
 
+
+##两种方法获得stockIDList，selectScale=1 从文本文件stockIDList.txt 读取 =2，海选
+def makeStockList(selectScale=0):
+    stockIDList=["999999","399001"]
+    ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
+    stockIDType=["8","3","6","0"]
+    if selectScale == 1: ##限选
+        with open('stockIDList.txt') as fOpen:
+            for line in fOpen:
+                inner_list = [elt.strip() for elt in line.split(' ')]
+                stockIDList.append(inner_list[0])
+    if selectScale == 2 :  ##海选
+        fileNames=os.listdir(Ccomfunc.src)
+        for fileItem in fileNames:
+            if os.path.basename(fileItem)[0] in stockIDType: ## 根据文件名的第一个字符区分股票类别 
+                stockIDList.append(os.path.splitext(fileItem)[0])
+    return stockIDList
+
 ##根据量能选择股票
 def selectStockByVolume():
-    stockIDList=["999999","399001"]
-    fileNames=os.listdir(Ccomfunc.src)
-    for fileItem in fileNames:
-        ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
-        if os.path.basename(fileItem).startswith("6") or os.path.basename(fileItem).startswith("0") or os.path.basename(fileItem).startswith("8") :
-            stockIDList.append(os.path.splitext(fileItem)[0])
+    stockIDList=makeStockList()
     lineWritedList=[]
     
     shStock=Cstock.Stock("999999")
@@ -63,22 +76,10 @@ def selectStockByVolume():
 ##1 弱势的反弹力度
 ##2 目标价位，支撑价位。
 
+   
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
 def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2015,2014,2013,2012,2011,2010],selectScale=2):
-    stockIDList=["999999","399001"]
-    ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
-    stockIDType=["8","3","6","0"]
-    if selectScale == 1: ##限选
-        with open('stockIDList.txt') as fOpen:
-            for line in fOpen:
-                inner_list = [elt.strip() for elt in line.split(' ')]
-                stockIDList.append(inner_list[0])
-    if selectScale == 2 :  ##海选
-        fileNames=os.listdir(Ccomfunc.src)
-        for fileItem in fileNames:
-## 根据文件名的第一个字符区分股票类别 
-            if os.path.basename(fileItem)[0] in stockIDType:
-                stockIDList.append(os.path.splitext(fileItem)[0])
+    stockIDList=makeStockList()
     lineWritedList=[]
     
     shStock=Cstock.Stock("999999")
@@ -124,13 +125,7 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
 
 ## 根据指数板块月涨幅选股
 def selectStockByMonthRise():
-    stockIDList=[]
-    if len(stockIDList)==0:
-        fileNames=os.listdir(Ccomfunc.dirHisData)
-        for fileItem in fileNames:
-            ##根据字头选择文件 上证6 深圳 0 板块指8 创业板 3
-            if os.path.basename(fileItem).startswith("8") or os.path.basename(fileItem).startswith("9") :
-                stockIDList.append(os.path.splitext(fileItem)[0])
+    stockIDList=makeStockList()
     
     print ("正在根据条件筛选股票：")
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
