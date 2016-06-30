@@ -36,7 +36,9 @@ def printResult(curStock,kMatchIndexList):
     value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
     if matchNum>0:
         lineWritedList.append("-"*72)
-        lineWritedList.append(u"识别结果：{}, 涨幅<=0个数: {}({:.2f}%), 涨幅>=1个数: {}, 涨幅<-1个数: {}".format( \
+        lineWritedList.append(u"模式识别结果统计:")
+        lineWritedList.append(u"涨幅<=0个数:\t涨幅>=1个数:\t 涨幅<-1个数:")
+        lineWritedList.append(u"{}\t{}({:.2f}%)\t{}\t {}".format( \
                 matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
         valueLine='\t'.join(map(str,sorted(riseRateNextList)))
         _median=np.median(riseRateNextList)
@@ -49,9 +51,10 @@ def printResult(curStock,kMatchIndexList):
         lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
     
+    lineWritedList.append(u"日期\t星期\t前3日涨幅\t量能\t次日涨幅\t次日开盘")
     for index in kMatchIndexList: 
         weekDay=curStock.dateList[index].isoweekday() 
-        resultLine= u"{0},星期{1},前3日涨幅{2},{3},{4},量能{5},{6},{7},次日涨幅{8},次日开盘{9:.2f}".format(curStock.dayStrList[index],weekDay,\
+        resultLine= u"{0}\t{1}\t{2},{3},{4}\t{5},{6},{7}\t{8}\t{9:.2f}".format(curStock.dayStrList[index],weekDay,\
                         curStock.dayRiseRateCloseFList[index-2],curStock.dayRiseRateCloseFList[index-1],curStock.dayRiseRateCloseFList[index],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index-2],curStock.dayRadioLinkOfTradeVolumeFList[index-1],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index],\
@@ -59,7 +62,7 @@ def printResult(curStock,kMatchIndexList):
         lineWritedList.append(resultLine)
 #                for intervalDay in [-3,-5,-8,-13,-21,-34,-55,-89]:
 #                    print (u"对比日{}日涨幅{:.2f}，当前{:.2f}".format(intervalDay,Ccomfunc.calRiseRateInterval(curStock,i,intervalDay), Ccomfunc.calTrend(curStock,intervalDay))) ##注意这里用的是负指数
-        resultLine=u"   --趋势涨幅(日):"
+        resultLine=u"------趋势涨幅(日):"
         for intervalDay in [-20,-10,-5,3,5,8,13]:
             resultLine+=u" ({}){:.1f}".format(intervalDay,trendAna.calRiseRateInterval(curStock,index,intervalDay))
         lineWritedList.append(resultLine)
@@ -203,9 +206,10 @@ def recogitionPattern(stockID,strDate=""):
     inforLine="-"*8+u"最近交易日的相关数据："
     addInforLine(inforLine)
     
+    lineWritedList.append("星期\t涨幅:\t 量比:\t波动幅度:")
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{},星期{}\t涨幅:{}\t 量比:{}\t波动幅度:{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i],\
+        resultLine=u"{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
         lineWritedList.append(resultLine)
     

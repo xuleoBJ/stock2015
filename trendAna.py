@@ -179,13 +179,16 @@ if __name__=="__main__":
    strMonth="07"
    lineWritedList=[]
 ## 按月统计涨幅 振幅 最大波动幅度，最小波动幅度
-   for year in range(2000,2016):
+   for year in range(2000,2017):
+            dateYearFirstDate = str(year)+"/"+"01"+"/"+"01"
+            indexOfYearFirstDate = Ccomfunc.getIndexByStrDate(curStock,dateYearFirstDate)
             dateStrStart = str(year)+"/"+strMonth+"/"+"01"
             indexOfStartDate = Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
             dateStrEnd = str(year)+"/"+strMonth+"/"+"31"
             indexOfDateEnd = Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
+            riseOfYearFirstDay2monthFirstDay =  calRiseRateClosed(curStock,indexOfYearFirstDate,indexOfStartDate-1)
             riseRateMonth =  calRiseRateClosed(curStock,indexOfStartDate,indexOfDateEnd)
-            lineOut = u"{}年{}月\t{:.2f}".format(year,strMonth,riseRateMonth)
+            lineOut = u"{}年{}月\t{:.2f}\t{:.2f}".format(year,strMonth,riseOfYearFirstDay2monthFirstDay,riseRateMonth)
             lineWritedList.append(lineOut)
             print(lineOut)
    

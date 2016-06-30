@@ -66,7 +66,7 @@ def selectStockByVolume():
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
 def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2015,2014,2013,2012,2011,2010],selectScale=2):
     stockIDList=["999999","399001"]
-## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
+    ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
     stockIDType=["8","3","6","0"]
     if selectScale == 1: ##限选
         with open('stockIDList.txt') as fOpen:
@@ -158,14 +158,15 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    case=1
+    case=2
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     if case==1:
         selectStockByMonthRise() 
     if case==2:
-        selectStockByRiseRateBetween2Date("06/28","07/15") 
-        selectStockByRiseRateBetween2Date("07/01","07/31") 
-        selectStockByRiseRateBetween2Date("06/28","07/05") 
+        selectStockByRiseRateBetween2Date("06/01","06/15") 
+        selectStockByRiseRateBetween2Date("06/16","06/30") 
+        selectStockByRiseRateBetween2Date("07/01","07/15") 
+        selectStockByRiseRateBetween2Date("07/16","07/30") 
     if case==3:
         selectStockByVolume()
    
