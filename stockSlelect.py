@@ -11,7 +11,7 @@ import numpy as np
 
 
 ##两种方法获得stockIDList，selectScale=1 从文本文件stockIDList.txt 读取 =2，海选
-def makeStockList(selectScale=0):
+def makeStockList(selectScale=2):
     stockIDList=["999999","399001"]
     ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
     stockIDType=["8","3","6","0"]
@@ -123,6 +123,30 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
     goalFilePath=os.path.join(Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect.txt') ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
+## 根据历史日涨幅选股
+def selectStockByDayRise(strMonth,strDay):
+    stockIDList=makeStockList()
+    print ("正在根据条件筛选股票：")
+    ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
+    lineWritedList=[]
+    dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015"]]
+    for stockID in stockIDList:
+        ##读取股票代码，存储在curStock里
+        curStock=Cstock.Stock(stockID)
+        sList=[]
+        sList.append(curStock.stockID)
+        sList.append(curStock.stockName)
+        for sDay in dayStrList:
+            indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
+            sList.append(sDay)
+            riseRate = -999
+            if indexOfDate>=0:
+                riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
+            sList.append(str(riseRate))
+        lineWritedList.append("\t".join(sList))
+    goalFilePath='result.txt'
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+
 ## 根据指数板块月涨幅选股
 def selectStockByMonthRise():
     stockIDList=makeStockList()
@@ -153,7 +177,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    case=2
+    case=4
     ##分析寻找涨幅最大板块中，当月涨幅最大的个数
     if case==1:
         selectStockByMonthRise() 
@@ -164,6 +188,8 @@ if __name__=="__main__":
         selectStockByRiseRateBetween2Date("07/16","07/30") 
     if case==3:
         selectStockByVolume()
+    if case==4:
+        selectStockByDayRise("07","03")
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

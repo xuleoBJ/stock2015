@@ -71,7 +71,7 @@ def getIndexByDate(_curStock,dateInput):
     for i in range(0,_curStock.count-1):
         if _curStock.dateList[i]<=dateInput<_curStock.dateList[i+1]:
             return i
-    if _curStock.dateList[-1]==dateInput:
+    if len(_curStock.dateList)>1 and _curStock.dateList[-1]==dateInput:
         return _curStock.count-1
     return -1
 
