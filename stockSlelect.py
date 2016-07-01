@@ -126,7 +126,7 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
 ## 根据历史日涨幅选股
 def selectStockByDayRise(strMonth,strDay):
     stockIDList=makeStockList()
-    print ("正在根据条件筛选股票：")
+    print ("条件筛选股票："+strMonth+strDay)
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     lineWritedList=[]
     dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015"]]
@@ -144,7 +144,7 @@ def selectStockByDayRise(strMonth,strDay):
                 riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
             sList.append(str(riseRate))
         lineWritedList.append("\t".join(sList))
-    goalFilePath='result.txt'
+    goalFilePath=strMonth+strDay+'_stockRise.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
 ## 根据指数板块月涨幅选股
@@ -170,7 +170,7 @@ def selectStockByMonthRise():
                     _riseRateMonth=str(curStock.monthRiseRateFList[i])
             sList.append(_riseRateMonth)
         lineWritedList.append("\t".join(sList))
-    goalFilePath='result.txt'
+    goalFilePath=strMonth+'_stockRise.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
 if __name__=="__main__":
@@ -189,7 +189,8 @@ if __name__=="__main__":
     if case==3:
         selectStockByVolume()
     if case==4:
-        selectStockByDayRise("07","03")
+        for i in range(1,31):
+            selectStockByDayRise("07",str(i).zfill(2))
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
