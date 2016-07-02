@@ -10,35 +10,35 @@ import trendAna
 import numpy as np
 
 
-##Á½ÖÖ·½·¨»ñµÃstockIDList£¬selectScale=1 ´ÓÎÄ±¾ÎÄ¼şstockIDList.txt ¶ÁÈ¡ =2£¬º£Ñ¡
+##ä¸¤ç§æ–¹æ³•è·å¾—stockIDListï¼ŒselectScale=1 ä»æ–‡æœ¬æ–‡ä»¶stockIDList.txt è¯»å– =2ï¼Œæµ·é€‰
 def makeStockList(selectScale=2):
     stockIDList=["999999","399001"]
-    ## ¸ù¾İÎÄ¼şÃûµÄµÚÒ»¸ö×Ö·ûÇø·Ö¹ÉÆ±Àà±ğ  ÉÏÖ¤6 ÉîÛÚ 0 °å¿éÖ¸8 ´´Òµ°å 3
+    ## æ ¹æ®æ–‡ä»¶åçš„ç¬¬ä¸€ä¸ªå­—ç¬¦åŒºåˆ†è‚¡ç¥¨ç±»åˆ«  ä¸Šè¯6 æ·±åœ³ 0 æ¿å—æŒ‡8 åˆ›ä¸šæ¿ 3
     stockIDType=["8","3","6","0"]
-    if selectScale == 1: ##ÏŞÑ¡
+    if selectScale == 1: ##é™é€‰
         with open('stockIDList.txt') as fOpen:
             for line in fOpen:
                 inner_list = [elt.strip() for elt in line.split(' ')]
                 stockIDList.append(inner_list[0])
-    if selectScale == 2 :  ##º£Ñ¡
+    if selectScale == 2 :  ##æµ·é€‰
         fileNames=os.listdir(Ccomfunc.src)
         for fileItem in fileNames:
-            if os.path.basename(fileItem)[0] in stockIDType: ## ¸ù¾İÎÄ¼şÃûµÄµÚÒ»¸ö×Ö·ûÇø·Ö¹ÉÆ±Àà±ğ 
+            if os.path.basename(fileItem)[0] in stockIDType: ## æ ¹æ®æ–‡ä»¶åçš„ç¬¬ä¸€ä¸ªå­—ç¬¦åŒºåˆ†è‚¡ç¥¨ç±»åˆ« 
                 stockIDList.append(os.path.splitext(fileItem)[0])
     return stockIDList
 
-##¸ù¾İÁ¿ÄÜÑ¡Ôñ¹ÉÆ±
+##æ ¹æ®é‡èƒ½é€‰æ‹©è‚¡ç¥¨
 def selectStockByVolume():
     stockIDList=makeStockList()
     lineWritedList=[]
     
     shStock=Cstock.Stock("999999")
     sIDList = []  
-    ##ÀàĞÍ 1 ·Å¾ŞÁ¿ 2 ÈıÈÕÁ¬Ğø·ÅÁ¿ 3 ÈıÈÕÁ¬ĞøËõÁ¿ÏÂµø
+    ##ç±»å‹ 1 æ”¾å·¨é‡ 2 ä¸‰æ—¥è¿ç»­æ”¾é‡ 3 ä¸‰æ—¥è¿ç»­ç¼©é‡ä¸‹è·Œ
     for stockID in stockIDList:
         curStock=Cstock.Stock(stockID)
-        if curStock.count>0:  ##ÌŞ³ıÊı¾İÏîÎª¿ÕµÄ 
-            ##3ÈÕËõÁ¿ÏÂµø
+        if curStock.count>0:  ##å‰”é™¤æ•°æ®é¡¹ä¸ºç©ºçš„ 
+            ##3æ—¥ç¼©é‡ä¸‹è·Œ
             if curStock.dayRadioLinkOfTradeVolumeArray[-1]<1 and curStock.dayRiseRateArray[-1]<0:
                 if curStock.dayRadioLinkOfTradeVolumeArray[-2]<1 and curStock.dayRiseRateArray[-1]<0:
                     if curStock.dayRadioLinkOfTradeVolumeArray[-3]<1 and curStock.dayRiseRateArray[-1]<0:
@@ -48,7 +48,7 @@ def selectStockByVolume():
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-2]))
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
             
-            ##3ÈÕ·ÅÁ¿ÉÏÕÇ
+            ##3æ—¥æ”¾é‡ä¸Šæ¶¨
             if curStock.dayRadioLinkOfTradeVolumeArray[-1]>1 and curStock.dayRiseRateArray[-1]>0:
                 if curStock.dayRadioLinkOfTradeVolumeArray[-2]>1 and curStock.dayRiseRateArray[-1]>0:
                     if curStock.dayRadioLinkOfTradeVolumeArray[-3]>1 and curStock.dayRiseRateArray[-1]>0:
@@ -58,7 +58,7 @@ def selectStockByVolume():
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-2]))
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
 
-            ##±È½Ï´óÅÌºÍ¸ö¹ÉµÄÁ¿ÄÜÖ¸±êÑ¡Ôñ¹ÉÆ±,Ñ¡Ôñ·ÅÁ¿µÄstockID
+            ##æ¯”è¾ƒå¤§ç›˜å’Œä¸ªè‚¡çš„é‡èƒ½æŒ‡æ ‡é€‰æ‹©è‚¡ç¥¨,é€‰æ‹©æ”¾é‡çš„stockID
             if curStock.dayStrList[-1]==shStock.dayStrList[-1]:
                 if curStock.dayRadioLinkOfTradeVolumeArray[-1]>=1.5:
                     if curStock.dayRadioLinkOfTradeVolumeArray[-1]-shStock.dayRadioLinkOfTradeVolumeArray[-1]>0.5:
@@ -69,22 +69,23 @@ def selectStockByVolume():
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
             lineWritedList.append("\t".join(sIDList))
     print lineWritedList
-    goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##Êä³öÎÄ¼şÃû
+    goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##è¾“å‡ºæ–‡ä»¶å
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
-##¼¼ÊõÑ¡¹ÉµÄÌõ¼ş
-##1 ÈõÊÆµÄ·´µ¯Á¦¶È
-##2 Ä¿±ê¼ÛÎ»£¬Ö§³Å¼ÛÎ»¡£
+##æŠ€æœ¯é€‰è‚¡çš„æ¡ä»¶
+##1 å¼±åŠ¿çš„åå¼¹åŠ›åº¦
+##2 ç›®æ ‡ä»·ä½ï¼Œæ”¯æ’‘ä»·ä½ã€‚
 
    
-##¸ø³ödateStr ½»Ò×ÈÕ,interval ½»Ò×ÈÕ¼ä¸ô£¬¼ÆËãÁ½¸ö½»Ò×ÈÕµÄÕÇ·ù
+##ç»™å‡ºdateStr äº¤æ˜“æ—¥,interval äº¤æ˜“æ—¥é—´éš”ï¼Œè®¡ç®—ä¸¤ä¸ªäº¤æ˜“æ—¥çš„æ¶¨å¹…
 def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2015,2014,2013,2012,2011,2010],selectScale=2):
     stockIDList=makeStockList()
     lineWritedList=[]
+    lineWritedList8=[]  ##æŒ‡æ•°ä¸º8çš„å•ç‹¬å†™å‡ºæ¥
     
     shStock=Cstock.Stock("999999")
     for stockID in stockIDList:
-        ##¶ÁÈ¡¹ÉÆ±´úÂë£¬´æ´¢ÔÚcurStockÀï
+        ##è¯»å–è‚¡ç¥¨ä»£ç ï¼Œå­˜å‚¨åœ¨curStocké‡Œ
         curStock=Cstock.Stock(stockID)
         if curStock.count>0:
             sList = []
@@ -92,7 +93,7 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
             sList.append(curStock.stockName)
             riseList=[]
             riseSHList=[]
-            iBig = 0 ##¼ÆÊıÆ÷£¬¸ú´óÅÌÕÇ·ù¶Ô±È
+            iBig = 0 ##è®¡æ•°å™¨ï¼Œè·Ÿå¤§ç›˜æ¶¨å¹…å¯¹æ¯”
             for year in yearList:
                 dateStrStart=str(year)+"/"+inputMDDateStart
                 indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
@@ -109,7 +110,7 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
                     riseList.append(rise)
                     riseSH = trendAna.calRiseRateClosed(shStock,indexOfStartDateSH,indexOfEndDateSH)
                     riseSHList.append(riseSH)
-                    ##¼ÇÂ¼Ç¿ÓÚ´óÅÌµÄ¸öÊı
+                    ##è®°å½•å¼ºäºå¤§ç›˜çš„ä¸ªæ•°
                     if rise>=riseSH:
                         iBig = iBig+1
                     sList.append(str(round(rise,2)))
@@ -118,20 +119,43 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
                 sList.append(str(round(np.array(riseSHList).mean(),2)))
             else:
                 sList.append(str(round(np.array(riseList).mean(),2)))
-
-            lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join(Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect.txt') ##Êä³öÎÄ¼şÃû
+				
+            if stockID[0]=="8":
+                lineWritedList8.append("\t".join(sList))
+            else:
+                lineWritedList.append("\t".join(sList))
+    goalFilePath=os.path.join(Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect.txt') ##è¾“å‡ºæ–‡ä»¶å
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    goalFilePath=os.path.join(Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect8.txt') ##è¾“å‡ºæ–‡ä»¶å
+    Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
-## ¸ù¾İÀúÊ·ÈÕÕÇ·ùÑ¡¹É
+## æ ¹æ®å†å²æ—¥æ¶¨å¹…é€‰è‚¡ï¼Œè¾“å…¥strMonth = "01" strDay ="31"
 def selectStockByDayRise(strMonth,strDay):
     stockIDList=makeStockList()
-    print ("Ìõ¼şÉ¸Ñ¡¹ÉÆ±£º"+strMonth+strDay)
-    ##·ÖÎö°å¿éÖ¸ÊıÔÂ¶ÈÊı¾İµÄÕÇ·ù£¬½øĞĞ¹ÉÆ±°å¿éÉ¸Ñ¡£¬ÕâÊÇÖÜÆÚĞÔĞĞÇéÑ¡ÔñµÄÒ»¸öÖ÷Òª·½·¨
     lineWritedList=[]
+    lineWritedList8=[]
+	
+    print ("æ¡ä»¶ç­›é€‰è‚¡ç¥¨ï¼š"+strMonth+strDay)
+    ##åˆ†ææ¿å—æŒ‡æ•°æœˆåº¦æ•°æ®çš„æ¶¨å¹…ï¼Œè¿›è¡Œè‚¡ç¥¨æ¿å—ç­›é€‰ï¼Œè¿™æ˜¯å‘¨æœŸæ€§è¡Œæƒ…é€‰æ‹©çš„ä¸€ä¸ªä¸»è¦æ–¹æ³•
+    headLine=[]
+    headLine.append("stockID")
+    headLine.append("stockName")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+	
     dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015"]]
     for stockID in stockIDList:
-        ##¶ÁÈ¡¹ÉÆ±´úÂë£¬´æ´¢ÔÚcurStockÀï
+        ##è¯»å–è‚¡ç¥¨ä»£ç ï¼Œå­˜å‚¨åœ¨curStocké‡Œ
         curStock=Cstock.Stock(stockID)
         sList=[]
         sList.append(curStock.stockID)
@@ -143,21 +167,24 @@ def selectStockByDayRise(strMonth,strDay):
             if indexOfDate>=0:
                 riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
             sList.append(str(riseRate))
-        lineWritedList.append("\t".join(sList))
+        if stockID[0]=="8":
+            lineWritedList8.append("\t".join(sList))
+        else:
+            lineWritedList.append("\t".join(sList))
     goalFilePath=strMonth+strDay+'_stockRise.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    goalFilePath=strMonth+strDay+'_stockRise8.txt'
+    Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
-## ¸ù¾İÖ¸Êı°å¿éÔÂÕÇ·ùÑ¡¹É
-def selectStockByMonthRise():
+## æ ¹æ®æŒ‡æ•°æ¿å—æœˆæ¶¨å¹…é€‰è‚¡
+def selectStockByMonthRise(strMonth):
     stockIDList=makeStockList()
-    
-    print ("ÕıÔÚ¸ù¾İÌõ¼şÉ¸Ñ¡¹ÉÆ±£º")
-    ##·ÖÎö°å¿éÖ¸ÊıÔÂ¶ÈÊı¾İµÄÕÇ·ù£¬½øĞĞ¹ÉÆ±°å¿éÉ¸Ñ¡£¬ÕâÊÇÖÜÆÚĞÔĞĞÇéÑ¡ÔñµÄÒ»¸öÖ÷Òª·½·¨
+    print ("æ­£åœ¨æ ¹æ®æ¡ä»¶ç­›é€‰è‚¡ç¥¨ï¼š")
+    ##åˆ†ææ¿å—æŒ‡æ•°æœˆåº¦æ•°æ®çš„æ¶¨å¹…ï¼Œè¿›è¡Œè‚¡ç¥¨æ¿å—ç­›é€‰ï¼Œè¿™æ˜¯å‘¨æœŸæ€§è¡Œæƒ…é€‰æ‹©çš„ä¸€ä¸ªä¸»è¦æ–¹æ³•
     lineWritedList=[]
-    strMonth="07"
     monthStrList=[ strMonth+ele for ele in ["2011","2012","2013","2014","2015"]]
     for stockID in stockIDList:
-        ##¶ÁÈ¡¹ÉÆ±´úÂë£¬´æ´¢ÔÚcurStockÀï
+        ##è¯»å–è‚¡ç¥¨ä»£ç ï¼Œå­˜å‚¨åœ¨curStocké‡Œ
         curStock=Cstock.Stock(stockID)
         sList=[]
         sList.append(curStock.stockID)
@@ -173,14 +200,24 @@ def selectStockByMonthRise():
     goalFilePath=strMonth+'_stockRise.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
+def printConsumeTime(startClock):
+    timeSpan=time.clock()-startClock
+    print("Time used(s):",round(timeSpan,2))
+
 if __name__=="__main__":
    
-    startClock=time.clock() ##¼ÇÂ¼³ÌĞò¿ªÊ¼¼ÆËãÊ±¼ä
+    startClock=time.clock() ##è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
+    selectStockByRiseRateBetween2Date("06/01","06/15") 
+    printConsumeTime(startClock)
+    startClock=time.clock() ##è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
     
+    selectStockByRiseRateBetween2Date("06/16","06/30") 
+    selectStockByRiseRateBetween2Date("07/01","07/15") 
+    selectStockByRiseRateBetween2Date("07/16","07/30")  
     case=4
-    ##·ÖÎöÑ°ÕÒÕÇ·ù×î´ó°å¿éÖĞ£¬µ±ÔÂÕÇ·ù×î´óµÄ¸öÊı
+    ##åˆ†æå¯»æ‰¾æ¶¨å¹…æœ€å¤§æ¿å—ä¸­ï¼Œå½“æœˆæ¶¨å¹…æœ€å¤§çš„ä¸ªæ•°
     if case==1:
-        selectStockByMonthRise() 
+        selectStockByMonthRise("07") 
     if case==2:
         selectStockByRiseRateBetween2Date("06/01","06/15") 
         selectStockByRiseRateBetween2Date("06/16","06/30") 
@@ -189,6 +226,8 @@ if __name__=="__main__":
     if case==3:
         selectStockByVolume()
     if case==4:
+        printConsumeTime(startClock)
+        startClock=time.clock() ##è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
         for i in range(1,31):
             selectStockByDayRise("07",str(i).zfill(2))
    
