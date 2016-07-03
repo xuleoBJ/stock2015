@@ -137,11 +137,14 @@ def statisticsRiselrate(cStock,iYearStart,iYearEnd,sMDStart,sMDEnd):## sMDStart=
     plt.xticks(ind + width/2., dateTick)
     plt.show()
 
+
+
+
 if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
 
-    stockID="002001"
+    stockID="601318"
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
     curStock.list2array()
@@ -178,7 +181,6 @@ if __name__=="__main__":
 #        print "区间低点出现日期：{}，高点日期：{}".format(curStock.dayStrList[indexMin],curStock.dayStrList[indexMax])
 #        fileWrited.write(headLine+"\n")
 
-  
     
     ##设置分析周期
     iDaysPeriodUser=len(curStock.dayStrList)

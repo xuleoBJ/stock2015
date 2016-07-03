@@ -1,6 +1,7 @@
 ﻿# -*- coding: utf-8 -*- 
 import os
 import shutil
+import subprocess
 import time
 import datetime
 import math
@@ -118,16 +119,52 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     printResult(curStock,kPatternList)
     
 
-def mainAppCall():
-    main("600031") 
-
+##read stock, if openPrice - 0.5 , get riseRate
+def openPriceSatis(stockID):
+    lineWritedList=[]
+    curStock=Cstock.Stock(stockID)
+    headWordList=[]
+    headWordList.append("日期    ")
+    headWordList.append("星期")
+    headWordList.append("开盘涨幅")
+    headWordList.append("收盘涨幅")
+    headWordList.append("T+1涨幅")
+    headWordList.append("T+2涨幅")
+    headWordList.append("距离上次交易日间隔天数")
+    headWordList.append("区间涨幅")
+    headLine="\t".join(headWordList)
+    lineWritedList.append(headLine)
+    print headLine
+    lastRecordDay=0
+    for i in range(0,len(curStock.dayStrList)):
+        if curStock.dayRiseRateOpenFList[i]<=-2:
+            wordList=[]
+            wordList.append(curStock.dayStrList[i])
+            weekDay = curStock.dateList[i].isoweekday()
+            wordList.append(str(weekDay))
+            wordList.append(str(curStock.dayRiseRateOpenFList[i]))
+            wordList.append(str(curStock.dayRiseRateCloseFList[i]))
+            wordList.append(str(curStock.dayRiseRateCloseFList[i+1]))
+            wordList.append(str(curStock.dayRiseRateCloseFList[i+2]))
+            wordList.append(str(i-lastRecordDay))
+            riseRateInter=100*(curStock.dayPriceClosedArray[i]-curStock.dayPriceClosedArray[lastRecordDay])/curStock.dayPriceClosedArray[lastRecordDay]
+            wordList.append(str(round(riseRateInter,2)))
+            lastRecordDay=i
+            resultLine= "\t".join(wordList)
+            lineWritedList.append(resultLine)
+            print resultLine
+    goalFilePath='_result.txt'
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    subprocess.call(['notepad.exe',goalFilePath])
+    
 
 if __name__=="__main__":
     
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     stockID="999999"
-    specialDateSatis(stockID)
+    openPriceSatis(stockID)
+#    specialDateSatis(stockID)
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()
