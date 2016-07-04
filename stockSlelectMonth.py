@@ -208,20 +208,15 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    case=2
-    ##分析寻找涨幅最大板块中，当月涨幅最大的个数
-    if case==1:
-        selectStockByMonthRise("07") 
+    case=4
     if case==2:
         selectStockByRiseRateBetween2Date("06/01","06/10") 
         selectStockByRiseRateBetween2Date("06/01","06/15") 
         selectStockByRiseRateBetween2Date("06/16","06/30") 
-    if case==3:
-        selectStockByVolume()
     if case==4:
         printConsumeTime(startClock)
         startClock=time.clock() ##记录程序开始计算时间
-        for i in range(1,31):
+        for i in range(04,10):
             selectStockByDayRise("07",str(i).zfill(2))
    
     timeSpan=time.clock()-startClock

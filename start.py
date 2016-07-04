@@ -30,14 +30,28 @@ def calGDG():
 def WarnBigEvent():
     ctypes.windll.user32.MessageBoxA(0, "goal:3200,sell:1/2", "infor", 1)
 
-##历史上的今天
-def specialDateSatis(curStock,strDate):
+##历史上相同的周，和相同的交易日
+def specialWeekDaySatis(curStock,strDate):
     print strDate
     split = strDate.split('/')
     for iYear in range(2000,2016):
         inputStr="/".join([str(iYear),split[1],split[2]])
         index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
         resultLine= u"{}\t{}\t当日涨幅{}\t次日涨幅{}".format(curStock.stockID,curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index],curStock.dayRiseRateCloseFList[index+1])
+        print resultLine
+
+##历史上的今天
+def specialDateSatis(curStock,strDate):
+    print strDate
+    resultLine= u"代码\t日期\t当日涨幅\t次日涨幅\t前日涨幅"
+    print resultLine
+    split = strDate.split('/')
+    for iYear in range(2000,2016):
+        inputStr="/".join([str(iYear),split[1],split[2]])
+        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
+        resultLine= u"{}\t{}({})\t{}\t{}\t{}".format( \
+                curStock.stockID,curStock.dayStrList[index], curStock.weekDayList[index], \
+                curStock.dayRiseRateCloseFList[index],curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateCloseFList[index-1])
         print resultLine
 
 def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
@@ -63,9 +77,8 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     
   
     for i in range(matchDateIndex-5,matchDateIndex+1):
-        weekDay = curStock.dateList[i].isoweekday()
         marketSummaryStr = trendAna.marketSummary(curStock,i)
-        print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
+        print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], curStock.weekDayList[i] , \
                 curStock.dayRiseRateCloseFList[i],curStock.dayPriceClosedFList[i],\
                 curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
                 curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
@@ -141,10 +154,6 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                     resultLine+=u"\t支撑位！"
             print resultLine
     
-## 3.仓位控制和仓位止损控制
-##长线止损
-##中线止损
-##短线止损
 
 if __name__ == "__main__":
  

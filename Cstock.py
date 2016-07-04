@@ -151,6 +151,7 @@ class Stock:
         self.count = 0
         print("-"*72)
         self.dayStrList=[]           ##day日期，string
+        self.weekDayList=[]           ##day日期，string
         self.dateList=[]             ##date日期，date格式
         
         ##日级别
@@ -183,7 +184,10 @@ class Stock:
                     print "{},{}".format(self.stockID,self.stockName)
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
-                    self.dateList.append(Ccomfunc.convertDateStr2Date(self.dayStrList[-1]))
+                    curDate = Ccomfunc.convertDateStr2Date(self.dayStrList[-1])
+                    curWeekDay = curDate.isoweekday()
+                    self.dateList.append(curDate)
+                    self.weekDayList.append(curWeekDay)
                     
                     self.dayPriceOpenFList.append(float(splitLine[1]))
                     self.dayPriceHighestFList.append(float(splitLine[2]))

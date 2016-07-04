@@ -54,8 +54,7 @@ def printResult(curStock,kMatchIndexList):
     
     lineWritedList.append(u"日期    \t星期\t次日涨幅\t次日开盘\t量能\t")
     for index in kMatchIndexList: 
-        weekDay=curStock.dateList[index].isoweekday() 
-        resultLine= u"{0:<10}\t{1}\t{2}\t{3}\t{4}\t".format(curStock.dayStrList[index],weekDay,\
+        resultLine= u"{0:<10}\t{1}\t{2}\t{3}\t{4}\t".format(curStock.dayStrList[index],curStock.weekDayList[index],\
                         curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1], \
                         curStock.dayRadioLinkOfTradeVolumeFList[index]\
                        )
@@ -216,13 +215,13 @@ def recogitionPattern(stockID,strDate=""):
     kPatternList=patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias)
     printResult(curStock,kPatternList)
     
-    inforLine=u"增加开盘价涨幅匹配条件："
-    addInforLine(inforLine)
-    patternRecByPriceOpen(curStock,matchDateIndex,kPatternList)
+   ## inforLine=u"增加开盘价涨幅匹配条件："
+   ## addInforLine(inforLine)
+   ## patternRecByPriceOpen(curStock,matchDateIndex,kPatternList)
     
-    inforLine=u"增加振幅匹配条件："
-    addInforLine(inforLine)
-    patternRecByRiseWave(curStock,matchDateIndex,kPatternList)
+   ## inforLine=u"增加振幅匹配条件："
+   ## addInforLine(inforLine)
+   ## patternRecByRiseWave(curStock,matchDateIndex,kPatternList)
     
     inforLine=u"增加成交量匹配条件："
     addInforLine(inforLine)
