@@ -34,7 +34,7 @@ def selectStockByDayRise(strMonth,strDay):
     lineWritedList=[]
     lineWritedList8=[]
 	
-    print ("条件筛选股票："+strMonth+strDay)
+    print (u"条件筛选股票："+strMonth+strDay)
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     headLine=[]
     headLine.append("stockID")
@@ -62,6 +62,7 @@ def selectStockByDayRise(strMonth,strDay):
         for sDay in dayStrList:
             indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
             sList.append( curStock.dayStrList[indexOfDate] )
+            sList.append( str(curStock.weekDayList[indexOfDate]) )
             riseRate = -999
             if indexOfDate>=0:
                 riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
@@ -75,29 +76,6 @@ def selectStockByDayRise(strMonth,strDay):
     goalFilePath=strMonth+strDay+'_stockRise8.txt'
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
-## 根据指数板块月涨幅选股
-def selectStockByMonthRise(strMonth):
-    stockIDList=makeStockList()
-    print ("正在根据条件筛选股票：")
-    ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
-    lineWritedList=[]
-    monthStrList=[ strMonth+ele for ele in ["2011","2012","2013","2014","2015"]]
-    for stockID in stockIDList:
-        ##读取股票代码，存储在curStock里
-        curStock=Cstock.Stock(stockID)
-        sList=[]
-        sList.append(curStock.stockID)
-        sList.append(curStock.stockName)
-        for sMonth in monthStrList:
-            sList.append(sMonth)
-            _riseRateMonth="-999"
-            for i in range(len(curStock.monthStrList)):
-                if curStock.monthStrList[i].endswith(sMonth):
-                    _riseRateMonth=str(curStock.monthRiseRateFList[i])
-            sList.append(_riseRateMonth)
-        lineWritedList.append("\t".join(sList))
-    goalFilePath=strMonth+'_stockRise.txt'
-    Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
 def printConsumeTime(startClock):
     timeSpan=time.clock()-startClock
@@ -107,21 +85,10 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    case=2
-    ##分析寻找涨幅最大板块中，当月涨幅最大的个数
-    if case==1:
-        selectStockByMonthRise("07") 
-    if case==2:
-        selectStockByRiseRateBetween2Date("06/01","06/10") 
-        selectStockByRiseRateBetween2Date("06/01","06/15") 
-        selectStockByRiseRateBetween2Date("06/16","06/30") 
-    if case==3:
-        selectStockByVolume()
-    if case==4:
-        printConsumeTime(startClock)
-        startClock=time.clock() ##记录程序开始计算时间
-        for i in range(1,31):
-            selectStockByDayRise("07",str(i).zfill(2))
+    printConsumeTime(startClock)
+    startClock=time.clock() ##记录程序开始计算时间
+    for i in range(1,31):
+        selectStockByDayRise("07",str(i).zfill(2))
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

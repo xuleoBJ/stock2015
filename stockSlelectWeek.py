@@ -89,10 +89,12 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    case=2
     selectStockByRiseRateBetween2Date("07/01","07/10") 
     selectStockByRiseRateBetween2Date("07/11","07/20") 
     selectStockByRiseRateBetween2Date("07/21","07/31") 
+    selectStockByRiseRateBetween2Date("08/01","08/10") 
+    selectStockByRiseRateBetween2Date("08/11","08/20") 
+    selectStockByRiseRateBetween2Date("08/21","08/31") 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
