@@ -29,8 +29,7 @@ def makeStockList(selectScale=2):
 
 
 ## 根据历史日涨幅选股，输入strMonth = "01" strDay ="31"
-def selectStockByDayRise(strMonth,strDay):
-    stockIDList=makeStockList()
+def selectStockByDayRise(strMonth,strDay,stockIDList):
     lineWritedList=[]
     lineWritedList8=[]
 	
@@ -56,24 +55,25 @@ def selectStockByDayRise(strMonth,strDay):
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
-        sList=[]
-        sList.append(curStock.stockID)
-        sList.append(curStock.stockName)
-        for sDay in dayStrList:
-            indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
-            sList.append( curStock.dayStrList[indexOfDate] )
-            sList.append( str(curStock.weekDayList[indexOfDate]) )
-            riseRate = -999
-            if indexOfDate>=0:
-                riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
-            sList.append(str(riseRate))
-        if stockID[0]=="8":
-            lineWritedList8.append("\t".join(sList))
-        else:
-            lineWritedList.append("\t".join(sList))
-    goalFilePath=strMonth+strDay+'_stockRise.txt'
+        if curStock.count > 0 : 
+            sList=[]
+            sList.append(curStock.stockID)
+            sList.append(curStock.stockName)
+            for sDay in dayStrList:
+                indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
+                sList.append( curStock.dayStrList[indexOfDate] )
+                sList.append( str(curStock.weekDayList[indexOfDate]) )
+                riseRate = -999
+                if indexOfDate>=0:
+                    riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
+                sList.append(str(riseRate))
+            if stockID[0]=="8":
+                lineWritedList8.append("\t".join(sList))
+            else:
+                lineWritedList.append("\t".join(sList))
+    goalFilePath=os.path.join( Ccomfunc.resultDir,strMonth+strDay+u'_stockRise股票.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
-    goalFilePath=strMonth+strDay+'_stockRise8.txt'
+    goalFilePath=os.path.join( Ccomfunc.resultDir,strMonth+strDay+u'_stockRise板块.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
 
@@ -87,8 +87,9 @@ if __name__=="__main__":
     
     printConsumeTime(startClock)
     startClock=time.clock() ##记录程序开始计算时间
-    for i in range(1,31):
-        selectStockByDayRise("07",str(i).zfill(2))
+    stockIDList=makeStockList()
+    for i in range(9,31):
+        selectStockByDayRise("07",str(i).zfill(2),stockIDList)
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

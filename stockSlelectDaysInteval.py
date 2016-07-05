@@ -75,9 +75,9 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join(resultDir, Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect.txt')
+    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect股票.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
-    goalFilePath=os.path.join(resultDir, Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+'_stockSelect8.txt')
+    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect板块.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
 
