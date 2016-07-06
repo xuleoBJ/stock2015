@@ -143,7 +143,31 @@ class Stock:
                 self.monthWaveRateFList.append(-999)
                 self.monthOpenRateFList.append(-999)
                 self.monthOpenCloseRateFList.append(-999)
-   
+    
+
+    def printHeadLineDateData(self):
+        wordList=[]
+        wordList.append(u"日期(星期)")
+        wordList.append(u"收盘价")
+        wordList.append(u"收盘涨幅")
+        wordList.append(u"开盘涨幅")
+        wordList.append(u"最高涨幅")
+        wordList.append(u"最低涨幅")
+        headLine= "\t".join(wordList)
+        print headLine
+        return headLine
+
+    def printLineDateData(self,indexDate):
+        wordList=[]
+        wordList.append(self.dayStrList[indexDate]+" "+str(self.weekDayList[indexDate]))
+        wordList.append(str(self.dayPriceClosedFList[indexDate]))
+        wordList.append(str(self.dayRiseRateCloseFList[indexDate]))
+        wordList.append(str(self.dayRiseRateOpenFList[indexDate]))
+        wordList.append(str(self.dayRiseRateHighestFList[indexDate]))
+        wordList.append(str(self.dayRiseRateLowestFList[indexDate]))
+        dataLine= "\t".join(wordList)
+        print dataLine
+        return dataLine
 
     def __init__(self,stockID,stockDirData="C:\\new_dxzq_v6\\T0002\\export\\"):
         self.stockName=""
@@ -314,10 +338,12 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     shStock=Stock('999999')
+    shStock.printHeadLineDateData()
+    for i in range(10,20):
+        shStock.printLineDateData(i)
     print shStock.dateList[-10:]
     
     curStock=Stock('002001')
-    curStock.list2array()
     print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
     print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
     print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName

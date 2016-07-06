@@ -61,13 +61,12 @@ def selectStockByDayRise(strMonth,strDay,stockIDList):
             sList.append(curStock.stockName)
             for sDay in dayStrList:
                 indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
-                sList.append( curStock.dayStrList[indexOfDate] )
-                sList.append( str(curStock.weekDayList[indexOfDate]) )
+                sList.append( curStock.dayStrList[indexOfDate]+"["+str(curStock.weekDayList[indexOfDate])+"]" )
                 riseRate = -999
                 if indexOfDate>=0:
                     riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
                 sList.append(str(riseRate))
-            if stockID[0]=="8":
+            if stockID[0] not in ["3","6","0"]:
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
@@ -88,7 +87,7 @@ if __name__=="__main__":
     printConsumeTime(startClock)
     startClock=time.clock() ##记录程序开始计算时间
     stockIDList=makeStockList()
-    for i in range(9,31):
+    for i in range(07,31):
         selectStockByDayRise("07",str(i).zfill(2),stockIDList)
    
     timeSpan=time.clock()-startClock
