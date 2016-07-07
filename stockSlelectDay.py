@@ -76,21 +76,22 @@ def selectStockByDayRise(strMonth,strDay,stockIDList):
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
 
-def printConsumeTime(startClock):
+def logRecord(logFilePath,startClock):
+    logFileWrited=open(logFilePath ,'a')
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
+    logFileWrited.write(str(round(timeSpan,2))+"\n")
+    logFileWrited.close()
 
 if __name__=="__main__":
-   
-    startClock=time.clock() ##记录程序开始计算时间
     
-    printConsumeTime(startClock)
-    startClock=time.clock() ##记录程序开始计算时间
+    curFilename=os.path.basename(__file__)
+    logFilePath=os.path.join(u'log_'+curFilename+'.txt')
+
     stockIDList=makeStockList()
-    for i in range(07,31):
+    for i in range(10,15):
+        startClock=time.clock() ##记录程序开始计算时间
         selectStockByDayRise("07",str(i).zfill(2),stockIDList)
-   
-    timeSpan=time.clock()-startClock
-    print("Time used(s):",round(timeSpan,2))
+        logRecord(logFilePath,startClock)
 
 

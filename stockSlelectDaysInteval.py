@@ -70,8 +70,9 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
                 sList.append(str(round(np.array(riseSHList).mean(),2)))
             else:
                 sList.append(str(round(np.array(riseList).mean(),2)))
-				
-            if stockID[0]=="8":
+
+			##write 2 different files	
+            if stockID[0] not in ["3","6","0"]:
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
@@ -90,11 +91,10 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     
     selectStockByRiseRateBetween2Date("07/01","07/10") 
-    selectStockByRiseRateBetween2Date("07/11","07/20") 
-    selectStockByRiseRateBetween2Date("07/21","07/31") 
-    selectStockByRiseRateBetween2Date("08/01","08/10") 
-    selectStockByRiseRateBetween2Date("08/11","08/20") 
-    selectStockByRiseRateBetween2Date("08/21","08/31") 
+    selectStockByRiseRateBetween2Date("07/11","07/15") 
+    selectStockByRiseRateBetween2Date("07/15","07/20") 
+    selectStockByRiseRateBetween2Date("07/21","07/25") 
+    selectStockByRiseRateBetween2Date("07/26","07/31") 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

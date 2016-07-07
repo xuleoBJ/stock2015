@@ -33,12 +33,6 @@ def WarnBigEvent():
 ##历史上相同的周，和相同的交易日
 def specialWeekDaySatis(curStock,strDate):
     print strDate
-    split = strDate.split('/')
-    for iYear in range(2000,2016):
-        inputStr="/".join([str(iYear),split[1],split[2]])
-        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
-        resultLine= u"{}\t{}\t当日涨幅{}\t次日涨幅{}".format(curStock.stockID,curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index],curStock.dayRiseRateCloseFList[index+1])
-        print resultLine
 
 ##历史上的今天
 def specialDateSatis(curStock,strDate):
@@ -48,7 +42,7 @@ def specialDateSatis(curStock,strDate):
     split = strDate.split('/')
     for iYear in range(2000,2016):
         inputStr="/".join([str(iYear),split[1],split[2]])
-        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
+        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)+1
         resultLine= u"{}\t{}({})\t{}\t{}\t{}".format( \
                 curStock.stockID,curStock.dayStrList[index], curStock.weekDayList[index], \
                 curStock.dayRiseRateCloseFList[index],curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateCloseFList[index-1])
@@ -64,12 +58,12 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
 
     print(u"-"*72)
     print(u"近期市场分析：")
-    headLine=u"日期\t星期\t涨幅\t最高\t最低\t量能\t描述"
+    headLine=u"日期[星期]\t涨幅\t最高\t最低\t量能\t描述"
     print(headLine)
     for i in range(matchDateIndex-5,matchDateIndex+1):
         weekDay = curStock.dateList[i].isoweekday()
         marketSummaryStr = trendAna.marketSummary(curStock,i)
-        print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
+        print(u"{}[{}]\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
                 curStock.dayRiseRateCloseFList[i],curStock.dayPriceClosedFList[i],\
                 curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
                 curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\

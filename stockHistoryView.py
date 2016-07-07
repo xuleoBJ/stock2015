@@ -20,7 +20,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
 
-    stockID="603022"
+    stockID="600897"
     strMDStart="07/01"
     strMDEnd="07/10"
     

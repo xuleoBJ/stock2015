@@ -165,7 +165,7 @@ def main(cStock):
     for i in range(-3,0): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(cStock.dayStrList[i]).isoweekday() 
         resultLine="{},星期{}\t收盘价:{}\t涨幅:{}\t量能环比:{}\t波动幅度:{}".format(\
-                cStock.dayStrList[i],weekDay,cStock.dayPriceClosedArray[i],cStock.dayRiseRateFList[i],\
+                cStock.dayStrList[i],weekDay,cStock.dayPriceClosedArray[i],cStock.dayRiseRateCloseArray[i],\
                 cStock.dayRadioLinkOfTradeVolumeFList[i],cStock.dayWaveRateFList[i])
         print resultLine
 
@@ -189,7 +189,7 @@ if __name__=="__main__":
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
-    stocIDkList=["002152"]
+    stocIDkList=["000917"]
     for stockID in stocIDkList:
         curStock=Cstock.Stock(stockID)
         curStock.list2array()

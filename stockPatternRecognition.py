@@ -37,8 +37,8 @@ def printResult(curStock,kMatchIndexList):
     if matchNum>0:
         lineWritedList.append("-"*72)
         lineWritedList.append(u"模式识别结果统计:")
-        lineWritedList.append(u"总数\t涨幅<=0(比例%)\t涨幅>=1\t涨幅<-1")
-        lineWritedList.append(u"{:2d}\t{:2d}({:.2f}%)\t{}\t{}".format( \
+        lineWritedList.append(u"统计总数\t<=0(占比%)\t>=1\t<-1")
+        lineWritedList.append(u"{:2d}   \t{:2d}({:.2f}%)\t{}\t{}".format( \
                 matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
         valueLine='\t'.join(map(str,sorted(riseRateNextList)))
         _median=np.median(riseRateNextList)
@@ -226,9 +226,8 @@ def recogitionPattern(stockID,strDate=""):
     inforLine=u"增加成交量匹配条件："
     addInforLine(inforLine)
     patterRecByVolume(curStock,matchDateIndex,kPatternList,kNum)
-    
-    inforLine=u"收盘提前10分钟预测："
 	
+dirPatternRec = "patternRecDir"
 
 def mainAppCall(strDate=""):
     del configOS.patternRecDateListSH[:]
@@ -242,7 +241,14 @@ def mainAppCall(strDate=""):
 
     for line in lineWritedList:
         print line
-    goalFilePath="patternRec.txt" ##输出文件名
+    
+    now = datetime.datetime.now()
+    endTime = now.replace(hour=15, minute=00, second=0, microsecond=0)
+    if now <= endTime:
+        dayStr=datetime.date.today().strftime("%Y%m%d")
+    else:
+        dayStr=(datetime.date.today()+datetime.timedelta(days=1)).strftime("%Y%m%d")
+    goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
     os.startfile(goalFilePath)
 
