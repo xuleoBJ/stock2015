@@ -189,7 +189,7 @@ if __name__=="__main__":
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
-    stocIDkList=["000917"]
+    stocIDkList=["000663"]
     for stockID in stocIDkList:
         curStock=Cstock.Stock(stockID)
         curStock.list2array()

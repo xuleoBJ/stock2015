@@ -235,19 +235,14 @@ def mainAppCall(strDate=""):
     del configOS.patternRecDateListCYB[:]
 
     for stockID in configOS.stockIDMarketList: 
-        recogitionPattern(stockID,strDate) ##-1是最后一个交易日分析
+        recogitionPattern(stockID,strDate) 
 
     configOS.updatePetternRectDateList()
 
     for line in lineWritedList:
         print line
     
-    now = datetime.datetime.now()
-    endTime = now.replace(hour=15, minute=00, second=0, microsecond=0)
-    if now <= endTime:
-        dayStr=datetime.date.today().strftime("%Y%m%d")
-    else:
-        dayStr=(datetime.date.today()+datetime.timedelta(days=1)).strftime("%Y%m%d")
+    dayStr=strDate.replace("/","")
     goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
     os.startfile(goalFilePath)
@@ -256,7 +251,19 @@ if __name__=="__main__":
     
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
-    mainAppCall()
+    
+    strDate=""
+
+    now = datetime.datetime.now()
+    marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+    marketEndTime = now.replace(hour=15, minute=00, second=0, microsecond=0)
+    
+    ##根据时间自动取strDate,开盘之前 以后取昨天，下午三点以前今天
+    if strDate=="" and now <= marketEndTime:
+        strDate=(datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y/%m/%d")
+    if strDate=="" and now >= marketEndTime:
+        strDate=datetime.date.today().strftime("%Y/%m/%d")
+    mainAppCall(strDate)
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

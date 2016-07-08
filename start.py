@@ -63,20 +63,12 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     for i in range(matchDateIndex-5,matchDateIndex+1):
         weekDay = curStock.dateList[i].isoweekday()
         marketSummaryStr = trendAna.marketSummary(curStock,i)
-        print(u"{}[{}]\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
-                curStock.dayRiseRateCloseFList[i],curStock.dayPriceClosedFList[i],\
-                curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
-                curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
+        print(u"{}[{}]\t{:.2f}%\t{:.2f}%\t{:.2f}%\t{}\t{}".format(curStock.dayStrList[i], weekDay , \
+                curStock.dayRiseRateCloseFList[i],\
+                curStock.dayRiseRateHighestArray[i],\
+                curStock.dayRiseRateLowestArray[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
     
-  
-    for i in range(matchDateIndex-5,matchDateIndex+1):
-        marketSummaryStr = trendAna.marketSummary(curStock,i)
-        print(u"{} {}\t{:.2f}%({:.2f})\t{:.1f}({:.2f}%)\t{:.1f}({:.2f}%)\t{}\t{}".format(curStock.dayStrList[i], curStock.weekDayList[i] , \
-                curStock.dayRiseRateCloseFList[i],curStock.dayPriceClosedFList[i],\
-                curStock.dayPriceHighestArray[i],curStock.dayRiseRateHighestArray[i],\
-                curStock.dayPriceLowestFList[i],curStock.dayRiseRateLowestArray[i],\
-                curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
     
     ## 历史上的今天
     print (u"-"*72)
@@ -99,8 +91,8 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     print(headLine)
     print(u"价 {}\t{}\t{}\t{}".format(curStock.day3PriceAverageArray[matchDateIndex],curStock.day5PriceAverageArray[matchDateIndex],\
             curStock.day10PriceAverageArray[matchDateIndex],curStock.day20PriceAverageArray[matchDateIndex]) )
-    print(u"量 {}\t{}\t{}\t{}".format(curStock.day3TradeVolumeArray[matchDateIndex],curStock.day5TradeVolumeArray[matchDateIndex],\
-            curStock.day10TradeVolumeArray[matchDateIndex],curStock.day20TradeVolumeArray[matchDateIndex]) )
+##    print(u"量 {}\t{}\t{}\t{}".format(curStock.day3TradeVolumeArray[matchDateIndex],curStock.day5TradeVolumeArray[matchDateIndex],\
+##            curStock.day10TradeVolumeArray[matchDateIndex],curStock.day20TradeVolumeArray[matchDateIndex]) )
     print (u"-"*72)
     
     print(u"1-时空趋势分析")
@@ -135,7 +127,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     print(u"-"*72)
     headline=u"周期(日)幅度\t低点\t高点\t点位"
     print (headline)
-    for period in [20,60,120,180]:
+    for period in [20,60,90,120,150,180]:
         cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex+1].max()
         cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].min()
         for keyPoint in [0.25,0.33,0.5,0.825]:
