@@ -6,7 +6,7 @@ import datetime
 import Cstock
 import Ccomfunc
 import pdb
-import trendAna
+import stockTrendAna
 import numpy as np
 
 

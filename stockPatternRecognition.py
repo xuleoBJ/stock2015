@@ -6,7 +6,8 @@ import datetime
 import math
 import Cstock
 import sys
-import Ccomfunc,trendAna
+import Ccomfunc
+import stockTrendAna
 import configOS
 import numpy as np
 import matplotlib.pyplot as plt

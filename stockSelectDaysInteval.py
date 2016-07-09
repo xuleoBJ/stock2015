@@ -6,7 +6,7 @@ import datetime
 import Cstock
 import Ccomfunc
 import pdb
-import trendAna
+import stockTrendAna
 import numpy as np
 
 
@@ -57,9 +57,9 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
                     sList.append(curStock.dayStrList[indexOfStartDate])
                     sList.append(curStock.dayStrList[indexOfEndDate])
                     rise = -999
-                    rise = trendAna.calRiseRateClosed(curStock,indexOfStartDate,indexOfEndDate)
+                    rise = stockTrendAna.calRiseRateClosed(curStock,indexOfStartDate,indexOfEndDate)
                     riseList.append(rise)
-                    riseSH = trendAna.calRiseRateClosed(shStock,indexOfStartDateSH,indexOfEndDateSH)
+                    riseSH = stockTrendAna.calRiseRateClosed(shStock,indexOfStartDateSH,indexOfEndDateSH)
                     riseSHList.append(riseSH)
                     ##记录强于大盘的个数
                     if rise>=riseSH:
