@@ -8,35 +8,11 @@ import Ccomfunc
 import pdb
 import stockTrendAna
 import numpy as np
+import getStockIDList
 
-##两种方法获得stockIDList，selectScale=1 从文本文件stockIDList.txt 读取 =2，海选
-def makeStockList(selectScale=2):
-    stockIDList=["999999","399001"]
-    stockIDListNot=[]
-    with open('stockIDListNot.txt') as fOpen:
-        for line in fOpen:
-            inner_list = [elt.strip() for elt in line.split(' ')]
-            stockIDListNot.append(inner_list[0])
-    
-    
-    ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
-    stockIDType=["8","3","6","0"]
-    if selectScale == 1: ##限选
-        with open('stockIDList.txt') as fOpen:
-            for line in fOpen:
-                inner_list = [elt.strip() for elt in line.split(' ')]
-                stockIDList.append(inner_list[0])
-    if selectScale == 2 :  ##海选
-        fileNames=os.listdir(Ccomfunc.src)
-        for fileItem in fileNames:
-            curFileName = os.path.basename(fileItem) 
-            if curFileName not in stockIDListNot and curFileName[0] in stockIDType: ## 根据文件名的第一个字符区分股票类别 
-                stockIDList.append(os.path.splitext(fileItem)[0])
-    return stockIDList
-
-   
+##selectScale=1 从文本文件stockIDList.txt 读取 =2，海选 
 def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2):
-    stockIDList=makeStockList()
+    stockIDList=getStockIDList.makeStockList(selectScale)
     
     shStock=Cstock.Stock("999999")
     for numWeek in numWeekList:
@@ -86,9 +62,9 @@ def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2
                     lineWritedList8.append("\t".join(sList))
                 else:
                     lineWritedList.append("\t".join(sList))
-        goalFilePath=os.path.join( Ccomfunc.resultDir,str(numWeek)+u'_stockSelect股票.txt')
+        goalFilePath=os.path.join( Ccomfunc.resultDir,"week"+str(numWeek)+u'_stockSelect股票.txt')
         Ccomfunc.write2Text(goalFilePath,lineWritedList)
-        goalFilePath=os.path.join( Ccomfunc.resultDir,str(numWeek)+u'_stockSelect板块.txt')
+        goalFilePath=os.path.join( Ccomfunc.resultDir,"week"+str(numWeek)+u'_stockSelect板块.txt')
         Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
 
@@ -100,7 +76,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    selectStockByRiseRateByWeek([26,27,28,29]) 
+    selectStockByRiseRateByWeek(range(26,30)) 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

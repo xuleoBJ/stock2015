@@ -36,7 +36,7 @@ def outputDataByWeekNum(curStock,numWeekStart,numWeekEnd,yearList = range(2010,2
         indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
 
         ## 获取交易周的周五的字符串
-        dateStrEnd= "-".join([str(iYear),str(numWeekEnd),str(6)])
+        dateStrEnd= "-".join([str(iYear),str(numWeekEnd),str(5)])
         dt = datetime.datetime.strptime(dateStrEnd, "%Y-%W-%w")
         dateStrEnd=dt.strftime("%Y/%m/%d")
         indexOfEndDate=Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
@@ -50,7 +50,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
 
-    stockID="002302"
+    stockID="999999"
     
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
@@ -61,7 +61,7 @@ if __name__=="__main__":
     fileWrited.write(stockID+'\n')
     curStock.printHeadLineDateData()
     
-    outputDataByWeekNum(curStock,27,28)
+    outputDataByWeekNum(curStock,27,27)
 
     for line in lineWrited:
         fileWrited.write(line+'\n')

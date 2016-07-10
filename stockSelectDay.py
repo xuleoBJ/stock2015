@@ -8,24 +8,7 @@ import Ccomfunc
 import pdb
 import stockTrendAna
 import numpy as np
-
-
-##两种方法获得stockIDList，selectScale=1 从文本文件stockIDList.txt 读取 =2，海选
-def makeStockList(selectScale=2):
-    stockIDList=["999999","399001"]
-    ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
-    stockIDType=["8","3","6","0"]
-    if selectScale == 1: ##限选
-        with open('stockIDList.txt') as fOpen:
-            for line in fOpen:
-                inner_list = [elt.strip() for elt in line.split(' ')]
-                stockIDList.append(inner_list[0])
-    if selectScale == 2 :  ##海选
-        fileNames=os.listdir(Ccomfunc.src)
-        for fileItem in fileNames:
-            if os.path.basename(fileItem)[0] in stockIDType: ## 根据文件名的第一个字符区分股票类别 
-                stockIDList.append(os.path.splitext(fileItem)[0])
-    return stockIDList
+import getStockIDList
 
 
 ## 根据历史日涨幅选股，输入strMonth = "01" strDay ="31"
@@ -88,7 +71,7 @@ if __name__=="__main__":
     curFilename=os.path.basename(__file__)
     logFilePath=os.path.join(u'log_'+curFilename+'.txt')
 
-    stockIDList=makeStockList()
+    stockIDList = getStockIDList.makeStockList()
     strMonth="07"
     dayRange=range(20,31)
     for i in dayRange:

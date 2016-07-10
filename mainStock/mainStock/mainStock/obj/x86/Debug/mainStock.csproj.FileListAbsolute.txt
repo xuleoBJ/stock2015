@@ -1,0 +1,7 @@
+E:\stock2015\mainStock\mainStock\mainStock\bin\Debug\mainStock.exe
+E:\stock2015\mainStock\mainStock\mainStock\bin\Debug\mainStock.pdb
+E:\stock2015\mainStock\mainStock\mainStock\obj\x86\Debug\mainStock.Properties.Resources.resources
+E:\stock2015\mainStock\mainStock\mainStock\obj\x86\Debug\mainStock.csproj.GenerateResource.Cache
+E:\stock2015\mainStock\mainStock\mainStock\obj\x86\Debug\mainStock.exe
+E:\stock2015\mainStock\mainStock\mainStock\obj\x86\Debug\mainStock.pdb
+E:\stock2015\mainStock\mainStock\mainStock\obj\x86\Debug\mainStock.mainForm.resources

@@ -3,11 +3,11 @@ Thumbs.db
 ehthumbs.db
 
 #xuleo filters
-*.txt
 *.xls
 *.svg
 *.*~
 resultDir/
+dataManage/
 *.swp
 *.pyc
 

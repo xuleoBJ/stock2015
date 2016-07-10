@@ -8,29 +8,11 @@ import Ccomfunc
 import pdb
 import stockTrendAna
 import numpy as np
-
-
-##两种方法获得stockIDList，selectScale=1 从文本文件stockIDList.txt 读取 =2，海选
-def makeStockList(selectScale=2):
-    stockIDList=["999999","399001"]
-    ## 根据文件名的第一个字符区分股票类别  上证6 深圳 0 板块指8 创业板 3
-    stockIDType=["8","3","6","0"]
-    if selectScale == 1: ##限选
-        with open('stockIDList.txt') as fOpen:
-            for line in fOpen:
-                inner_list = [elt.strip() for elt in line.split(' ')]
-                stockIDList.append(inner_list[0])
-    if selectScale == 2 :  ##海选
-        fileNames=os.listdir(Ccomfunc.src)
-        for fileItem in fileNames:
-            if os.path.basename(fileItem)[0] in stockIDType: ## 根据文件名的第一个字符区分股票类别 
-                stockIDList.append(os.path.splitext(fileItem)[0])
-    return stockIDList
-
+import getStockIDList
    
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
 def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2):
-    stockIDList=makeStockList()
+    stockIDList=getStockIDList.makeStockList()
     lineWritedList=[]
     lineWritedList8=[]  ##指数为8的单独写出来
     
@@ -91,9 +73,9 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     
     selectStockByRiseRateBetween2Date("07/01","07/10") 
-    selectStockByRiseRateBetween2Date("07/11","07/15") 
-    selectStockByRiseRateBetween2Date("07/15","07/20") 
-    selectStockByRiseRateBetween2Date("07/21","07/25") 
+    selectStockByRiseRateBetween2Date("07/11","07/16") 
+    selectStockByRiseRateBetween2Date("07/15","07/21") 
+    selectStockByRiseRateBetween2Date("07/21","07/26") 
     selectStockByRiseRateBetween2Date("07/26","07/31") 
    
     timeSpan=time.clock()-startClock

@@ -132,20 +132,25 @@ def trendOfMonthHistory(curStock):
 
 ##获得区间的最高点指数
 def getDateIndexHighestPoint(curStock,indexOfDateStart,indexOfDateEnd):
+    indexOfDateStart=indexOfDateStart-1
     return indexOfDateStart+curStock.dayPriceHighestArray[indexOfDateStart:indexOfDateEnd].argmax()
 
 ##获得区间的最低点指数
 def getDateIndexLowestPoint(curStock,indexOfDateStart,indexOfDateEnd):
+    indexOfDateStart=indexOfDateStart-1
     return indexOfDateStart+curStock.dayPriceHighestArray[indexOfDateStart:indexOfDateEnd].argmin()
 
 ##读取curStock，,indexOfDateStart,indexOfDateEnd，计算 两个交易日收盘涨幅
 def calRiseRateClosed(curStock,indexOfDateStart,indexOfDateEnd):
+    indexOfDateStart=indexOfDateStart-1
     if indexOfDateStart>=0 and curStock.dayPriceClosedFList[indexOfDateStart]>0:
         return 100*(curStock.dayPriceClosedFList[indexOfDateEnd]-curStock.dayPriceClosedFList[indexOfDateStart])/curStock.dayPriceClosedFList[indexOfDateStart]
     else:
         return -999
 
+##获得区间的涨幅,主要
 def calRiseRate(dataArray,indexOfDateStart,indexOfDateEnd):
+    indexOfDateStart=indexOfDateStart-1
     if dataArray[indexOfDateStart]>0:
         return 100*(dataArray[indexOfDateEnd]-dataArray[indexOfDateStart])/dataArray[indexOfDateStart]
     else:
