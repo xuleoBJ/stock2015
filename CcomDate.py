@@ -57,6 +57,11 @@ def get_month_begin(ts = time.time(),N = 0):
  
 if __name__ == "__main__":
     #get current week num of the year
+    dateStr="2016/07/10"
+    dt = datetime.datetime.strptime(dateStr, "%Y/%m/%d")
+    dtMon = dt + datetime.timedelta(days=( - dt.weekday()))
+    print dtMon,dtMon.weekday()
+    print dt
     now = datetime.date(2016, 7, 9)
     numWeek = now.isocalendar()[1]
     print ("本周是年度"+str(numWeek)+"星期"+str(now.weekday()))

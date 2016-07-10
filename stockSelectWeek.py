@@ -11,7 +11,7 @@ import numpy as np
 import getStockIDList
 
 ##selectScale=1 从文本文件stockIDList.txt 读取 =2，海选 
-def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2):
+def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=1):
     stockIDList=getStockIDList.makeStockList(selectScale)
     
     shStock=Cstock.Stock("999999")
@@ -44,8 +44,8 @@ def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2
                     indexOfEndDateSH=Ccomfunc.getIndexByStrDate(shStock,dateStrEnd)
                     print indexOfStartDate,curStock.dayStrList[indexOfStartDate],indexOfEndDate,curStock.dayStrList[indexOfEndDate]
                     if curStock.count>0 and indexOfStartDate>=0 and indexOfEndDate>0:
-                        sList.append(curStock.dayStrList[indexOfStartDate])
-                        sList.append(curStock.dayStrList[indexOfEndDate])
+                        ##保留日期是为了看是否是停牌影响,同时把两个时间日期写到了一起
+                        sList.append(curStock.dayStrList[indexOfStartDate].replace('/','')+"-"+curStock.dayStrList[indexOfEndDate].replace('/',''))
                         rise = -999
                         rise = stockTrendAna.calRiseRateClosed(curStock,indexOfStartDate,indexOfEndDate)
                         riseList.append(rise)
