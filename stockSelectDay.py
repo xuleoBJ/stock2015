@@ -11,7 +11,7 @@ import numpy as np
 import getStockIDList
 
 ## 根据历史序数周和周几选股，输入numWeek 和 weekDay
-def selectStockByWeekDayRise(numWeek,numWeek,stockIDList):
+def selectStockByWeekDayRise(numWeek,weekDay,stockIDList):
     lineWritedList=[]
     lineWritedList8=[]
 	
@@ -33,7 +33,6 @@ def selectStockByWeekDayRise(numWeek,numWeek,stockIDList):
     headLine.append("date")
     headLine.append("rise(%)")
     ## 获得第几周几天	
-    dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015"]]
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
@@ -41,19 +40,11 @@ def selectStockByWeekDayRise(numWeek,numWeek,stockIDList):
             sList=[]
             sList.append(curStock.stockID)
             sList.append(curStock.stockName)
-            for sDay in dayStrList:
-                dateStrStart = "-".join([str(iYear),str(numWeekStart),str(1)])
+            for iYear in range(2011,2017):
+                dateStrStart = "-".join([str(iYear),str(numWeek),str(weekDay)])
                 dt = datetime.datetime.strptime(dateStrStart, "%Y-%W-%w")
                 dateStrStart=dt.strftime("%Y/%m/%d")
-                indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
-
-                ## 获取交易周的周五的字符串
-                dateStrEnd= "-".join([str(iYear),str(numWeekEnd),str(5)])
-                dt = datetime.datetime.strptime(dateStrEnd, "%Y-%W-%w")
-                dateStrEnd=dt.strftime("%Y/%m/%d")
-                indexOfEndDate=Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
-                indexList=range(indexOfStartDate,indexOfEndDate+1)
-                indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
+                indexOfDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
                 sList.append( curStock.dayStrList[indexOfDate]+"["+str(curStock.weekDayList[indexOfDate])+"]" )
                 riseRate = -999
                 if indexOfDate>=0:
@@ -63,9 +54,9 @@ def selectStockByWeekDayRise(numWeek,numWeek,stockIDList):
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join( Ccomfunc.resultDir,strMonth+strDay+u'_stockRise股票.txt')
+    goalFilePath=os.path.join( Ccomfunc.resultDir,str(numWeek)+"_"+str(weekDay)+u'_stockRise股票.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
-    goalFilePath=os.path.join( Ccomfunc.resultDir,strMonth+strDay+u'_stockRise板块.txt')
+    goalFilePath=os.path.join( Ccomfunc.resultDir,str(numWeek)+"_"+str(weekDay)+u'_stockRise板块.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
 ## 根据历史日涨幅选股，输入strMonth = "01" strDay ="31"
@@ -129,6 +120,10 @@ if __name__=="__main__":
     logFilePath=os.path.join(u'log_'+curFilename+'.txt')
 
     stockIDList = getStockIDList.makeStockList()
+
+    numWeek=26
+    weekDay=3
+    selectStockByWeekDayRise(numWeek,weekDay,stockIDList)
     strMonth="07"
     dayRange=range(20,31)
     for i in dayRange:
