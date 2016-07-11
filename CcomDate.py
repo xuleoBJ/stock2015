@@ -9,6 +9,20 @@
 import time
 import datetime
  
+## 根据输入的date，返回当周周1的日期
+def getStrDateMonday_of_week( inputStrDate ):
+    dt = datetime.datetime.strptime(inputStrDate, "%Y/%m/%d")
+    dtMon =  monday_of_week( dt )
+    return dtMon.strftime( "%Y/%m/%d" )
+
+def monday_of_week( inputDate ):
+    return  getDayOfWeek( inputDate , 1 )
+
+## 根据输入的date，获得当周周几的日期，周1 用1，周5 用5
+def getDayOfWeek( inputDate , weekday ):
+    days = inputDate.isoweekday()
+    return inputDate + datetime.timedelta( -days + weekday)
+
 def get_day_begin(ts = time.time(),N = 0):
     """
     N为0时获取时间戳ts当天的起始时间戳，N为负数时前数N天，N为正数是后数N天
@@ -58,10 +72,7 @@ def get_month_begin(ts = time.time(),N = 0):
 if __name__ == "__main__":
     #get current week num of the year
     dateStr="2016/07/10"
-    dt = datetime.datetime.strptime(dateStr, "%Y/%m/%d")
-    dtMon = dt + datetime.timedelta(days=( - dt.weekday()))
-    print dtMon,dtMon.weekday()
-    print dt
+    print getStrDateMonday_of_week(dateStr)
     now = datetime.date(2016, 7, 9)
     numWeek = now.isocalendar()[1]
     print ("本周是年度"+str(numWeek)+"星期"+str(now.weekday()))

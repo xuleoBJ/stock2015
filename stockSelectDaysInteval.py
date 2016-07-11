@@ -9,10 +9,11 @@ import pdb
 import stockTrendAna
 import numpy as np
 import getStockIDList
+import CcomDate
 
 ##给出dateStr 交易日,找到初始日期的周一，进行计算
 def selectStockByDaysInterval(inputMDDateStart,numTradeDay,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2):
-    stockIDList=getStockIDList.makeStockList()
+    stockIDList=getStockIDList.makeStockList(selectScale)
     lineWritedList=[]
     lineWritedList8=[]  ##指数为8的单独写出来
     
@@ -30,6 +31,7 @@ def selectStockByDaysInterval(inputMDDateStart,numTradeDay,yearList=[2016,2015,2
             for year in yearList:
                 dateStrStart=str(year)+"/"+inputMDDateStart
                 ## 判断datestrStart 是否是周一，如果不是周一，变成周一 
+                dateStrStart = CcomDate.getStrDateMonday_of_week(dateStrStart) 
                 indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
                 indexOfStartDateSH=Ccomfunc.getIndexByStrDate(shStock,dateStrStart)
                 
@@ -59,9 +61,9 @@ def selectStockByDaysInterval(inputMDDateStart,numTradeDay,yearList=[2016,2015,2
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect股票.txt')
+    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"+"+str(numTradeDay)+u'_stockSelect股票.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
-    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect板块.txt')
+    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"+"+str(numTradeDay)+u'_stockSelect板块.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
    
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
@@ -126,11 +128,9 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    selectStockByRiseRateBetween2Date("07/01","07/10") 
-    selectStockByRiseRateBetween2Date("07/11","07/16") 
-    selectStockByRiseRateBetween2Date("07/15","07/21") 
-    selectStockByRiseRateBetween2Date("07/21","07/26") 
-    selectStockByRiseRateBetween2Date("07/26","07/31") 
+    selectStockByDaysInterval("07/11",10) 
+   ## selectStockByRiseRateBetween2Date("07/21","07/26") 
+   ## selectStockByRiseRateBetween2Date("07/26","07/31") 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

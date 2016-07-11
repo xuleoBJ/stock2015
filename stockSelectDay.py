@@ -10,13 +10,70 @@ import stockTrendAna
 import numpy as np
 import getStockIDList
 
-
-## 根据历史日涨幅选股，输入strMonth = "01" strDay ="31"
-def selectStockByDayRise(strMonth,strDay,stockIDList):
+## 根据历史序数周和周几选股，输入numWeek 和 weekDay
+def selectStockByWeekDayRise(numWeek,numWeek,stockIDList):
     lineWritedList=[]
     lineWritedList8=[]
 	
-    print (u"条件筛选股票："+strMonth+strDay)
+    print (u"按周和星期条件筛选股票：")
+    ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
+    headLine=[]
+    headLine.append("stockID")
+    headLine.append("stockName")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    headLine.append("date")
+    headLine.append("rise(%)")
+    ## 获得第几周几天	
+    dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015"]]
+    for stockID in stockIDList:
+        ##读取股票代码，存储在curStock里
+        curStock=Cstock.Stock(stockID)
+        if curStock.count > 0 : 
+            sList=[]
+            sList.append(curStock.stockID)
+            sList.append(curStock.stockName)
+            for sDay in dayStrList:
+                dateStrStart = "-".join([str(iYear),str(numWeekStart),str(1)])
+                dt = datetime.datetime.strptime(dateStrStart, "%Y-%W-%w")
+                dateStrStart=dt.strftime("%Y/%m/%d")
+                indexOfStartDate=Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
+
+                ## 获取交易周的周五的字符串
+                dateStrEnd= "-".join([str(iYear),str(numWeekEnd),str(5)])
+                dt = datetime.datetime.strptime(dateStrEnd, "%Y-%W-%w")
+                dateStrEnd=dt.strftime("%Y/%m/%d")
+                indexOfEndDate=Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
+                indexList=range(indexOfStartDate,indexOfEndDate+1)
+                indexOfDate=Ccomfunc.getIndexByStrDate(curStock,sDay)
+                sList.append( curStock.dayStrList[indexOfDate]+"["+str(curStock.weekDayList[indexOfDate])+"]" )
+                riseRate = -999
+                if indexOfDate>=0:
+                    riseRate = curStock.dayRiseRateCloseArray[indexOfDate] 
+                sList.append(str(riseRate))
+            if stockID[0] not in ["3","6","0"]:
+                lineWritedList8.append("\t".join(sList))
+            else:
+                lineWritedList.append("\t".join(sList))
+    goalFilePath=os.path.join( Ccomfunc.resultDir,strMonth+strDay+u'_stockRise股票.txt')
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    goalFilePath=os.path.join( Ccomfunc.resultDir,strMonth+strDay+u'_stockRise板块.txt')
+    Ccomfunc.write2Text(goalFilePath,lineWritedList8)
+
+## 根据历史日涨幅选股，输入strMonth = "01" strDay ="31"
+def selectStockByStrDateRise(strMonth,strDay,stockIDList):
+    lineWritedList=[]
+    lineWritedList8=[]
+	
+    print (u"按固定日期条件筛选股票："+strMonth+strDay)
     ##分析板块指数月度数据的涨幅，进行股票板块筛选，这是周期性行情选择的一个主要方法
     headLine=[]
     headLine.append("stockID")
@@ -77,7 +134,7 @@ if __name__=="__main__":
     for i in dayRange:
         startClock=time.clock() ##记录程序开始计算时间
         strDay = str(i).zfill(2)
-        selectStockByDayRise("07",strDay,stockIDList)
+        selectStockByStrDateRise("07",strDay,stockIDList)
         logRecord(logFilePath,startClock,strMonth+strDay)
 
 
