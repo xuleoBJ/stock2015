@@ -61,14 +61,6 @@ def printResult(curStock,kMatchIndexList):
         plt.subplots_adjust(left=0.15)
         plt.show()
 
-#统计某一个特殊日期的涨幅，比如元旦前或者5-1 后
-def specialDateSatis(stockID):
-    curStock=Cstock.Stock(stockID)
-    for iYear in range(2000,2015):
-        inputStr="/".join([str(iYear),"06","30"])
-        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
-        resultLine= u"{}\t涨幅{}".format(curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index])
-        print resultLine
 
 def addInforLine(inforLine):
     lineWritedList.append("-"*72)
@@ -124,20 +116,23 @@ def openPriceSatis(stockID):
     lineWritedList=[]
     curStock=Cstock.Stock(stockID)
     headWordList=[]
-    headWordList.append("日期    ")
-    headWordList.append("星期")
-    headWordList.append("开盘涨幅")
-    headWordList.append("收盘涨幅")
-    headWordList.append("T+1涨幅")
-    headWordList.append("T+2涨幅")
-    headWordList.append("距离上次交易日间隔天数")
-    headWordList.append("区间涨幅")
+    headWordList.append(u"日期    ")
+    headWordList.append(u"星期")
+    headWordList.append(u"开盘涨幅")
+    headWordList.append(u"收盘涨幅")
+    headWordList.append(u"T+1涨幅")
+    headWordList.append(u"T+2涨幅")
+    headWordList.append(u"距离上次交易日间隔天数")
+    headWordList.append(u"区间涨幅")
     headLine="\t".join(headWordList)
     lineWritedList.append(headLine)
     print headLine
     lastRecordDay=0
     for i in range(0,len(curStock.dayStrList)):
-        if curStock.dayRiseRateOpenFList[i]<=-2:
+        ## 这里设置条件
+        ## 条件1：前交易日 大于0 开盘低开1个点
+        #if curStock.dayRiseRateOpenFList[i-1]>=0 and curStock.dayRiseRateOpenFList[i]<=-1:
+        if curStock.dayRiseRateOpenFList[i-1]>=0 and curStock.dayRiseRateOpenFList[i]<=-1:
             wordList=[]
             wordList.append(curStock.dayStrList[i])
             weekDay = curStock.dateList[i].isoweekday()
@@ -164,7 +159,6 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     stockID="999999"
     openPriceSatis(stockID)
-#    specialDateSatis(stockID)
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()
