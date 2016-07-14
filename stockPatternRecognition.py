@@ -53,11 +53,11 @@ def printResult(curStock,kMatchIndexList):
 #        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
     
-    lineWritedList.append(u"日期    \t星期\t次日涨幅\t次日开盘\t量能\t")
+    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t量能\t当日涨幅\t当日最高\t当日最低")
     for index in kMatchIndexList: 
-        resultLine= u"{0:<10}\t{1}\t{2}\t{3}\t{4}\t".format(curStock.dayStrList[index],curStock.weekDayList[index],\
-                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1], \
-                        curStock.dayRadioLinkOfTradeVolumeFList[index]\
+        resultLine= u"{0:<10}[{1}]\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}".format(curStock.dayStrList[index],curStock.weekDayList[index],\
+                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1],curStock.dayRadioLinkOfTradeVolumeFList[index],\
+                        curStock.dayRiseRateCloseArray[index],curStock.dayRiseRateHighestArray[index],curStock.dayRiseRateLowestArray[index] \
                        )
         lineWritedList.append(resultLine)
 ##趋势日涨幅
@@ -205,10 +205,10 @@ def recogitionPattern(stockID,strDate=""):
     inforLine="-"*8+u"最近交易日的相关数据："
     addInforLine(inforLine)
     
-    lineWritedList.append("星期\t涨幅:\t 量比:\t波动幅度:")
+    lineWritedList.append("日期[星期]    \t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t")
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i],\
+        resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i], curStock.dayRiseRateHighestArray[i], curStock.dayRiseRateLowestFList[i], \
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
         lineWritedList.append(resultLine)
     

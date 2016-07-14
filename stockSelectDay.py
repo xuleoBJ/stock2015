@@ -121,11 +121,13 @@ if __name__=="__main__":
 
     stockIDList = getStockIDList.makeStockList()
 
-    numWeek=26
-    weekDay=3
-    selectStockByWeekDayRise(numWeek,weekDay,stockIDList)
+    ##按星期和周几分析数据选股
+    ##numWeek=26
+    ##weekDay=3
+    ##selectStockByWeekDayRise(numWeek,weekDay,stockIDList)
+    ##按日期分析数据选股
     strMonth="07"
-    dayRange=range(20,31)
+    dayRange=range(15,20)
     for i in dayRange:
         startClock=time.clock() ##记录程序开始计算时间
         strDay = str(i).zfill(2)
