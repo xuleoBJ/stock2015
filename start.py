@@ -132,7 +132,10 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
         cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].min()
         for keyPoint in [0.25,0.33,0.5,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
-            resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
+            calRiseRate = -999
+            if resistLinePoint != 0:
+                calRiseRate = 100*(resistLinePoint-curStock.dayPriceClosedArray[-1])/resistLinePoint
+            resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}\t{:.2f}%".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint,calRiseRate)
             if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:
                 if curStock.dayPriceClosedFList[matchDateIndex]<=resistLinePoint:
                     resultLine+=u"\t注意压力位！"
