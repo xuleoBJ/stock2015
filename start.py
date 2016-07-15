@@ -13,6 +13,7 @@ import ctypes
 from PyQt4 import QtGui # Import the PyQt4 module we'll need
 from PyQt4.QtGui import *
 
+lineWritedList=[]
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
 def calResistLine(cyclePeriod,keyPoint):
@@ -142,7 +143,17 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                 if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
             print resultLine
+
+
+
+def mainAppCall(strDate=""):
+    for line in lineWritedList:
+        print line
     
+    dayStr=strDate.replace("/","")
+    goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    os.startfile(goalFilePath)
 
 if __name__ == "__main__":
  

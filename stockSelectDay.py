@@ -127,7 +127,7 @@ if __name__=="__main__":
     ##selectStockByWeekDayRise(numWeek,weekDay,stockIDList)
     ##按日期分析数据选股
     strMonth="07"
-    dayRange=range(15,20)
+    dayRange=range(20,31)
     for i in dayRange:
         startClock=time.clock() ##记录程序开始计算时间
         strDay = str(i).zfill(2)
