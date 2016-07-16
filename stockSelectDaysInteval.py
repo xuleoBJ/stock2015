@@ -12,7 +12,7 @@ import getStockIDList
 import CcomDate
 
 ##给出dateStr 交易日,找到初始日期的周一，进行计算
-def selectStockByDaysInterval(inputMDDateStart,numTradeDay,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2):
+def selectStockByDaysInterval(inputMDDateStart,numTradeDay,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2,dirSelect=2):
     stockIDList=getStockIDList.makeStockList(selectScale)
     lineWritedList=[]
     lineWritedList8=[]  ##指数为8的单独写出来
@@ -61,13 +61,14 @@ def selectStockByDaysInterval(inputMDDateStart,numTradeDay,yearList=[2016,2015,2
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"+"+str(numTradeDay)+u'_stockSelect股票.txt')
+    outDir = Ccomfunc.dirSyn if dirSelect == 2 else  Ccomfunc.resultDir
+    goalFilePath=os.path.join( outDir,inputMDDateStart.replace("/","")+"+"+str(numTradeDay)+u'_stockSelect股票.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
-    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"+"+str(numTradeDay)+u'_stockSelect板块.txt')
+    goalFilePath=os.path.join( outDir,inputMDDateStart.replace("/","")+"+"+str(numTradeDay)+u'_stockSelect板块.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
    
 ##给出dateStr 交易日,interval 交易日间隔，计算两个交易日的涨幅
-def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2):
+def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2,dirSelect=2):
     stockIDList=getStockIDList.makeStockList()
     lineWritedList=[]
     lineWritedList8=[]  ##指数为8的单独写出来
@@ -114,9 +115,10 @@ def selectStockByRiseRateBetween2Date(inputMDDateStart,inputMDDateEnd,yearList=[
                 lineWritedList8.append("\t".join(sList))
             else:
                 lineWritedList.append("\t".join(sList))
-    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect股票.txt')
+    outDir = Ccomfunc.dirSyn if dirSelect == 2 else  Ccomfunc.resultDir
+    goalFilePath=os.path.join( outDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect股票.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
-    goalFilePath=os.path.join( Ccomfunc.resultDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect板块.txt')
+    goalFilePath=os.path.join( outDir,inputMDDateStart.replace("/","")+"-"+inputMDDateEnd.replace("/","")+u'_stockSelect板块.txt')
     Ccomfunc.write2Text(goalFilePath,lineWritedList8)
 
 
@@ -128,9 +130,10 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    selectStockByDaysInterval("07/11",10) 
-   ## selectStockByRiseRateBetween2Date("07/21","07/26") 
-   ## selectStockByRiseRateBetween2Date("07/26","07/31") 
+    ##selectStockByDaysInterval("07/11",10) 
+    selectStockByRiseRateBetween2Date("07/16","07/20") 
+    selectStockByRiseRateBetween2Date("07/20","07/26") 
+    selectStockByRiseRateBetween2Date("07/26","07/31") 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
