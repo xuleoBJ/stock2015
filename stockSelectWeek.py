@@ -11,7 +11,6 @@ import numpy as np
 import getStockIDList
 
 
-dirSyn = "E:\\我的坚果云\\数据分析\\"
 ##selectScale=1 从文本文件stockIDList.txt 读取 =2，海选 ,dirSelect=1 选择结果输出文件夹
 def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2011,2010],selectScale=2,dirSelect=2):
     stockIDList=getStockIDList.makeStockList(selectScale)
@@ -64,7 +63,7 @@ def selectStockByRiseRateByWeek(numWeekList,yearList=[2016,2015,2014,2013,2012,2
                     lineWritedList8.append("\t".join(sList))
                 else:
                     lineWritedList.append("\t".join(sList))
-        outDir = dirSyn if dirSelect == 2 else  Ccomfunc.resultDir
+        outDir = Ccomfunc.dirSyn if dirSelect == 2 else  Ccomfunc.resultDir
         goalFilePath=os.path.join( outDir , "week"+str(numWeek)+u'_stockSelect股票.txt')
         Ccomfunc.write2Text(goalFilePath,lineWritedList)
         goalFilePath=os.path.join( outDir , "week"+str(numWeek)+u'_stockSelect板块.txt')
