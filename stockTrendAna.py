@@ -181,8 +181,9 @@ def printCalTrend(curStock,intervalDay):
 if __name__=="__main__":
    stockID="999999"
    curStock=Cstock.Stock(stockID)
-   strMonth="07"
+   strMonth="08"
    lineWritedList=[]
+   lineWritedList.append("年月"+"\t"+"年初至今涨幅"+"\t"+strMonth+"涨幅")
 ## 按月统计涨幅 振幅 最大波动幅度，最小波动幅度
    for year in range(2000,2017):
             dateYearFirstDate = str(year)+"/"+"01"+"/"+"01"

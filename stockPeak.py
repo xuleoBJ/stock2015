@@ -6,7 +6,7 @@ import datetime
 import sys
 import Cstock
 import Ccomfunc
-import trendAna
+import stockTrendAna
 
 
 stockID="999999"

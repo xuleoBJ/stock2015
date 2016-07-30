@@ -73,9 +73,9 @@ if __name__ == "__main__":
     #get current week num of the year
     dateStr="2016/07/10"
     print getStrDateMonday_of_week(dateStr)
-    now = datetime.date(2016, 7, 9)
+    now = datetime.date(2016, 7, 17)
     numWeek = now.isocalendar()[1]
-    print ("本周是年度"+str(numWeek)+"星期"+str(now.weekday()))
+    print ( now.strftime("%Y%m%d")+ "是年度"+str(numWeek)+"周，星期"+str(now.weekday()))
     iWeekDay=0
     #The -0 and -%w pattern tells the parser to pick the sunday in that week. 
     for iYear in range(2010,2017):

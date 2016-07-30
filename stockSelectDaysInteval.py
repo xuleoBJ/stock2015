@@ -131,9 +131,11 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     
     ##selectStockByDaysInterval("07/11",10) 
-    selectStockByRiseRateBetween2Date("07/16","07/20") 
-    selectStockByRiseRateBetween2Date("07/20","07/26") 
-    selectStockByRiseRateBetween2Date("07/26","07/31") 
+    selectStockByRiseRateBetween2Date("07/31","09/01") 
+    selectStockByRiseRateBetween2Date("07/31","08/15") 
+    selectStockByRiseRateBetween2Date("07/31","08/10") 
+    selectStockByRiseRateBetween2Date("08/11","08/21") 
+    selectStockByRiseRateBetween2Date("08/20","09/01") 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

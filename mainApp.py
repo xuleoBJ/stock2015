@@ -14,7 +14,7 @@ import configOS
 import stockPatternRecognition
 import copyFile2Dir
 import start
-import Ccomfunc,trendAna
+import Ccomfunc,stockTrendAna
 from datetime import datetime,timedelta 
 import stockTradeModel
 import stockPeak
