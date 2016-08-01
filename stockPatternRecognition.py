@@ -53,11 +53,12 @@ def printResult(curStock,kMatchIndexList):
 #        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
     
-    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t量能\t当日涨幅\t当日最高\t当日最低")
+    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t次日最高\t次日最低\t量能\t当日涨幅")
     for index in kMatchIndexList: 
         resultLine= u"{0:<10}[{1}]\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}".format(curStock.dayStrList[index],curStock.weekDayList[index],\
-                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1],curStock.dayRadioLinkOfTradeVolumeFList[index],\
-                        curStock.dayRiseRateCloseArray[index],curStock.dayRiseRateHighestArray[index],curStock.dayRiseRateLowestArray[index] \
+                        curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1],\
+                        curStock.dayRiseRateHighestArray[index+1],curStock.dayRiseRateLowestArray[index+1],\
+                        curStock.dayRadioLinkOfTradeVolumeFList[index],curStock.dayRiseRateCloseArray[index]\
                        )
         lineWritedList.append(resultLine)
 ##趋势日涨幅
