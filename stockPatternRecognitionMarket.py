@@ -176,6 +176,56 @@ def addInforLine(inforLine):
     lineWritedList.append("-"*72)
     lineWritedList.append(inforLine)
 
+
+
+def calMoodIndexTradeDay(curStock,dateIndex):
+    pass
+
+
+##计算昨日市场情绪指数
+def calMoodIndexFromRecogitionPattern(curStock,matchDateIndex,kMatchIndexListYestoday):
+    ##识别结果统计分析
+    dateList=[]
+    riseRateNextList=[]
+    for i in kMatchIndexListYestoday:
+        dateList.append(curStock.dayStrList[i])
+        riseRateNextList.append(curStock.dayRiseRateCloseFList[i+1])
+    ##识别昨日的模型，获取识别结果数据列排序
+    riseRateNextList.sort()
+    #print riseRateNextList
+    
+    ##匹配日涨幅
+    riseRateCur=curStock.dayRiseRateCloseFList[matchDateIndex]
+
+    numMatch = len(riseRateNextList)
+    indexOfRise=1
+    if riseRateCur<=riseRateNextList[0]:
+        pass 
+    elif riseRateCur>=riseRateNextList[-1]:
+        indexOfRise=numMatch+1
+    else:
+        for i in range(numMatch ):
+            if riseRateNextList[i]<=riseRateCur<= riseRateNextList[i+1]:
+                indexOfRise= i
+                break
+    #print riseRateCur, indexOfRise
+    ##计算匹配日涨幅的位置
+    moodIndex = float(indexOfRise) / ( numMatch + 1 )
+    
+    ##计算量能，根据量能修正昨日市场情绪参数
+    volEnergeRate = float(curStock.dayTradeVolumeFList[matchDateIndex])/ curStock.dayTradeVolumeFList[matchDateIndex-1]
+    
+    ##修正市场情绪修正算法
+    ##市场情绪通过量能做参数做调整修正，如果是缩量 如果是下跌就X倒数，
+    # print volEnergeRate
+    if volEnergeRate<1 and curStock.dayRiseRateCloseFList[matchDateIndex]>0:
+        moodIndex =  moodIndex * volEnergeRate
+    if volEnergeRate<1 and curStock.dayRiseRateCloseFList[matchDateIndex]>0:
+        moodIndex =  moodIndex * 1/volEnergeRate
+    ##根据数据列计算市场情绪指数
+    print (u"昨日市场情绪指数{:.2f}".format(moodIndex)) 
+
+
     ## 默认的是最后一个交易日作匹配模型
 def recogitionPattern(stockID,strDate=""):
     ##读取股票代码，存储在curStock里
@@ -217,6 +267,11 @@ def recogitionPattern(stockID,strDate=""):
     kPatternList=patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias)
     printResult(curStock,kPatternList)
     
+
+    print("-"*72)
+    print(u"计算市场情绪指数")
+    kPatternListYestoday=patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex-1,bias)
+    calMoodIndexFromRecogitionPattern(curStock,matchDateIndex,kPatternListYestoday)
    ## inforLine=u"增加开盘价涨幅匹配条件："
    ## addInforLine(inforLine)
    ## patternRecByPriceOpen(curStock,matchDateIndex,kPatternList)
