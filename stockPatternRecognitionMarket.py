@@ -102,7 +102,7 @@ def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
     ##根据涨幅进行历史K线模式识别,iTradeDay curStock周期，kNum是K线组合个数
     ##需要增加从某一天开始的模式
     kMatchIndexList=[] ##匹配的模式个数
-    print ("-"*8+u"根据前{}涨幅,自动设置条件,模式识别：".format(kNum))
+    # print ("-"*8+u"根据前{}涨幅,自动设置条件,模式识别：".format(kNum))
     for i in range(-iTradeDay+kNum,-1):
 	    iCount=0
 	    bSelect=True
@@ -183,11 +183,12 @@ def calMoodIndexTradeDay(curStock,dateIndex):
 
 
 ##计算昨日市场情绪指数
-def calMoodIndexFromRecogitionPattern(curStock,matchDateIndex,kMatchIndexListYestoday):
+def calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias):
+    kPatternListYestoday=patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex-1,bias)
     ##识别结果统计分析
     dateList=[]
     riseRateNextList=[]
-    for i in kMatchIndexListYestoday:
+    for i in kPatternListYestoday:
         dateList.append(curStock.dayStrList[i])
         riseRateNextList.append(curStock.dayRiseRateCloseFList[i+1])
     ##识别昨日的模型，获取识别结果数据列排序
@@ -210,7 +211,7 @@ def calMoodIndexFromRecogitionPattern(curStock,matchDateIndex,kMatchIndexListYes
                 break
     #print riseRateCur, indexOfRise
     ##计算匹配日涨幅的位置
-    moodIndex = float(indexOfRise) / ( numMatch + 1 )
+    moodIndex =100* float(indexOfRise) / ( numMatch + 1 )
     
     ##计算量能，根据量能修正昨日市场情绪参数
     volEnergeRate = float(curStock.dayTradeVolumeFList[matchDateIndex])/ curStock.dayTradeVolumeFList[matchDateIndex-1]
@@ -223,22 +224,24 @@ def calMoodIndexFromRecogitionPattern(curStock,matchDateIndex,kMatchIndexListYes
     if volEnergeRate<1 and curStock.dayRiseRateCloseFList[matchDateIndex]>0:
         moodIndex =  moodIndex * 1/volEnergeRate
     ##根据数据列计算市场情绪指数
-    print (u"昨日市场情绪指数{:.2f}".format(moodIndex)) 
-
-
-    ## 默认的是最后一个交易日作匹配模型
-def recogitionPattern(stockID,strDate=""):
-    ##读取股票代码，存储在curStock里
-    curStock=Cstock.Stock(stockID)
+    return moodIndex
     
+
+
+def recogitionPatternByDateStr(curStock,strDate):
     matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
+    recogitionPatternByDateIndex(curStock,matchDateIndex)
+    
+    ## 默认的是最后一个交易日作匹配模型
+def recogitionPatternByDateIndex(curStock,matchDateIndex):
+    ##读取股票代码，存储在curStock里
 
     lineWritedList.append("-"*72)
-    lineWritedList.append(stockID)
+    lineWritedList.append(curStock.stockID)
 
     ##设置分析周期,缺省为1000，是4年的行情
     iTradeDay=1000
-    if stockID=="999999":
+    if curStock.stockID=="999999":
         iTradeDay=len(curStock.dayStrList)
     ##起始分析日期 dateStrStart
     dateStrStart=curStock.dayStrList[-iTradeDay]
@@ -250,7 +253,7 @@ def recogitionPattern(stockID,strDate=""):
     
     kNum=3 ##需要分析的K线天数
     bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
-    if stockID not in ["999999"] :
+    if curStock.stockID not in ["999999"] :
         bias=1.0
     
     inforLine="-"*8+u"最近交易日的相关数据："
@@ -270,8 +273,8 @@ def recogitionPattern(stockID,strDate=""):
 
     print("-"*72)
     print(u"计算市场情绪指数")
-    kPatternListYestoday=patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex-1,bias)
-    calMoodIndexFromRecogitionPattern(curStock,matchDateIndex,kPatternListYestoday)
+    moodIndex = calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
+    print (u"昨日市场情绪指数{:.2f}".format(moodIndex)) 
    ## inforLine=u"增加开盘价涨幅匹配条件："
    ## addInforLine(inforLine)
    ## patternRecByPriceOpen(curStock,matchDateIndex,kPatternList)
@@ -292,7 +295,8 @@ def mainAppCall(strDate=""):
     del configOS.patternRecDateListCYB[:]
 
     for stockID in configOS.stockIDMarketList: 
-        recogitionPattern(stockID,strDate) 
+        curStock=Cstock.Stock(stockID)
+        recogitionPatternByDateStr(curStock,strDate) 
 
     configOS.updatePetternRectDateList()
 

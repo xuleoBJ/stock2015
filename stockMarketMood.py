@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 import datetime
+import stockPatternRecognitionMarket
+import Cstock
 import lxml.etree as etree
 import lxml.html
 import ConfigParser
@@ -158,7 +160,20 @@ def moodIndexMarket(stockID="399001",showDateInterval=60,periodCalDaysOfMood=200
 
 if __name__ == "__main__":
     print (u"市场情绪分析：")
-    moodIndexMarket("399001",showDateInterval=100)
+    iTradeDay=1000
+    kNum=3
+    stockID="999999"
+    curStock=Cstock.Stock(stockID)
+    bias=0.5
+    mooddateStrList=[]
+    moodIndexList=[]
+    for matchDateIndex in range(curStock.count-10,curStock.count):
+        moodIndex = stockPatternRecognitionMarket.calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
+        mooddateStrList.append(curStock.dayStrList[matchDateIndex])
+        moodIndexList.append(moodIndex)
+    for i in range(len(mooddateStrList)):
+        print mooddateStrList[i],moodIndexList[i] 
+    # moodIndexMarket("399001",showDateInterval=100)
     
 
 
