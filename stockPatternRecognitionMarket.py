@@ -223,6 +223,29 @@ def calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bia
         moodIndex =  moodIndex * volEnergeRate
     if volEnergeRate<1 and curStock.dayRiseRateCloseFList[matchDateIndex]>0:
         moodIndex =  moodIndex * 1/volEnergeRate
+    
+    ##通过5日均线修正市场情绪指数
+    ## 收盘价大于5日均线
+    if curStock.dayPriceClosedArray[matchDateIndex]>=curStock.day5PriceAverageArray[matchDateIndex]:
+        if moodIndex<25:
+            moodIndex=moodIndex+20
+        if 25<=moodIndex<35:
+            moodIndex=moodIndex+15
+        if 35<=moodIndex<45:
+            moodIndex=moodIndex+10
+        if 45<=moodIndex<50:
+            moodIndex=moodIndex+5
+    ## 收盘价小于5日均线
+    if curStock.dayPriceClosedArray[matchDateIndex]<=curStock.day5PriceAverageArray[matchDateIndex]:
+        if moodIndex>=75:
+            moodIndex=moodIndex-20
+        if 75>moodIndex>=65:
+            moodIndex=moodIndex-15
+        if 65>moodIndex>=55:
+            moodIndex=moodIndex-10
+        if 55>moodIndex>=50:
+            moodIndex=moodIndex-5
+    
     ##根据数据列计算市场情绪指数
     return moodIndex
     

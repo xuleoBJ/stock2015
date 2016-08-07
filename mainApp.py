@@ -11,7 +11,7 @@ from Cstock import Stock
 from candleStickPlot import drawCandleStick
 
 import configOS
-import stockPatternRecognition
+import stockPatternRecognitionMarket
 import copyFile2Dir
 import start
 import Ccomfunc,stockTrendAna
@@ -119,7 +119,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     def patternRec(self):
         sDate=str(self.lineEditDateRec.text())
         print sDate
-        stockPatternRecognition.mainAppCall(sDate)
+        stockPatternRecognitionMarket.mainAppCall(sDate)
 
     def tradeStart(self):
         stockID=str(self.lineEditInputStockIDTrend.text())
