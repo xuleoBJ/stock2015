@@ -264,7 +264,7 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
 
     ##设置分析周期,缺省为1000，是4年的行情
     iTradeDay=1000
-    if curStock.stockID=="999999":
+    if curStock.stockID in ["999999","399001"]:
         iTradeDay=len(curStock.dayStrList)
     ##起始分析日期 dateStrStart
     dateStrStart=curStock.dayStrList[-iTradeDay]
@@ -339,7 +339,7 @@ if __name__=="__main__":
     strDate=""
 
     now = datetime.datetime.now()
-    marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0)
+    marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0) 
     marketEndTime = now.replace(hour=15, minute=00, second=0, microsecond=0)
     
     ##根据时间自动取strDate,开盘之前 以后取昨天，下午三点以前今天

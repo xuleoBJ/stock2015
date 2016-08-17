@@ -16,6 +16,65 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 lineWritedList=[]
 
+def recogitionPatternByDateStr(curStock,strDate):
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
+    recogitionPatternByDateIndex(curStock,matchDateIndex)
+    
+    ## 默认的是最后一个交易日作匹配模型
+def recogitionPatternByDateIndex(curStock,matchDateIndex):
+    ##读取股票代码，存储在curStock里
+
+    lineWritedList.append("-"*72)
+    lineWritedList.append(curStock.stockID)
+
+    ##设置分析周期,缺省为1000，是4年的行情
+    iTradeDay=1000
+    if curStock.stockID in ["999999","399001"]:
+        iTradeDay=len(curStock.dayStrList)
+    ##起始分析日期 dateStrStart
+    dateStrStart=curStock.dayStrList[-iTradeDay]
+    ##终了分析日期 dateStrEnd
+    dateStrEnd=curStock.dayStrList[-1]
+
+    inforLine= "-"*8+u"正在查找历史K线日期：！！！！日期选完，请注意看K线趋势，同时注意成交量的表现："
+    stockPatternRecognitionMarket.addInforLine(inforLine)
+    
+    kNum=3 ##需要分析的K线天数
+    bias=0.5 ##涨幅取值范围，个股用1，大盘指数用0.5
+    if curStock.stockID not in ["999999"] :
+        bias=1.0
+    
+    inforLine="-"*8+u"最近交易日的相关数据："
+    stockPatternRecognitionMarket.addInforLine(inforLine)
+    
+    lineWritedList.append("日期[星期]    \t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t")
+    for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
+        weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
+        resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i], curStock.dayRiseRateHighestArray[i], curStock.dayRiseRateLowestFList[i], \
+                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
+        lineWritedList.append(resultLine)
+    
+    print("-"*72)
+    kPatternList=patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias)
+    printResult(curStock,kPatternList)
+    
+
+    print("-"*72)
+    print(u"计算市场情绪指数")
+    moodIndex = calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
+    print (u"昨日市场情绪指数{:.2f}".format(moodIndex)) 
+   ## inforLine=u"增加开盘价涨幅匹配条件："
+   ## addInforLine(inforLine)
+   ## patternRecByPriceOpen(curStock,matchDateIndex,kPatternList)
+    
+   ## inforLine=u"增加振幅匹配条件："
+   ## addInforLine(inforLine)
+   ## patternRecByRiseWave(curStock,matchDateIndex,kPatternList)
+    
+    inforLine=u"增加成交量匹配条件："
+    stockPatternRecognitionMarket.addInforLine(inforLine)
+    patterRecByVolume(curStock,matchDateIndex,kPatternList,kNum)
+
 def printResult(curStock,kMatchIndexList):
     ##识别结果统计分析
     dateList=[]
@@ -64,10 +123,6 @@ def printResult(curStock,kMatchIndexList):
         lineWritedList.append(resultLine)
 dirPatternRec = "patternRecDir"
 
-def mainAppCall(strDate=""):
-    stockID = "300468"
-    stockPatternRecognitionMarket.recogitionPattern(stockID,strDate) 
-
 
 
 if __name__=="__main__":
@@ -86,7 +141,11 @@ if __name__=="__main__":
         strDate=(datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y/%m/%d")
     if strDate=="" and now >= marketEndTime:
         strDate=datetime.date.today().strftime("%Y/%m/%d")
-    mainAppCall(strDate)
+
+    stockID = "600707"
+    curStock=Cstock.Stock(stockID)
+    recogitionPatternByDateStr(curStock,strDate) 
+     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()

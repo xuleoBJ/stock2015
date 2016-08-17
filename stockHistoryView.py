@@ -50,7 +50,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
 
-    stockID="600206"
+    stockID="600171"
     
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)
@@ -61,7 +61,7 @@ if __name__=="__main__":
     fileWrited.write(stockID+'\n')
     curStock.printHeadLineDateData()
     
-    outputDataByWeekNum(curStock,30,32)
+    outputDataByWeekNum(curStock,32,34)
 
     for line in lineWrited:
         fileWrited.write(line+'\n')
