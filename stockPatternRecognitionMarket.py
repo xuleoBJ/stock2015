@@ -235,6 +235,9 @@ def calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bia
             moodIndex=moodIndex+10
         if 45<=moodIndex<50:
             moodIndex=moodIndex+5
+        ##如果最低价小于五日均线
+        if curStock.dayRiseRateLowestFList[matchDateIndex]<=curStock.day5PriceAverageArray[matchDateIndex]:
+            moodIndex=moodIndex-10
     ## 收盘价小于5日均线
     if curStock.dayPriceClosedArray[matchDateIndex]<=curStock.day5PriceAverageArray[matchDateIndex]:
         if moodIndex>=75:
@@ -245,6 +248,9 @@ def calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bia
             moodIndex=moodIndex-10
         if 55>moodIndex>=50:
             moodIndex=moodIndex-5
+        ##如果最高价大于五日均线
+        if curStock.dayRiseRateHighestFList[matchDateIndex] >= curStock.day5PriceAverageArray[matchDateIndex]:
+            moodIndex=moodIndex+10
     
     ##根据数据列计算市场情绪指数
     return moodIndex
@@ -294,10 +300,6 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     printResult(curStock,kPatternList)
     
 
-    print("-"*72)
-    print(u"计算市场情绪指数")
-    moodIndex = calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
-    print (u"昨日市场情绪指数{:.2f}".format(moodIndex)) 
    ## inforLine=u"增加开盘价涨幅匹配条件："
    ## addInforLine(inforLine)
    ## patternRecByPriceOpen(curStock,matchDateIndex,kPatternList)
@@ -310,6 +312,13 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     addInforLine(inforLine)
     patterRecByVolume(curStock,matchDateIndex,kPatternList,kNum)
 	
+    print("-"*72)
+    print(u"计算市场情绪指数")
+    moodIndex = calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
+    inforLine = u"昨日市场情绪指数{:.2f}".format(moodIndex)
+    print (inforLine) 
+    addInforLine(inforLine)
+
 dirPatternRec = "patternRecDir"
 
 def mainAppCall(strDate=""):
