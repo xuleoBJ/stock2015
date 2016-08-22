@@ -256,6 +256,24 @@ def calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bia
     return moodIndex
     
 
+##计算市场风险指数
+def calMarketRiskIndex(curStock,moodIndex,kMatchIndexList):
+    ##利用市场情绪指数和大于1和小于-1的参数个数来评估市场风险。
+    ##风险级别 5 为最大 
+    marketRiskIndex = 5- moodIndex/20
+    riseRateNextList=[]
+    for i in kMatchIndexList:
+        riseRateNextList.append(curStock.dayRiseRateCloseFList[i+1])
+    
+    value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
+    value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
+    
+    ## 用小于-1的大盘指数修正，越大风险越大
+    if value_bigger1 > value_smaller_1:
+        marketRiskIndex = marketRiskIndex - 0.5
+    if value_bigger1 < value_smaller_1:
+        marketRiskIndex = marketRiskIndex + 0.5 
+    return marketRiskIndex
 
 def recogitionPatternByDateStr(curStock,strDate):
     matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
@@ -288,7 +306,7 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     inforLine="-"*8+u"最近交易日的相关数据："
     addInforLine(inforLine)
     
-    lineWritedList.append("日期[星期]    \t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t")
+    lineWritedList.append(u"日期[星期]    \t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t")
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
         resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i], curStock.dayRiseRateHighestArray[i], curStock.dayRiseRateLowestFList[i], \
@@ -316,6 +334,13 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     print(u"计算市场情绪指数")
     moodIndex = calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
     inforLine = u"昨日市场情绪指数{:.2f}".format(moodIndex)
+    print (inforLine) 
+    addInforLine(inforLine)
+    
+    print("-"*72)
+    print(u"市场风险指数")
+    marketRiskIndex = calMarketRiskIndex(curStock,moodIndex,kPatternList)
+    inforLine = u"市场风险指数{:.2f}".format(marketRiskIndex)
     print (inforLine) 
     addInforLine(inforLine)
 
