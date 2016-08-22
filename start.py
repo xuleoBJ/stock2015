@@ -128,10 +128,10 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     print(u"-"*72)
     headline=u"周期(日)幅度\t低点\t高点\t点位"
     print (headline)
-    for period in [20,60,90,120,150,180]:
+    for period in [5,10,20,30,60,90,120,150,180]:
         cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex+1].max()
         cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].min()
-        for keyPoint in [0.25,0.33,0.5,0.825]:
+        for keyPoint in [0.25,0.33,0.5,0.618,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             calRiseRate = -999
             if resistLinePoint != 0:

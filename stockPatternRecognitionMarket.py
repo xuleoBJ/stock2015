@@ -275,10 +275,37 @@ def calMarketRiskIndex(curStock,moodIndex,kMatchIndexList):
         marketRiskIndex = marketRiskIndex + 0.5 
     return marketRiskIndex
 
+def calResistLine(curStock,strDate):
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
+    ## 时空分析,关键支撑分析
+    print(u"-"*72)
+    print(u"关键点位提示分析：")
+    print(u"-"*72)
+    headline=u"周期(日)\t幅度\t低点\t高点\t点位\t涨幅\t信号"
+    addInforLine(headline)
+    for period in [5,10,20,30,60,90,120,150,180]:
+        cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex+1].max()
+        cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex+1].min()
+        for keyPoint in [0.25,0.33,0.5,0.618,0.825]:
+            resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
+            calRiseRate = -999
+            if resistLinePoint != 0:
+                calRiseRate = 100*(resistLinePoint-curStock.dayPriceClosedArray[-1])/resistLinePoint
+            resultLine=u"{}日\t{}\t{}\t{}\t{:.2f}\t{:.2f}%".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint,calRiseRate)
+            if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:
+                if curStock.dayPriceClosedFList[matchDateIndex]<=resistLinePoint:
+                    resultLine+=u"\t注意压力位！"
+                if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
+                    resultLine+=u"\t支撑位！"
+            lineWritedList.append(resultLine)
+
+
 def recogitionPatternByDateStr(curStock,strDate):
     matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
     recogitionPatternByDateIndex(curStock,matchDateIndex)
-    
+
+
+
     ## 默认的是最后一个交易日作匹配模型
 def recogitionPatternByDateIndex(curStock,matchDateIndex):
     ##读取股票代码，存储在curStock里
@@ -333,14 +360,14 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     print("-"*72)
     print(u"计算市场情绪指数")
     moodIndex = calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bias)
-    inforLine = u"昨日市场情绪指数{:.2f}".format(moodIndex)
+    inforLine = u"昨日市场情绪指数:\t{:.2f}".format(moodIndex)
     print (inforLine) 
     addInforLine(inforLine)
     
     print("-"*72)
     print(u"市场风险指数")
     marketRiskIndex = calMarketRiskIndex(curStock,moodIndex,kPatternList)
-    inforLine = u"市场风险指数{:.2f}".format(marketRiskIndex)
+    inforLine = u"市场风险指数:\t{:.2f}".format(marketRiskIndex)
     print (inforLine) 
     addInforLine(inforLine)
 
@@ -354,6 +381,7 @@ def mainAppCall(strDate=""):
     for stockID in configOS.stockIDMarketList: 
         curStock=Cstock.Stock(stockID)
         recogitionPatternByDateStr(curStock,strDate) 
+        calResistLine(curStock,strDate)
 
     configOS.updatePetternRectDateList()
 
