@@ -126,12 +126,12 @@ if __name__=="__main__":
     ##weekDay=3
     ##selectStockByWeekDayRise(numWeek,weekDay,stockIDList)
     ##按日期分析数据选股
-    strMonth="07"
-    dayRange=range(1,15)
+    strMonth="08"
+    dayRange=range(31,32)
     for i in dayRange:
         startClock=time.clock() ##记录程序开始计算时间
         strDay = str(i).zfill(2)
-        selectStockByStrDateRise("08",strDay,stockIDList)
+        selectStockByStrDateRise(strMonth,strDay,stockIDList)
         logRecord(logFilePath,startClock,strMonth+strDay)
 
 

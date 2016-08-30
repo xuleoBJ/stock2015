@@ -50,7 +50,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
 
-    stockID="600825"
+    stockID="600650"
     
     ##读取股票代码，存储在curStock里
     curStock=Cstock.Stock(stockID)

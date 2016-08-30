@@ -131,8 +131,7 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     
     ##selectStockByDaysInterval("07/11",10) 
-    selectStockByRiseRateBetween2Date("08/16","08/19") 
-    selectStockByRiseRateBetween2Date("08/22","08/26") 
+    selectStockByRiseRateBetween2Date("09/01","09/5") 
     selectStockByRiseRateBetween2Date("08/27","08/31") 
     selectStockByRiseRateBetween2Date("09/01","09/10") 
    

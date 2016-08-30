@@ -371,7 +371,6 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     print (inforLine) 
     addInforLine(inforLine)
 
-dirPatternRec = "patternRecDir"
 
 def mainAppCall(strDate=""):
     del configOS.patternRecDateListSH[:]
@@ -387,7 +386,10 @@ def mainAppCall(strDate=""):
 
     for line in lineWritedList:
         print line
-    
+    ## outPut 分析结果 
+    dirPatternRec = u"E:\我的坚果云\patternRecDir"
+    if not os.path.exists(dirPatternRec):
+        dirPatternRec = "patternRecDir"
     dayStr=strDate.replace("/","")
     goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
