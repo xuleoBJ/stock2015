@@ -260,7 +260,7 @@ def calMoodIndexFromRecogitionPattern(curStock,iTradeDay,kNum,matchDateIndex,bia
 def calMarketRiskIndex(curStock,moodIndex,kMatchIndexList):
     ##利用市场情绪指数和大于1和小于-1的参数个数来评估市场风险。
     ##风险级别 5 为最大 
-    marketRiskIndex = 5- moodIndex/20
+    marketRiskIndex = 5 - round(moodIndex/20,0)
     riseRateNextList=[]
     for i in kMatchIndexList:
         riseRateNextList.append(curStock.dayRiseRateCloseFList[i+1])
@@ -268,11 +268,8 @@ def calMarketRiskIndex(curStock,moodIndex,kMatchIndexList):
     value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
     value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
     
-    ## 用小于-1的大盘指数修正，越大风险越大
-    if value_bigger1 > value_smaller_1:
-        marketRiskIndex = marketRiskIndex - 0.5
-    if value_bigger1 < value_smaller_1:
-        marketRiskIndex = marketRiskIndex + 0.5 
+    ## 用小于-1的大盘指数修正，越大风险越大,利用极端值修正持仓风险系数
+    marketRiskIndex = marketRiskIndex - (value_bigger1 - value_smaller_1)*0.1
     return marketRiskIndex
 
 def calResistLine(curStock,strDate):
