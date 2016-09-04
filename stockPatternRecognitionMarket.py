@@ -268,8 +268,9 @@ def calMarketRiskIndex(curStock,moodIndex,kMatchIndexList):
     value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
     value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
     
-    ## 用小于-1的大盘指数修正，越大风险越大,利用极端值修正持仓风险系数
-    marketRiskIndex = marketRiskIndex - (value_bigger1 - value_smaller_1)*0.1
+    ## 当 风险指数范围居中时用,极端值修正一下 用小于-1的大盘指数修正，越大风险越大,利用极端值修正持仓风险系数
+    if 1.5<=marketRiskIndex<= 3.5 :
+        marketRiskIndex = marketRiskIndex - (value_bigger1 - value_smaller_1)*0.2
     return marketRiskIndex
 
 def calResistLine(curStock,strDate):
@@ -397,7 +398,7 @@ if __name__=="__main__":
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     
-    strDate=""
+    strDate="2016/09/02"
 
     now = datetime.datetime.now()
     marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0) 

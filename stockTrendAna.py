@@ -181,20 +181,20 @@ def printCalTrend(curStock,intervalDay):
 if __name__=="__main__":
    stockID="999999"
    curStock=Cstock.Stock(stockID)
-   strMonth="08"
+   strMonth="09"
    lineWritedList=[]
-   lineWritedList.append("年月"+"\t"+"年初至今涨幅"+"\t"+strMonth+"涨幅")
+   lineWritedList.append("年度"+"\t"+"0101-0831涨幅"+"\t"+strMonth+"月涨幅")
 ## 按月统计涨幅 振幅 最大波动幅度，最小波动幅度
    for year in range(2000,2017):
             dateYearFirstDate = str(year)+"/"+"01"+"/"+"01"
             indexOfYearFirstDate = Ccomfunc.getIndexByStrDate(curStock,dateYearFirstDate)
             dateStrStart = str(year)+"/"+strMonth+"/"+"01"
             indexOfStartDate = Ccomfunc.getIndexByStrDate(curStock,dateStrStart)
-            dateStrEnd = str(year)+"/"+strMonth+"/"+"31"
+            dateStrEnd = str(year)+"/"+strMonth+"/"+"30"
             indexOfDateEnd = Ccomfunc.getIndexByStrDate(curStock,dateStrEnd)
             riseOfYearFirstDay2monthFirstDay =  calRiseRateClosed(curStock,indexOfYearFirstDate,indexOfStartDate-1)
             riseRateMonth =  calRiseRateClosed(curStock,indexOfStartDate,indexOfDateEnd)
-            lineOut = u"{}年{}月\t{:.2f}\t{:.2f}".format(year,strMonth,riseOfYearFirstDay2monthFirstDay,riseRateMonth)
+            lineOut = u"{}年\t{:.2f}\t{:.2f}".format(year,riseOfYearFirstDay2monthFirstDay,riseRateMonth)
             lineWritedList.append(lineOut)
             print(lineOut)
    
