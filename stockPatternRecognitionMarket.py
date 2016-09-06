@@ -295,6 +295,10 @@ def calResistLine(curStock,strDate):
                     resultLine+=u"\t注意压力位！"
                 if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
+            if period == 30:
+                resultLine+=u"\t!30日"
+            if keyPoint == 0.5:
+                resultLine+=u"\t!0.5"
             lineWritedList.append(resultLine)
 
 
@@ -398,7 +402,7 @@ if __name__=="__main__":
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     
-    strDate="2016/09/02"
+    strDate=""
 
     now = datetime.datetime.now()
     marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0) 
