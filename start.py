@@ -70,7 +70,22 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                 curStock.dayRiseRateLowestArray[i],\
                 curStock.dayRadioLinkOfTradeVolumeFList[i], marketSummaryStr))
     
-    
+    ## 通过大盘上证成交量判断目前的市场位置,30日均线的位置
+    if curStock.stockID == "999999":
+        if curStock.dayTurnOverArray[matchDateIndex]>=2000*10**8:
+            print u"市场强势"
+        elif 1500*10**8<=curStock.dayTurnOverArray[matchDateIndex]<2000*10**8:
+            print u"平衡市场"
+        elif curStock.dayTurnOverArray[matchDateIndex]<=1500*10**8:
+            print u"弱市场"
+        if curStock.dayPriceClosedArray[matchDateIndex] < curStock.day30PriceAverageArray[matchDateIndex] :
+            print u"30日均线以下"
+        else:
+            print u"30日均线以上"
+        if curStock.dayPriceClosedArray[matchDateIndex] < curStock.day5PriceAverageArray[matchDateIndex] :
+            print u"5日均线以下"
+        else:
+            print u"5日均线以上"
     ## 历史上的今天
     print (u"-"*72)
     headLine=u"历史上今天的涨幅:"
@@ -88,10 +103,10 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ## 均价分析
     print (u"-"*72)
     print (u"均价分析：")
-    headLine=u"\t3日\t5日\t10日\t20日"
+    headLine=u"\t3日\t5日\t10日\t30日"
     print(headLine)
     print(u"价 {}\t{}\t{}\t{}".format(curStock.day3PriceAverageArray[matchDateIndex],curStock.day5PriceAverageArray[matchDateIndex],\
-            curStock.day10PriceAverageArray[matchDateIndex],curStock.day20PriceAverageArray[matchDateIndex]) )
+            curStock.day10PriceAverageArray[matchDateIndex],curStock.day30PriceAverageArray[matchDateIndex]) )
 ##    print(u"量 {}\t{}\t{}\t{}".format(curStock.day3TradeVolumeArray[matchDateIndex],curStock.day5TradeVolumeArray[matchDateIndex],\
 ##            curStock.day10TradeVolumeArray[matchDateIndex],curStock.day20TradeVolumeArray[matchDateIndex]) )
     print (u"-"*72)

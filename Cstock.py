@@ -27,7 +27,7 @@ class Stock:
         self.day3PriceAverageArray=np.zeros(self.count)     ##3日均价
         self.day5PriceAverageArray=np.zeros(self.count)     ##5日均价
         self.day10PriceAverageArray=np.zeros(self.count)     ##10日均价
-        self.day20PriceAverageArray=np.zeros(self.count)     ##20日均价
+        self.day30PriceAverageArray=np.zeros(self.count)     ##30日均价
         self.day60PriceAverageArray=np.zeros(self.count)     ##60日均价
         for i in range(3,self.count):
             self.day3PriceAverageArray[i]= round(self.dayPriceClosedArray[i-3:i].mean(),2)
@@ -35,8 +35,8 @@ class Stock:
                 self.day5PriceAverageArray[i] = round(self.dayPriceClosedArray[i-5:i].mean(),2)
             if i>=10:
                 self.day10PriceAverageArray[i]= round(self.dayPriceClosedArray[i-10:i].mean(),2)
-            if i>=20:
-                self.day20PriceAverageArray[i]=round(self.dayPriceClosedArray[i-20:i].mean(),2)
+            if i>=30:
+                self.day30PriceAverageArray[i]=round(self.dayPriceClosedArray[i-30:i].mean(),2)
             if i>=60:
                 self.day60PriceAverageArray[i]=round(self.dayPriceClosedArray[i-60:i].mean(),2)
 
@@ -347,7 +347,6 @@ if __name__=="__main__":
     print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
     print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
     print curStock.dayRiseRateLowestArray[-10:]
-    print curStock.monthStrList[-10:]
     print curStock.day5PriceAverageArray[-10:]
     
     timeSpan=time.clock()-startClock

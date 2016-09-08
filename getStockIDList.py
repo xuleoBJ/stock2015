@@ -27,3 +27,11 @@ def makeStockList(selectScale=2):
                 stockIDList.append(os.path.splitext(fileItem)[0])
     return stockIDList
 
+##输入代码IDtext路径，makeIDList,第一列为ID代码
+def makeStockListFromIDtxt(filePathIDtxt):
+    stockIDList=[]
+    with open(filePathIDtxt) as fOpen:
+        for line in fOpen:
+            inner_list = [elt.strip() for elt in line.split(' ')]
+            stockIDList.append(inner_list[0])
+    return stockIDList
