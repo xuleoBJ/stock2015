@@ -32,6 +32,6 @@ def makeStockListFromIDtxt(filePathIDtxt):
     stockIDList=[]
     with open(filePathIDtxt) as fOpen:
         for line in fOpen:
-            inner_list = [elt.strip() for elt in line.split(' ')]
+            inner_list = [elt.strip() for elt in line.split('\t')]
             stockIDList.append(inner_list[0])
     return stockIDList
