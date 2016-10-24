@@ -13,6 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter  
 
+## 比较板块和大盘的资金流向问题，板块是否有资金进入
+
 import numpy as np
 import matplotlib.mlab as mlab
 
@@ -61,14 +63,6 @@ def printResult(curStock,kMatchIndexList):
         plt.subplots_adjust(left=0.15)
         plt.show()
 
-#统计某一个特殊日期的涨幅，比如元旦前或者5-1 后
-def specialDateSatis(stockID):
-    curStock=Cstock.Stock(stockID)
-    for iYear in range(2000,2015):
-        inputStr="/".join([str(iYear),"10","08"])
-        index=Ccomfunc.getIndexByStrDate(curStock,inputStr)
-        resultLine= u"{}\t涨幅{}".format(curStock.dayStrList[index],curStock.dayRiseRateCloseFList[index])
-        print resultLine
 
 def addInforLine(inforLine):
     lineWritedList.append("-"*72)
@@ -119,13 +113,54 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     printResult(curStock,kPatternList)
     
 
+##read stock, if openPrice - 0.5 , get riseRate
+def openPriceSatis(stockID):
+    lineWritedList=[]
+    curStock=Cstock.Stock(stockID)
+    headWordList=[]
+    headWordList.append(u"日期    ")
+    headWordList.append(u"星期")
+    headWordList.append(u"开盘涨幅")
+    headWordList.append(u"收盘涨幅")
+    headWordList.append(u"T+1涨幅")
+    headWordList.append(u"T+2涨幅")
+    headWordList.append(u"距离上次交易日间隔天数")
+    headWordList.append(u"区间涨幅")
+    headLine="\t".join(headWordList)
+    lineWritedList.append(headLine)
+    print headLine
+    lastRecordDay=0
+    for i in range(0,len(curStock.dayStrList)):
+        ## 这里设置条件
+        ## 条件1：前交易日 大于0 开盘低开1个点
+        #if curStock.dayRiseRateOpenFList[i-1]>=0 and curStock.dayRiseRateOpenFList[i]<=-1:
+        if curStock.dayRiseRateOpenFList[i-1]>=0 and curStock.dayRiseRateOpenFList[i]<=-1:
+            wordList=[]
+            wordList.append(curStock.dayStrList[i])
+            weekDay = curStock.dateList[i].isoweekday()
+            wordList.append(str(weekDay))
+            wordList.append(str(curStock.dayRiseRateOpenFList[i]))
+            wordList.append(str(curStock.dayRiseRateCloseFList[i]))
+            wordList.append(str(curStock.dayRiseRateCloseFList[i+1]))
+            wordList.append(str(curStock.dayRiseRateCloseFList[i+2]))
+            wordList.append(str(i-lastRecordDay))
+            riseRateInter=100*(curStock.dayPriceClosedArray[i]-curStock.dayPriceClosedArray[lastRecordDay])/curStock.dayPriceClosedArray[lastRecordDay]
+            wordList.append(str(round(riseRateInter,2)))
+            lastRecordDay=i
+            resultLine= "\t".join(wordList)
+            lineWritedList.append(resultLine)
+            print resultLine
+    goalFilePath='_result.txt'
+    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    subprocess.call(['notepad.exe',goalFilePath])
+    
 
 if __name__=="__main__":
     
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     stockID="999999"
-    specialDateSatis(stockID)
+    openPriceSatis(stockID)
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
   ##  raw_input()
