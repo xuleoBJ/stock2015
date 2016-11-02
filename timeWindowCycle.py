@@ -30,8 +30,8 @@ def getCycleType(curdate,timeWindowDataFile):
                 tempDate = Ccomfunc.convertDateStr2Date(splitLine[0])
                 dateList.append(tempDate)
                 riseRateList.append( float(splitLine[4]) )
-    print dateList
-    print riseRateList
+ #   print dateList
+  #  print riseRateList
     for i in range(0,len(dateList)-1):
         if dateList[i]<= curdate <= dateList[i+1]:
             riseRate = riseRateList[i]

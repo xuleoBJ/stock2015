@@ -10,6 +10,7 @@ import Ccomfunc
 import stockTrendAna
 import configOS
 import numpy as np
+import timeWindowCycle
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter  
 
@@ -53,13 +54,18 @@ def printResult(curStock,kMatchIndexList):
 #        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
 
-    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t次日最高\t次日最低\t量能\t当日涨幅\t当日最高\t当日最低\t当日波动幅度")
-    for index in kMatchIndexList: 
-        resultLine= u"{0:<10}[{1}]\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}".format(curStock.dayStrList[index],curStock.weekDayList[index],\
+    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t次日最高\t次日最低\t量能\t当日涨幅\t当日最高\t当日最低\t当日波动幅度\t60日周期\t20日周期")
+    for index in kMatchIndexList:
+        filePathTimeWindow60 = "cycle\999999_60_peakAnalysisPrice.txt"
+        filePathTimeWindow20 = "cycle\999999_20_peakAnalysisPrice.txt"
+        resultLine= u"{0:<10}[{1}]\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}".format(curStock.dayStrList[index],curStock.weekDayList[index],\
                         curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1],\
                         curStock.dayRiseRateHighestArray[index+1],curStock.dayRiseRateLowestArray[index+1],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index],curStock.dayRiseRateCloseArray[index],\
-                        curStock.dayRiseRateHighestArray[index],curStock.dayRiseRateLowestArray[index],curStock.dayWaveRateArray[index])
+                        curStock.dayRiseRateHighestArray[index],curStock.dayRiseRateLowestArray[index],curStock.dayWaveRateArray[index],\
+                        timeWindowCycle.getCycleType(curStock.dateList[index],filePathTimeWindow60), \
+                        timeWindowCycle.getCycleType(curStock.dateList[index],filePathTimeWindow20), \
+                        )
         lineWritedList.append(resultLine)
 ##趋势日涨幅
 #        resultLine=u"------趋势涨幅(日):"
