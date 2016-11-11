@@ -341,11 +341,13 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     inforLine="-"*8+u"最近交易日的相关数据："
     addInforLine(inforLine)
     
-    lineWritedList.append(u"日期[星期]    \t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t")
+    lineWritedList.append(u"日期[星期]    \t价格\t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t60日涨幅\t30涨幅")
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayRiseRateCloseFList[i], curStock.dayRiseRateHighestArray[i], curStock.dayRiseRateLowestFList[i], \
-                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i])
+        resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayPriceClosedArray[i],curStock.dayRiseRateCloseFList[i],\
+                curStock.dayRiseRateHighestArray[i], curStock.dayRiseRateLowestFList[i], \
+                curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i],\
+                curStock.day60PriceAverageArray[i],curStock.day30PriceAverageArray[i])
         lineWritedList.append(resultLine)
     
     print("-"*72)
@@ -387,6 +389,7 @@ def mainAppCall(strDate=""):
 
     for stockID in configOS.stockIDMarketList: 
         curStock=Cstock.Stock(stockID)
+        curStock.list2array()
         recogitionPatternByDateStr(curStock,strDate) 
         calResistLine(curStock,strDate)
 
