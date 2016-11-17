@@ -54,17 +54,19 @@ def printResult(curStock,kMatchIndexList):
 #        lineWritedList.append(u"最低涨幅:{}\t中位数:{:.2f}".format(valueLowestLine,_median))
     lineWritedList.append("-"*72)
 
-    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t次日最高\t次日最低\t量能\t当日涨幅\t当日最高\t当日最低\t当日波动幅度\t60日周期\t20日周期")
+    lineWritedList.append(u"日期[星期]\t次日涨幅\t次日开盘\t次日最高\t次日最低\t量能\t当日涨幅\t当日最高\t当日最低\t当日波动幅度\t60日周期\t20日周期\t10日周期")
     for index in kMatchIndexList:
         filePathTimeWindow60 = "cycle\999999_60_peakAnalysisPrice.txt"
         filePathTimeWindow20 = "cycle\999999_20_peakAnalysisPrice.txt"
-        resultLine= u"{0:<10}[{1}]\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}".format(curStock.dayStrList[index],curStock.weekDayList[index],\
+        filePathTimeWindow10 = "cycle\999999_10_peakAnalysisPrice.txt"
+        resultLine= u"{0:<10}[{1}]\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}".format(curStock.dayStrList[index],curStock.weekDayList[index],\
                         curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateOpenFList[index+1],\
                         curStock.dayRiseRateHighestArray[index+1],curStock.dayRiseRateLowestArray[index+1],\
                         curStock.dayRadioLinkOfTradeVolumeFList[index],curStock.dayRiseRateCloseArray[index],\
                         curStock.dayRiseRateHighestArray[index],curStock.dayRiseRateLowestArray[index],curStock.dayWaveRateArray[index],\
                         timeWindowCycle.getCycleType(curStock.dateList[index],filePathTimeWindow60), \
                         timeWindowCycle.getCycleType(curStock.dateList[index],filePathTimeWindow20), \
+                        timeWindowCycle.getCycleType(curStock.dateList[index],filePathTimeWindow10), \
                         )
         lineWritedList.append(resultLine)
 ##趋势日涨幅
@@ -341,13 +343,16 @@ def recogitionPatternByDateIndex(curStock,matchDateIndex):
     inforLine="-"*8+u"最近交易日的相关数据："
     addInforLine(inforLine)
     
-    lineWritedList.append(u"日期[星期]    \t价格\t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t60日涨幅\t30涨幅")
+    lineWritedList.append(u"日期[星期]    \t价格\t涨幅\t最大涨幅\t最小涨幅\t量比\t波动幅度\t60日涨幅%\t30涨幅%\t10涨幅%")
     for i in range(matchDateIndex+1-kNum,matchDateIndex+1): ##循环指数起始比匹配指数少1
         weekDay=Ccomfunc.convertDateStr2Date(curStock.dayStrList[i]).isoweekday() 
-        resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(curStock.dayStrList[i],weekDay,curStock.dayPriceClosedArray[i],curStock.dayRiseRateCloseFList[i],\
+        resultLine=u"{}[{}]\t{}\t{}\t{}\t{}\t{}\t{}\t{}%\t{}%\t{}%".format(curStock.dayStrList[i],weekDay,curStock.dayPriceClosedArray[i],curStock.dayRiseRateCloseFList[i],\
                 curStock.dayRiseRateHighestArray[i], curStock.dayRiseRateLowestFList[i], \
                 curStock.dayRadioLinkOfTradeVolumeFList[i],curStock.dayWaveRateFList[i],\
-                curStock.day60PriceAverageArray[i],curStock.day30PriceAverageArray[i])
+                round(100*(curStock.dayPriceClosedArray[i]-curStock.day60PriceAverageArray[i])/curStock.day60PriceAverageArray[i],2),\
+                round(100*(curStock.dayPriceClosedArray[i]-curStock.day30PriceAverageArray[i])/curStock.day30PriceAverageArray[i],2),\
+                round(100*(curStock.dayPriceClosedArray[i]-curStock.day10PriceAverageArray[i])/curStock.day10PriceAverageArray[i],2),\
+                )
         lineWritedList.append(resultLine)
     
     print("-"*72)
