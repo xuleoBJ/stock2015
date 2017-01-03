@@ -403,7 +403,7 @@ def mainAppCall(strDate=""):
     for line in lineWritedList:
         print line
     ## outPut 分析结果 
-    dirPatternRec = u"E:\我的坚果云\patternRecDir"
+    dirPatternRec = u"E:\我的坚果云\3_patternRecDir"
     if not os.path.exists(dirPatternRec):
         dirPatternRec = "patternRecDir"
     dayStr=strDate.replace("/","")

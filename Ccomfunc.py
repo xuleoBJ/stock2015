@@ -23,7 +23,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 print os.path.curdir
 
 resultDir="resultDir"
-dirSyn = "E:\\我的坚果云\\数据分析\\"
+dirSyn = "E:\\我的坚果云\\2_数据分析\\"
 
 if not os.path.exists(resultDir):
     os.makedirs(resultDir)
