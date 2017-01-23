@@ -31,10 +31,10 @@ def calTBuy(curStock,strDate=Ccomfunc.defaultDateInputStr()):
     priceTBuyDic['Lowest3'] = curStock.dayPriceLowestArray[matchDateIndex-3:matchDateIndex].min()
     headLine="周期(日)幅度\t低点\t高点\t点位"
     lineWritedList.append(headLine) 
-    for period in [5,10,20,60]:
+    for period in [5,10,20,30,60]:
         cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].max()
         cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].min()
-        for keyPoint in [0.25,0.33,0.5,0.825]:
+        for keyPoint in [0.25,0.33,0.5,0.618,0.75,0.825]:
             resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
             resultLine="{}日\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
             if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:
@@ -239,7 +239,7 @@ if __name__=="__main__":
     print("\n"+"#"*80)
     
     startClock=time.clock() ##记录程序开始计算时间
-    stocIDkList=["000663"]
+    stocIDkList=["600699"]
     for stockID in stocIDkList:
         curStock=Stock(stockID)
         curStock.list2array()

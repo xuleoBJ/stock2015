@@ -82,7 +82,7 @@ def selectStockByStrDateRise(strMonth,strDay,stockIDList):
     headLine.append("date")
     headLine.append("rise(%)")
 	
-    dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015","2016"]]
+    dayStrList=[ ele+"/"+strMonth+"/"+strDay for ele in ["2011","2012","2013","2014","2015","2016","2017"]]
     for stockID in stockIDList:
         ##读取股票代码，存储在curStock里
         curStock=Cstock.Stock(stockID)
@@ -126,7 +126,7 @@ if __name__=="__main__":
     ##weekDay=3
     ##selectStockByWeekDayRise(numWeek,weekDay,stockIDList)
     ##按日期分析数据选股
-    strMonth="12"
+    strMonth="02"
     dayRange=range(1,31)
     for i in dayRange:
         startClock=time.clock() ##记录程序开始计算时间
