@@ -184,8 +184,6 @@ def addInforLine(inforLine):
     lineWritedList.append("-"*72)
     lineWritedList.append(inforLine)
 
-
-
 def calMoodIndexTradeDay(curStock,dateIndex):
     pass
 
@@ -403,9 +401,12 @@ def mainAppCall(strDate=""):
     for line in lineWritedList:
         print line
     ## outPut 分析结果 
-    dirPatternRec = u"E:\我的坚果云\3_patternRecDir"
-    if not os.path.exists(dirPatternRec):
-        dirPatternRec = "patternRecDir"
+    dirPatternRec = "patternRecDir"
+    # 坚果云目录
+    dirJGY = "E:\\我的坚果云\\3_patternRecDir"
+    if os.path.exists(dirJGY):
+        print "ok"
+        dirPatternRec = dirJGY
     dayStr=strDate.replace("/","")
     goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
