@@ -417,6 +417,7 @@ if __name__=="__main__":
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     
+    #格式####/##/##
     strDate=""
 
     now = datetime.datetime.now()
