@@ -418,7 +418,7 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     
     #格式####/##/##
-    strDate=""
+    strDate="2017/02/24"
 
     now = datetime.datetime.now()
     marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0) 
