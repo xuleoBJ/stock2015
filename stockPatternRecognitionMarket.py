@@ -417,8 +417,8 @@ if __name__=="__main__":
     ##模式识别的方法，如果最近3天的没有 可以用前三天的往后推
     startClock=time.clock() ##记录程序开始计算时间
     
-    #格式####/##/##
-    strDate="2017/02/24"
+    #格式####/##/##,""值取今天
+    strDate=""
 
     now = datetime.datetime.now()
     marketStartTime = now.replace(hour=9, minute=30, second=0, microsecond=0) 
