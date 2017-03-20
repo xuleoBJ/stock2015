@@ -42,6 +42,31 @@ def getCycleType(curdate,timeWindowDataFile):
             else :
                 return -1
 
+##判断所属周期的牛熊，从周期表得到涨幅值
+##input 是 strDate
+##读取周期文件
+def getRiseRate(curdate,timeWindowDataFile):
+    dateList=[]
+    riseRateList =[]
+    if os.path.exists(timeWindowDataFile):
+        fileOpened=open(timeWindowDataFile,'r')
+        ##从文件中读取日数据，并计算构造相关的日数据
+        lineIndex=0
+        for line in fileOpened.readlines():
+            lineIndex=lineIndex+1
+            splitLine=line.split()
+            if line!="" and lineIndex>3 and len(splitLine)>=5:
+                tempDate = Ccomfunc.convertDateStr2Date(splitLine[0])
+                dateList.append(tempDate)
+                riseRateList.append( float(splitLine[4]) )
+ #   print dateList
+  #  print riseRateList
+    for i in range(0,len(dateList)-1):
+        if dateList[i]<= curdate <= dateList[i+1]:
+            riseRate = riseRateList[i]
+            return riseRate
+            break
+
 if __name__ == "__main__":
     today=datetime.date.today()
     filePath ="999999_250_peakAnalysisPrice.txt"
