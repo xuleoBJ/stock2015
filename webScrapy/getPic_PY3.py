@@ -31,6 +31,7 @@ def save_imgs(img_addrs,page_num,folder):
     for i in img_addrs:
         pattern = r'sinaimg.cn/mw600/(.*?).jpg'
         filename = i.split('/')[-1]
+        print (filename)
         image = url_open(i)
         with open(filename,'wb') as f:
             f.write(image)

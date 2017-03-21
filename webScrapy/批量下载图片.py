@@ -1,5 +1,6 @@
 import urllib.request
 import os
+from datetime import datetime
 
 def url_open(url):
     req = urllib.request.Request(url)
@@ -32,14 +33,21 @@ def find_image(url):
 
 def save_image(folder,image_addrs):
     for each in image_addrs:
-        filename = each.split('/')[-1]
+        filename =os.path.join(folder, each.split('/')[-1])
         with open(filename,'wb') as f:
+            each = "http:" + each
             img = url_open(each)
             f.write(img)
+            
+def makeTodayDirStr():
+    strToday = datetime.now().strftime("%Y%m%d")
+    strPath = "e:/webScrapy/"+strToday
+    if not os.path.exists(strPath):
+        os.makedirs(strPath)
+    return strPath
 
-def download_girls(folder = 'girlimage',pages = 20):
-    os.mkdir(folder)
-    os.chdir(folder)
+def download_girls(pages = 20):
+    folder = makeTodayDirStr()
     url = 'http://jandan.net/ooxx/'
     page_num = int(get_page(url))
 
