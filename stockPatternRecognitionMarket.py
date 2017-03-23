@@ -403,7 +403,7 @@ def mainAppCall(strDate=""):
     ## outPut 分析结果 
     dirPatternRec = "patternRecDir"
     # 坚果云目录
-    dirJGY = "E:\\我的坚果云\\3_patternRecDir"
+    dirJGY = "E:\我的坚果云\3_patternRecDir"
     if os.path.exists(dirJGY):
         print "ok"
         dirPatternRec = dirJGY
