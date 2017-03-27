@@ -403,13 +403,16 @@ def mainAppCall(strDate=""):
     ## outPut 分析结果 
     dirPatternRec = "patternRecDir"
     # 坚果云目录
-    dirJGY = "E:\我的坚果云\3_patternRecDir"
-    if os.path.exists(dirJGY):
-        print "ok"
-        dirPatternRec = dirJGY
     dayStr=strDate.replace("/","")
-    goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
+    curFileName =  dayStr+".txt"
+    goalFilePath= os.path.join( dirPatternRec,curFileName ) ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    dirJGY = "E:\\我的坚果云\\3_patternRecDir\\"
+    if os.path.exists(dirJGY):
+        goalFilePathJGY =  os.path.join( dirJGY,curFileName )
+        print (goalFilePathJGY)
+        shutil.move(goalFilePath,goalFilePathJGY )
+        goalFilePath = goalFilePathJGY
     os.startfile(goalFilePath)
 
 if __name__=="__main__":
