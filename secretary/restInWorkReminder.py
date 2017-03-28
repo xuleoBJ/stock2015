@@ -8,7 +8,7 @@ from datetime import timedelta
 if __name__=="__main__":
     today = datetime.today()
     start_time = time.time()
-    print( time.strftime("%H:%M:%S -") + "开始工作时间")
+    print( "开始工作时间: " + time.strftime("%H:%M:%S") )
     iMin = 15
     intervalSecond = 60*iMin
     while 1:     

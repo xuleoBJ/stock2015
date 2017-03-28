@@ -44,4 +44,5 @@ def getYahooNBA():
             print(newsLine)
 
 if __name__ == '__main__':
+    getEspnNBA()
     getYahooNBA()
