@@ -4,9 +4,8 @@ import os
 import sys
 from datetime import datetime
 
-bOutFileSize = 1000
 def reporthook(count,block_size,total_size):
-        """
+	"""
 	回调函数
 	下载进度现实的函数
 	@count 已经下载的数据块的个数 是个数哦
@@ -16,20 +15,12 @@ def reporthook(count,block_size,total_size):
 	有了这三个量我们就可以计算进度了哈
 	只要totol_size 等于 count * block_size 那就说明下载完毕了
 
-        """ 
-        percent =round( (100.0 * count * block_size ) / total_size,1)
-        global bOutFileSize
-        if bOutFileSize==1000:
-                print("文件大小："+ str(round(total_size/1000,1))+"kb")
-                bOutFileSize=0
-       #输出下载进度
-        if percent != bOutFileSize:
-                sys.stdout.write("%2d%%" % percent)
-                sys.stdout.write("\b\b\b")
-                sys.stdout.flush()
-                print(("%2d%%" % percent), end="")
-                print("\b\b\b",end="")
-                bOutFileSize = percent
+	""" 
+	percent = (100.0 * count * block_size ) / total_size
+	#per就是百分进度了
+	sys.stdout.write("%2d%%" % percent)
+	sys.stdout.write("\b\b\b")
+	sys.stdout.flush()
 	#sys.stdout.write("Download Percent: %.2f %%"% per)
 	#输出进度,保留两个百分点，stdout。write("\r")是每次输出光标回到行首，这样目的为了一行输出进度，print xxx, 逗号在print后面表示不换行
     
@@ -59,10 +50,6 @@ if __name__=="__main__":
         fileNameChinese = urllib.parse.unquote(localName)
         local =dirToday+"\\"+urllib.parse.unquote(fileNameChinese)
         print ("-"*20+"正在下载：  "+fileNameChinese)
-        urllib.request.urlretrieve(url, local,reporthook)
-   
+        aa=urllib.request.urlopen(url)
         print (fileNameChinese + " OK")
         
-    #webbrowser.open_new(url)
-    # Open URL in a new tab, if a browser window is already open.
-    # webbrowser.open_new_tab(url)
