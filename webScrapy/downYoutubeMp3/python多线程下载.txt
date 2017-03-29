@@ -1,0 +1,40 @@
+You could use a thread pool to download files in parallel:
+
+#!/usr/bin/env python3
+from multiprocessing.dummy import Pool # use threads for I/O bound tasks
+from urllib.request import urlretrieve
+
+urls = [...]
+result = Pool(4).map(urlretrieve, urls) # download 4 files at a time
+You could also download several files at once in a single thread using asyncio:
+
+#!/usr/bin/env python3
+import asyncio
+import logging
+from contextlib import closing
+import aiohttp # $ pip install aiohttp
+
+@asyncio.coroutine
+def download(url, session, semaphore, chunk_size=1<<15):
+    with (yield from semaphore): # limit number of concurrent downloads
+        filename = url2filename(url)
+        logging.info('downloading %s', filename)
+        response = yield from session.get(url)
+        with closing(response), open(filename, 'wb') as file:
+            while True: # save file
+                chunk = yield from response.content.read(chunk_size)
+                if not chunk:
+                    break
+                file.write(chunk)
+        logging.info('done %s', filename)
+    return filename, (response.status, tuple(response.headers.items()))
+
+urls = [...]
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
+with closing(asyncio.get_event_loop()) as loop, \
+     closing(aiohttp.ClientSession()) as session:
+    semaphore = asyncio.Semaphore(4)
+    download_tasks = (download(url, session, semaphore) for url in urls)
+    result = loop.run_until_complete(asyncio.gather(*download_tasks))
+where url2filename() is defined here.
+
