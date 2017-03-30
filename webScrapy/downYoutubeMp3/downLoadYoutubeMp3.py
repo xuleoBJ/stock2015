@@ -27,8 +27,8 @@ def reporthook(count,block_size,total_size):
                 sys.stdout.write("%2d%%" % percent)
                 sys.stdout.write("\b\b\b")
                 sys.stdout.flush()
-                print(("%2d%%" % percent), end="")
-                print("\b\b\b",end="")
+                #print(("%2d%%" % percent), end="")
+                #print("\b\b\b",end="")
                 bOutFileSize = percent
 	#sys.stdout.write("Download Percent: %.2f %%"% per)
 	#输出进度,保留两个百分点，stdout。write("\r")是每次输出光标回到行首，这样目的为了一行输出进度，print xxx, 逗号在print后面表示不换行
