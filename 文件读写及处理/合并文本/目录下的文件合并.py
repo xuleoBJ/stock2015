@@ -5,7 +5,7 @@ import shutil
 
 if __name__=="__main__":
 
-    sourceDirPath="B4XL"
+    sourceDirPath="123"
     goalFilePath='合并文件后.txt'
     fileWrited=open(goalFilePath,'w')
 

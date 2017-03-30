@@ -24,18 +24,41 @@ import urllib.request
 from bs4 import BeautifulSoup
 import re
 
-def get_ids(filename):
+
+def get_lizhiMp3(filename,iPage):
         print(filename)
         html = urllib.request.urlopen(filename).read()#
-        content = html
-##        pattern = re.compile(b'div')
+##        content = html
+##        pattern = re.compile('data-url')
 ##        match = pattern.match(content)
 ##        print (match)
         soup=BeautifulSoup(html,"lxml")
-        newlist=soup.find_all("div")
+        print(soup.title)
+        goalFilePath=str(iPage)+'_addr.txt'
+        fileWrited=open(goalFilePath,'w')
+        newlist=soup.find_all("a",{"class":"clearfix js-play-data audio-list-item"})
+        for item in newlist:
+#                print(item["data-title"])
+                print(item["data-url"])
+                fileWrited.write(item["data-url"]+"\t"+item["data-title"]+"\n")
+        fileWrited.close()
+
+
+def get_ids(filename):
+        print(filename)
+        html = urllib.request.urlopen(filename).read()#
+##        content = html
+##        pattern = re.compile('data-url')
+##        match = pattern.match(content)
+##        print (match)
+        soup=BeautifulSoup(html,"lxml")
+        print(soup.title)
+        newlist=soup.find_all("a",{"class":"clearfix js-play-data audio-list-item"})
+        for item in newlist:
+                print(item["data-url"])
         print(newlist)
-        allids=newlist["sound_ids"]
-        idlist=allids.split(",")
+##        allids=newlist["sound_ids"]
+##        idlist=allids.split(",")
         print( idlist)
         return idlist
 
@@ -136,8 +159,10 @@ def dlpages(urlfirst,start,end):
 		dlall(str(realurl))
 
 if __name__=="__main__":
-        strUrl="http://m.ximalaya.com/4715548/sound/7900363"
-        downLoadAllAudio(strUrl)
+        for i in range(17,30):
+                strUrl="http://www.lizhi.fm/18503/p/"+str(i)+".html"
+                get_lizhiMp3(strUrl,i)
+
 	
 
 
