@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*- 
 ## 提醒休息
 
 import time
@@ -5,9 +6,9 @@ from datetime import datetime
 from tkinter import messagebox
 from datetime import timedelta
 
-if __name__=="__main__":
-    today = datetime.today()
-    start_time = time.time()
+if __name__ == "__main__":
+    _today = datetime.today()
+    _start_time = time.time()
     print( "开始工作时间: " + time.strftime("%H:%M:%S") )
     iMin = 15
     intervalSecond = 60*iMin
