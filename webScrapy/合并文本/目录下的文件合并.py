@@ -1,4 +1,3 @@
-# -*- coding: cp936 -*-
 import os
 import shutil
 
@@ -6,7 +5,7 @@ import shutil
 if __name__=="__main__":
 
     sourceDirPath="123"
-    goalFilePath='ºÏ²¢ÎÄ¼þºó.txt'
+    goalFilePath='ï¿½Ï²ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½.txt'
     fileWrited=open(goalFilePath,'w')
 
     fileNames=os.listdir(sourceDirPath)
@@ -16,4 +15,4 @@ if __name__=="__main__":
         for line in fileOpened.readlines():
             fileWrited.write(fileItem.replace(".txt","\t")+line)
     fileWrited.close()
-    print("ÐÂÎÄ¼þÔÚ¡ª¡ª"+goalFilePath)
+    print("ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ú¡ï¿½ï¿½ï¿½"+goalFilePath)

@@ -19,48 +19,35 @@ usage:
 notice:
  after finishing downloading the album ,please remove the temporary json file.
 """
-import sys ,os
+import sys
+import os
 import urllib.request
 from bs4 import BeautifulSoup
 import re
 
 
-def get_lizhiMp3(filename,iPage):
-        print(filename)
-        html = urllib.request.urlopen(filename).read()#
-##        content = html
-##        pattern = re.compile('data-url')
-##        match = pattern.match(content)
-##        print (match)
-        soup=BeautifulSoup(html,"lxml")
-        print(soup.title)
-        goalFilePath=str(iPage)+'_addr.txt'
-        fileWrited=open(goalFilePath,'w')
-        newlist=soup.find_all("a",{"class":"clearfix js-play-data audio-list-item"})
-        for item in newlist:
-#                print(item["data-title"])
-                print(item["data-url"])
-                fileWrited.write(item["data-url"]+"\t"+item["data-title"]+"\n")
-        fileWrited.close()
-
-
-def get_ids(filename):
-        print(filename)
-        html = urllib.request.urlopen(filename).read()#
-##        content = html
-##        pattern = re.compile('data-url')
-##        match = pattern.match(content)
-##        print (match)
-        soup=BeautifulSoup(html,"lxml")
-        print(soup.title)
-        newlist=soup.find_all("a",{"class":"clearfix js-play-data audio-list-item"})
-        for item in newlist:
-                print(item["data-url"])
-        print(newlist)
-##        allids=newlist["sound_ids"]
-##        idlist=allids.split(",")
-        print( idlist)
-        return idlist
+def get_ids(curHtlm):
+    print('-'*10, 'Current dealing...'+curHtlm)
+    goalFilePath = os.path.basename(curHtlm)+".txt"
+    fileWrited=open(goalFilePath, 'w')
+    soup = BeautifulSoup(open(curHtlm,encoding="utf-8").read(), 'lxml')
+    print (soup.title)
+    inforList = soup.find_all("ul")
+    idsList =[]
+    for item in inforList:
+        if item.has_attr("sound_ids"):
+            sound_idsLine = item["sound_ids"]
+            print(sound_idsLine)
+	
+            idsList.extend(sound_idsLine.split(','))
+        else:
+            pass
+        # child_herf = item.find("a")
+        # printLine = child_herf.attrs["title"]+"\t"+child_herf.attrs["href"]
+        # print(printLine) 
+        # fileWrited.write(printLine+"\n")
+    print(set(idsList))
+    fileWrited.close()
 
 def dlone(id):
 	#http://www.ximalaya.com/tracks/5500449.json
@@ -159,9 +146,13 @@ def dlpages(urlfirst,start,end):
 		dlall(str(realurl))
 
 if __name__=="__main__":
-        for i in range(17,30):
-                strUrl="http://www.lizhi.fm/18503/p/"+str(i)+".html"
-                get_lizhiMp3(strUrl,i)
+    album_addrs = []
+    album_folder = ""
+    filePath = 'E:\\stock2015\\webScrapy\\FM下载\\albumaddr.txt'
+    #本地文件存储专辑链接地址，可以一次下载多个专辑
+    with open(filePath,'r') as addr_file:
+        album_addrs = addr_file.readlines()
+    print(album_addrs)
 
 	
 
