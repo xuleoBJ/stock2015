@@ -8,8 +8,12 @@ from bs4 import BeautifulSoup
 import requests
 from datetime import datetime 
 
-sID="33943825"
-dirCurDownload ="秦朔朋友圈"
+
+## sID 是 ID
+## sName 是标签
+
+sID="1624974"
+sName ="听电影学英语"
 
 def get_ids(urladdress):
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'}
@@ -28,46 +32,34 @@ def get_ids(urladdress):
                 return (sound_idsLine)
     else:
         return ""
-    
-def makeTodayDirStr():
-    strToday = datetime.now().strftime("%Y%m%d")
-    strPath = os.path.join("e:/webScrapy/",strToday,dirCurDownload)
-    if not os.path.exists(strPath):
-        os.makedirs(strPath)
-    return strPath
 
 def parse_python_events(sound_ids):
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'}
-    goalFilePath = sID+".txt"
+    goalFilePath ="下载地址_"+sName+"_"+sID+".txt"
     fileWrited=open(goalFilePath, 'w')
     try:
         starttime = datetime.now()
-        endtime = datetime.now()
-        dirToday = makeTodayDirStr()
         for sound_id in sound_ids:
-            starttime = datetime.now()     
+
             urladdress = 'http://www.ximalaya.com/tracks/' + sound_id + '.json'  
             music_json = requests.get(urladdress,headers=headers).json()
-            line =""
-            if 'title' in music_json.keys() and 'play_path_32' in music_json.keys():
-                if music_json['title'] != None and music_json['play_path_32'] !=None:
-                    line = 'downloading:\t'+music_json['title']+'\t'+music_json['play_path_32']
-                    print(line)
-                    fileWrited.write(line+"\n")
-                    saveFileName =os.path.join(dirToday,music_json['title'] + '.mp3')
-                    if not os.path.exists(saveFileName): 
-                        try:
-                            urllib.request.urlretrieve(music_json['play_path_32'], saveFileName )
-                        except IOError:
-                            continue
-            endtime = datetime.now()
-            print(line+"\t耗时(s):"+str((endtime - starttime).seconds))
+            if 'title' in music_json.keys() and 'play_path_32' in music_json.keys():  
+                line = music_json['title']+'\t'+music_json['play_path_32']
+                print(line)
+                fileWrited.write(line+"\n")
+
+        endtime = datetime.now()
+        print(line+"\t耗时(s):"+str((endtime - starttime).seconds))
+
     except IOError:
         pass
     fileWrited.close()
 
+
+
 if __name__ == '__main__':
-   
+
+    
     sound_ids = []
     for i in range(1,34):
         urladdress ='http://www.ximalaya.com/%s/index_tracks?page=%d'%(sID,i)

@@ -8,10 +8,13 @@ from bs4 import BeautifulSoup
 import requests
 from datetime import datetime 
 
-##更改ID然后运行
 
-dirCurDownload ="大咖读书会"
-urladdress ="http://www.ximalaya.com/69149360/album/6294413"
+##dirCurDownload是标签，urladdress是单页地址
+## parse_downloadText 只把下载地址保存到文本
+## parse_downloadFile 下载文件到目录
+
+dirCurDownload ="英语演讲"
+urladdress ="http://www.ximalaya.com/1000632/album/3442"
 
 def get_ids(urladdress):
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'}
@@ -75,7 +78,7 @@ def parse_downloadFile(sound_ids):
                 line = music_json['title']+'\t'+music_json['play_path_32']
                 print(line)
                 fileWrited.write(line+"\n")
-                saveFileName =os.path.join(dirToday,music_json['title'] + '.mp3')
+                saveFileName =os.path.join(dirToday,music_json['title'] + '.m4a')
                 if not os.path.exists(saveFileName): 
                     try:
                         urllib.request.urlretrieve(music_json['play_path_32'], saveFileName )
