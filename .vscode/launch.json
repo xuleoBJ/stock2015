@@ -1,12 +1,13 @@
 {
     "version": "0.2.0",
     "configurations": [
+    
         {
             "name": "Python",
             "type": "python",
             "request": "launch",
             "stopOnEntry": true,
-            "pythonPath": "C:\\Python\\Python36-32\\python",
+            "pythonPath": "C:\\Python36-32\\python",
             "program": "${file}",
             "cwd": "${workspaceRoot}",
             "debugOptions": [

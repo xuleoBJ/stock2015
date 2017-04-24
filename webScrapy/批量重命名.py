@@ -4,8 +4,7 @@ import shutil
 
 if __name__=="__main__":
 
-    sourceDirPath="H:\\迅雷下载"
-    goalDir='123'
+    sourceDirPath="E:\\webScrapy\\郭德纲相声\\爆笑-郭德纲相声-2017整理"
     
 
     fileNames=os.listdir(sourceDirPath)

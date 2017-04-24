@@ -1,4 +1,5 @@
-from html.parser import HTMLParser
+# -*- coding:utf-8 -*- 
+
 import urllib.request
 import json
 import os
@@ -97,7 +98,8 @@ def parse_downloadFile(sound_ids):
 
 if __name__ == '__main__':
 
-    
+    BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+    print(BASE_DIR)
     sound_ids = []
     print(urladdress)
     sound_idsLine = get_ids(urladdress)

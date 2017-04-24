@@ -1,0 +1,2 @@
+import itchat
+print("ok")
