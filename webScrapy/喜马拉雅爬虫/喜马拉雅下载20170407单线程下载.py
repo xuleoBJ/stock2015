@@ -11,8 +11,9 @@ from datetime import datetime
 ## sID 是 用户ID
 ## dirCurDownload 保存目录
 
-sID="24413638"
-dirCurDownload ="在清华听演讲"
+sID="33943825"
+dirCurDownload ="秦朔朋友圈"
+formatM4a="play_path_64"
 
 def get_ids(urladdress):
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'}
@@ -52,15 +53,15 @@ def parse_python_events(sound_ids):
             urladdress = 'http://www.ximalaya.com/tracks/' + sound_id + '.json'  
             music_json = requests.get(urladdress,headers=headers).json()
             line =""
-            if 'title' in music_json.keys() and 'play_path_32' in music_json.keys():
-                if music_json['title'] != None and music_json['play_path_32'] !=None:
-                    line = 'downloading:\t'+music_json['title']+'\t'+music_json['play_path_32']
+            if 'title' in music_json.keys() and formatM4a in music_json.keys():
+                if music_json['title'] != None and music_json[formatM4a] !=None:
+                    line = 'downloading:\t'+music_json['title']+'\t'+music_json[formatM4a]
                     print(line)
                     fileWrited.write(line+"\n")
                     saveFileName =os.path.join(dirToday,music_json['title'] + '.m4a')
                     if not os.path.exists(saveFileName): 
                         try:
-                            urllib.request.urlretrieve(music_json['play_path_32'], saveFileName )
+                            urllib.request.urlretrieve(music_json[formatM4a], saveFileName )
                         except IOError:
                             continue
             endtime = datetime.now()
