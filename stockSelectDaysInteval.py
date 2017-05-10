@@ -133,10 +133,10 @@ if __name__=="__main__":
     startClock=time.clock() ##记录程序开始计算时间
     ##注意结束日期计算在内，比如0831 0831是参与计算的
     ##selectStockByDaysInterval("07/11",10) 
-    selectStockByRiseRateBetween2Date("01/01","01/10") 
-    selectStockByRiseRateBetween2Date("01/11","01/20") 
-    selectStockByRiseRateBetween2Date("01/21","01/31")
-    selectStockByRiseRateBetween2Date("01/01","01/31") 
+    selectStockByRiseRateBetween2Date("05/04","05/10") 
+    selectStockByRiseRateBetween2Date("05/11","01/20") 
+    selectStockByRiseRateBetween2Date("05/21","05/31")
+    selectStockByRiseRateBetween2Date("05/01","01/31") 
 
    
     timeSpan=time.clock()-startClock

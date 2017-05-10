@@ -11,8 +11,8 @@ from datetime import datetime
 ## sID 是 用户ID
 ## dirCurDownload 保存目录
 
-sID="33943825"
-dirCurDownload ="秦朔朋友圈"
+sID="12495477"
+dirCurDownload ="吴晓波频道"
 formatM4a="play_path_64"
 
 def get_ids(urladdress):
