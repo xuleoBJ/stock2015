@@ -80,7 +80,7 @@ if __name__=="__main__":
    
     startClock=time.clock() ##记录程序开始计算时间
     
-    selectStockByRiseRateByWeek(range(15,20)) 
+    selectStockByRiseRateByWeek(range(25,35)) 
    
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))
