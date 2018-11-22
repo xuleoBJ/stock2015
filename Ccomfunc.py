@@ -7,10 +7,10 @@ from datetime import timedelta
 import sys
 import Cstock
 import ctypes 
-import ConfigParser
+#import ConfigParser
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 
 ##数据目录字符串
@@ -20,7 +20,7 @@ dirHisData="dataManage\\hisData"
 
 ## 改变路径到工作目录 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-print os.path.curdir
+print (os.path.curdir)
 resultDir="resultDir"
 if not os.path.exists(resultDir):
     os.makedirs(resultDir)
@@ -124,8 +124,8 @@ def write2Text(goalFilePath,lineList):
 
 if __name__=="__main__":
     today=datetime.date.today()
-    print today
-    print monday_of_week(today)
-    print last_day_of_month(today)
-    print first_day_of_month(today)
+    print (today)
+    print (monday_of_week(today))
+    print (last_day_of_month(today))
+    print (first_day_of_month(today))
 

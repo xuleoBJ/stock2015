@@ -55,7 +55,7 @@ def selectStockByVolume():
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-2]))
                         sIDList.append(str(curStock.dayRadioLinkOfTradeVolumeArray[-1]))
             lineWritedList.append("\t".join(sIDList))
-    print lineWritedList
+    print (lineWritedList)
     goalFilePath=os.path.join(Ccomfunc.resultDir,'_stockSelect.txt') ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
 
@@ -160,8 +160,8 @@ if __name__=="__main__":
     if case==1:
         selectStockByMonthRise() 
     if case==2:
-        selectStockByRiseRateBetween2Date("01/01","01/15") 
-        selectStockByRiseRateBetween2Date("01/15","01/31") 
+        selectStockByRiseRateBetween2Date("11/01","11/30") 
+        selectStockByRiseRateBetween2Date("12/01","12/31") 
     if case==3:
         selectStockByVolume()
    

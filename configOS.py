@@ -1,8 +1,7 @@
-from ConfigParser import SafeConfigParser
-import ConfigParser
+import configparser
 import codecs  
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 cfgfile='config.ini'
 #config.read('config.ini')
 config.readfp(codecs.open(cfgfile, "r", "utf-8-sig"))

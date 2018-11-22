@@ -92,7 +92,7 @@ def patternRecByMarketAndStock(curMarket,curStock,matchDateIndex):
 		    iCount=iCount+1
 	    if bSelect==True:
 		    kMatchIndexList.append(i)
-    print kMatchIndexList 
+    print (kMatchIndexList) 
     return kMatchIndexList
 
 def patternRecByRiseRate(curStock,iTradeDay,kNum,matchDateIndex,bias=0.3):
@@ -237,7 +237,7 @@ def mainAppCall(strDate=""):
     configOS.updatePetternRectDateList()
 
     for line in lineWritedList:
-        print line
+        print (line)
     goalFilePath="patternRec.txt" ##输出文件名
     Ccomfunc.write2Text(goalFilePath,lineWritedList)
     os.startfile(goalFilePath)

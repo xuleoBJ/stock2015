@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import datetime,time
-import ConfigParser
+import configparser
 import Cstock
 import Ccomfunc
 import configOS
@@ -107,7 +107,7 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                     resultLine+=u"\t注意压力位！"
                 if curStock.dayPriceClosedFList[matchDateIndex-1]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
-            print resultLine
+            print (resultLine)
 
 
     ## 市场情绪

@@ -180,7 +180,7 @@ class Stock:
                 splitLine=line.split()
                 if lineIndex==1:
                     self.stockName=splitLine[1]
-                    print "{},{}".format(self.stockID,self.stockName)
+                    print ("{},{}".format(self.stockID,self.stockName))
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
                     self.dateList.append(Ccomfunc.convertDateStr2Date(self.dayStrList[-1]))
@@ -282,7 +282,7 @@ class StockUniDate:
                 splitLine=line.split()
                 if lineIndex==1:
                     self.stockName=splitLine[1]
-                    print "{},{}".format(self.stockID,self.stockName)
+                    print ("{},{}".format(self.stockID,self.stockName))
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     indexOfdate = self.dayStrList.index(splitLine[0])
                     self.dayPriceOpenArray[indexOfdate] = float(splitLine[1])
@@ -310,16 +310,15 @@ if __name__=="__main__":
     
     startClock=time.clock() ##记录程序开始计算时间
     shStock=Stock('999999')
-    print shStock.dateList[-10:]
+    print (shStock.dateList[-10:])
     
     curStock=Stock('002001')
     curStock.list2array()
-    print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
-    print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
-    print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
-    print curStock.dayRiseRateLowestArray[-10:]
-    print curStock.monthStrList[-10:]
-    print curStock.day5PriceAverageArray[-10:]
+    print (shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName)
+    print (shStock.dayStrList[-10:],shStock.stockID,shStock.stockName)
+    print (curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName)
+    print (curStock.dayRiseRateLowestArray[-10:])
+    print (curStock.day5PriceAverageArray[-10:])
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

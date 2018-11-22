@@ -5,7 +5,7 @@ import time
 import datetime
 import sys
 import Cstock
-import ConfigParser
+#import ConfigParser
 import Ccomfunc 
 import numpy as np
 import matplotlib as mpl
@@ -61,7 +61,7 @@ def trendOfMonthHistory(curStock):
         if riseOfmonth>-100:
             ymList.append(strYM)
             riseRateList.append(riseOfmonth)
-            print u"{}年{}月涨幅:{}".format(iYear,iMonth,riseOfmonth)
+            print (u"{}年{}月涨幅:{}".format(iYear,iMonth,riseOfmonth))
     valueLine='\t'.join(map(str,sorted(riseRateList)))
     _median=np.median(riseRateList[:])
     print( u"历年涨幅:{}\t中位数:{:.2f}".format(valueLine,_median) )
@@ -110,7 +110,7 @@ def calTrend(curStock,intervalDay):
     if intervalDay<0:
         return 100*(curStock.dayPriceClosedFList[-1]-curStock.dayPriceClosedFList[-1+intervalDay])/curStock.dayPriceClosedFList[-1+intervalDay]
     else:
-		return -999
+        return -999
 
 ##输出交易日的差额
 def printCalTrend(curStock,intervalDay):
@@ -119,6 +119,6 @@ def printCalTrend(curStock,intervalDay):
 if __name__=="__main__":
    stockID="999999"
    curStock=Cstock.Stock(stockID)
-   print getDateIndexLowestPoint(curStock,-100,-1)
+   print (getDateIndexLowestPoint(curStock,-100,-1))
 
 
