@@ -6,13 +6,13 @@ import Cstock
 import Ccomfunc
 import configOS
 import stockPatternRecognition
-import stockTecSet
+#import stockTecSet
 import volumeEnerge
 import trendAna
 import ctypes 
 
-from PyQt4 import QtGui # Import the PyQt4 module we'll need
-from PyQt4.QtGui import *
+from PyQt5 import QtGui # Import the PyQt4 module we'll need
+from PyQt5.QtGui import *
 
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位

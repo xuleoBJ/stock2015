@@ -52,7 +52,7 @@ def patternRecCalTPrice(cStock,dayRadioLinkPriceLowArray):
 #    print listPatternRecBycStock
     findIndex=cStock.findIndexByDayStr("2012/05/21")
     scale= dayRadioLinkPriceLowArray[findIndex+1]
-    print "匹配日此次预测低价{:.2f}".format(cStock.dayPriceLowestArray[-1]*(1+scale*0.01))
+    print ("匹配日此次预测低价{:.2f}".format(cStock.dayPriceLowestArray[-1]*(1+scale*0.01)))
 
 def outPutPriceRef(cStock):
     headWrited=[]
@@ -167,7 +167,7 @@ def main(cStock):
         resultLine="{},星期{}\t收盘价:{}\t涨幅:{}\t量能环比:{}\t波动幅度:{}".format(\
                 cStock.dayStrList[i],weekDay,cStock.dayPriceClosedArray[i],cStock.dayRiseRateFList[i],\
                 cStock.dayRadioLinkOfTradeVolumeFList[i],cStock.dayWaveRateFList[i])
-        print resultLine
+        print (resultLine)
 
     ## 美股-1.5以上，当日上午不买做T，可以适度的上午减仓做T。 
     ## 设计做T的价格，用15分钟K线的支撑或者其它点位。

@@ -11,33 +11,31 @@ import trendAna
 
 stockID="999999"
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
-##·ÖÎö²»Í¬ÖÜÆÚµÄ¸ßµã¼°·ù¶È
+##åˆ†æžä¸åŒå‘¨æœŸçš„é«˜ç‚¹åŠå¹…åº¦
 
 def getDateOfPrice(price,priceFList,dayStrList):
     indexPrice=priceFList.index(price)
     return dayStrList[indexPrice]
 
 def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFList,curPriceLowestFList,curPriceClosedFList):
-    print('½øÐÐ¼Û¸ñ·åÖµ·ÖÎö£¬·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisPrice.txt') ##Êä³öÎÄ¼þÃû
+    print('è¿›è¡Œä»·æ ¼å³°å€¼åˆ†æžï¼Œåˆ†æžå‘¨æœŸ(å¤?:'+str(dayPeriod))
+    goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisPrice.txt') ##è¾“å‡ºæ–‡ä»¶å?
     lineWritedList=[]
 
     lineWritedList.append('-'*50)
-    lineWritedList.append('¼Û¸ñ·åÖµ·ÖÎö·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    lineWritedList.append("ÈÕÆÚ"+"\t¾àÉÏ´Î·åÖµ½»Ò×ÈÕ¸öÊý\t"+"\t¾àÉÏ´Î·åÖµ×ÔÈ»ÈÕ¸öÊý\t"+"\t¾Ö²¿¸ßµã/µÍµã\t"+"¸¡¶¯·ù¶È%:\t")
+    lineWritedList.append('ä»·æ ¼å³°å€¼åˆ†æžåˆ†æžå‘¨æœ?å¤?:'+str(dayPeriod))
+    lineWritedList.append("æ—¥æœŸ"+"\tè·ä¸Šæ¬¡å³°å€¼äº¤æ˜“æ—¥ä¸ªæ•°\t"+"\tè·ä¸Šæ¬¡å³°å€¼è‡ªç„¶æ—¥ä¸ªæ•°\t"+"\tå±€éƒ¨é«˜ç‚?ä½Žç‚¹\t"+"æµ®åŠ¨å¹…åº¦%:\t")
    
-    ##±äÁ¿ ÓÃÓÚ¼ÆËã½»Ò×ÈÕ¼ä¸ô
+    ##å˜é‡ ç”¨äºŽè®¡ç®—äº¤æ˜“æ—¥é—´éš?
     d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     standValue=100
     daySpanLast=10 ## record last span dayPeriod
     indexLast=1
-    dayPeriod=dayPeriod/2 ##ÖÜÆÚÄÚ×îÖµ ÓÃ°ëÖÜÆÚÇ°ºóËã£¬iÑ­»·Ê± ±È½Ïµ±ÈÕÊÇ·ñÊÇÇ°ºó°ëÖÜÆÚµÄ¼«Öµ
+    dayPeriod=int(dayPeriod/2) ##å‘¨æœŸå†…æœ€å€?ç”¨åŠå‘¨æœŸå‰åŽç®—ï¼Œiå¾ªçŽ¯æ—?æ¯”è¾ƒå½“æ—¥æ˜¯å¦æ˜¯å‰åŽåŠå‘¨æœŸçš„æžå€?
     for i in range(dayPeriod,len(curDateStrList)):
-        ##Èç¹ûiÇ°ºóµÄdayPeriodÂú×ãÖÜÆÚ ,iºóÃæµÄ½»Ò×ÈÕ²»Âú×ã°ëÖÜÆÚ ¾ÍÓÃelseµÄ
+        ##å¦‚æžœiå‰åŽçš„dayPeriodæ»¡è¶³å‘¨æœŸ ,iåŽé¢çš„äº¤æ˜“æ—¥ä¸æ»¡è¶³åŠå‘¨æœŸ å°±ç”¨elseçš?
         max_value = -999
         max_index = 0
         if i<len(curDateStrList)-dayPeriod:
@@ -91,12 +89,12 @@ def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFLis
     Ccomfunc.write2Text(goalFilePath,lineWritedList) 
 
 def findPeakVolume(dayPeriod,curDateStrList,curTradeVolumeFList):
-    print('½øÐÐ³É½»Á¿·åÖµ·ÖÎö£¬·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisVolume.txt') ##Êä³öÎÄ¼þÃû
+    print('è¿›è¡Œæˆäº¤é‡å³°å€¼åˆ†æžï¼Œåˆ†æžå‘¨æœŸ(å¤?:'+str(dayPeriod))
+    goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisVolume.txt') ##è¾“å‡ºæ–‡ä»¶å?
     lineWritedList=[]
     lineWritedList.append('-'*50)
-    lineWritedList.append('³É½»Á¿·åÖµ·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    lineWritedList.append("ÈÕÆÚ"+"\t¾Ö²¿¸ßµã/µÍµã(ÍòÊÖ)\t"+"\t¾àÉÏ´Î·åÖµ½»Ò×ÈÕ¸öÊý\t"+"\t¾àÉÏ´Î·åÖµ×ÔÈ»ÈÕ¸öÊý\t"+"\t¸¡¶¯·ù¶È%:\t")
+    lineWritedList.append('æˆäº¤é‡å³°å€¼åˆ†æžå‘¨æœ?å¤?:'+str(dayPeriod))
+    lineWritedList.append("æ—¥æœŸ"+"\tå±€éƒ¨é«˜ç‚?ä½Žç‚¹(ä¸‡æ‰‹)\t"+"\tè·ä¸Šæ¬¡å³°å€¼äº¤æ˜“æ—¥ä¸ªæ•°\t"+"\tè·ä¸Šæ¬¡å³°å€¼è‡ªç„¶æ—¥ä¸ªæ•°\t"+"\tæµ®åŠ¨å¹…åº¦%:\t")
 
     d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
@@ -129,10 +127,10 @@ def findPeakVolume(dayPeriod,curDateStrList,curTradeVolumeFList):
     Ccomfunc.write2Text(goalFilePath,lineWritedList) 
 
 def findPeakTurnover(dayPeriod,curDateStrList,curTurnover):
-    print('½øÐÐ½»Ò×¶î·åÖµ·ÖÎö£¬·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
+    print('è¿›è¡Œäº¤æ˜“é¢å³°å€¼åˆ†æžï¼Œåˆ†æžå‘¨æœŸ(å¤?:'+str(dayPeriod))
     lineWritedList.append('-'*50)
-    lineWritedList.append('ÐÐ½»Ò×¶î·åÖµ·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    lineWritedList.append("ÈÕÆÚ"+"\t¾Ö²¿¸ßµã/µÍµã(ÒÚÔª)\t"+"\t¾àÉÏ´Î·åÖµ½»Ò×ÈÕ¸öÊý\t"+"\t¾àÉÏ´Î·åÖµ×ÔÈ»ÈÕ¸öÊý\t"+"\t¸¡¶¯·ù¶È%:\t")
+    lineWritedList.append('è¡Œäº¤æ˜“é¢å³°å€¼åˆ†æžå‘¨æœ?å¤?:'+str(dayPeriod))
+    lineWritedList.append("æ—¥æœŸ"+"\tå±€éƒ¨é«˜ç‚?ä½Žç‚¹(äº¿å…ƒ)\t"+"\tè·ä¸Šæ¬¡å³°å€¼äº¤æ˜“æ—¥ä¸ªæ•°\t"+"\tè·ä¸Šæ¬¡å³°å€¼è‡ªç„¶æ—¥ä¸ªæ•°\t"+"\tæµ®åŠ¨å¹…åº¦%:\t")
     d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
     standValue=100
@@ -167,36 +165,36 @@ def analysisDate(dateStrStart,dateStrEnd,curDateStrList,curPriceOpenFList,curPri
     indexStart=curDateStrList.index(dateStrStart)
     indexEnd=curDateStrList.index(dateStrEnd)
     print("-"*50)
-    print("·ÖÎöÖÜÆÚ(½»Ò×ÈÕ/Ìì):\t"+str(indexEnd-indexStart)+"ÆðÊ¼ÈÕÆÚ:\t"+curDateStrList[indexStart]+"\t½áÊøÈÕÆÚ:"+curDateStrList[indexEnd])
+    print("åˆ†æžå‘¨æœŸ(äº¤æ˜“æ—?å¤?:\t"+str(indexEnd-indexStart)+"èµ·å§‹æ—¥æœŸ:\t"+curDateStrList[indexStart]+"\tç»“æŸæ—¥æœŸ:"+curDateStrList[indexEnd])
     
     curPriceHighest=max(curPriceHighestFList[indexStart:indexEnd])
     datePriceHighest=getDateOfPrice(curPriceHighest,curPriceHighestFList,curDateStrList)
-    print("Çø¼äÄÚ×î¸ß¼Û:\t"+str(curPriceHighest)+"³öÏÖÈÕÆÚ:\t"+datePriceHighest)
+    print("åŒºé—´å†…æœ€é«˜ä»·:\t"+str(curPriceHighest)+"å‡ºçŽ°æ—¥æœŸ:\t"+datePriceHighest)
     
     curPriceLowest=min(curPriceLowestFList[indexStart:indexEnd])
     datePriceLowest=getDateOfPrice(curPriceLowest,curPriceLowestFList,curDateStrList)
-    print("Çø¼äÄÚ×îµÍ¼Û:\t"+str(curPriceLowest)+"³öÏÖÈÕÆÚ:\t"+datePriceLowest)
+    print("åŒºé—´å†…æœ€ä½Žä»·:\t"+str(curPriceLowest)+"å‡ºçŽ°æ—¥æœŸ:\t"+datePriceLowest)
 
     natureDaysNumFromLastPeak2Today=-1  
     if datePriceHighest>=datePriceLowest:
         natureDaysNumFromLastPeak2Today=datetime.date.today()-Ccomfunc.convertDateStr2Date(datePriceHighest)
     else:
         natureDaysNumFromLastPeak2Today=datetime.date.today()-Ccomfunc.convertDateStr2Date(datePriceLowest)
-    print("ÉÏ¸ö×îÖµ¾àÀë½ñÌìµÄ×ÔÈ»ÈÕ¸öÊý(Ìì):\t"+str(natureDaysNumFromLastPeak2Today.days))
-    print("×î¸ßµã³öÏÖÓë×îµÍµã³öÏÖ½»Ò×ÈÕ¸öÊý(Ìì):\t"+str(1+curPriceHighestFList.index(curPriceHighest)-curPriceLowestFList.index(curPriceLowest)))
+    print("ä¸Šä¸ªæœ€å€¼è·ç¦»ä»Šå¤©çš„è‡ªç„¶æ—¥ä¸ªæ•?å¤?:\t"+str(natureDaysNumFromLastPeak2Today.days))
+    print("æœ€é«˜ç‚¹å‡ºçŽ°ä¸Žæœ€ä½Žç‚¹å‡ºçŽ°äº¤æ˜“æ—¥ä¸ªæ•?å¤?:\t"+str(1+curPriceHighestFList.index(curPriceHighest)-curPriceLowestFList.index(curPriceLowest)))
     daySpan=calNatureDays(datePriceHighest,datePriceLowest)
-    print("×î¸ßµã³öÏÖÓë×îµÍµã³öÏÖ×ÔÈ»ÈÕ¸öÊý(Ìì):\t"+str(daySpan))
-    print("×î¸ßµã/×îµÍµã:\t"+str(round(curPriceHighest/curPriceLowest,2)))
+    print("æœ€é«˜ç‚¹å‡ºçŽ°ä¸Žæœ€ä½Žç‚¹å‡ºçŽ°è‡ªç„¶æ—¥ä¸ªæ•?å¤?:\t"+str(daySpan))
+    print("æœ€é«˜ç‚¹/æœ€ä½Žç‚¹:\t"+str(round(curPriceHighest/curPriceLowest,2)))
 
 def analysisScale(stockID,dateStrStart,dateStrEnd):
 ## get analysis indexStartDay and indexEndDay by dayStrList
     indexStart=dayStrList.index(dateStrStart)
     indexEnd=dayStrList.index(dateStrEnd)
     print("-"*50)
-    print("·ÖÎö¼Û²îºÍÕÇ·ù")
+    print("åˆ†æžä»·å·®å’Œæ¶¨å¹?)
     
-    zhenfuFList=[] ## ²¨¶¯·ù¶È
-    zhangdiefuFList=[]  ##ÕÇµø·ù
+    zhenfuFList=[] ## æ³¢åŠ¨å¹…åº¦
+    zhangdiefuFList=[]  ##æ¶¨è·Œå¹?
     for i in range(indexStart,indexEnd):
         priceDelta1=(dayPriceClosedFList[i]-dayPriceOpenFList[i])/dayPriceClosedFList[i-1]
         priceDelta2=(dayPriceHighestFList[i]-dayPriceLowestFList[i])/dayPriceClosedFList[i-1]
@@ -207,29 +205,29 @@ def analysisScale(stockID,dateStrStart,dateStrEnd):
     strDate=""
     for item in zhenfuFList:
         strDate=strDate+dayStrList[item]+"\t"
-    print("Õñ·ù³¬¹ý5%ÌìÊý:\t"+str(len(zhenfuFList))+"\tÆðÊ¼ÈÕÆÚÊÇ£º"+strDate)
+    print("æŒ¯å¹…è¶…è¿‡5%å¤©æ•°:\t"+str(len(zhenfuFList))+"\tèµ·å§‹æ—¥æœŸæ˜¯ï¼š"+strDate)
     strDate=""
     for item in zhangdiefuFList:
         strDate=strDate+dayStrList[item]+"\t"
-    print("ÕÇµø·ù³¬¹ý5%:\t"+str(len(zhangdiefuFList))+"\tÆðÊ¼ÈÕÆÚÊÇ£º"+strDate)
+    print("æ¶¨è·Œå¹…è¶…è¿?%:\t"+str(len(zhangdiefuFList))+"\tèµ·å§‹æ—¥æœŸæ˜¯ï¼š"+strDate)
 
 
 
 if __name__=="__main__":
    
-    startClock=time.clock() ##¼ÇÂ¼³ÌÐò¿ªÊ¼¼ÆËãÊ±¼ä
+    startClock=time.clock() ##è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—?
     
-    ##¶ÁÈ¡¹ÉÆ±´úÂë£¬´æ´¢ÔÚcurStockÀï
+    ##è¯»å–è‚¡ç¥¨ä»£ç ï¼Œå­˜å‚¨åœ¨curStocké‡?
     curStock=Cstock.Stock(stockID)
 
-    ##ÉèÖÃ·ÖÎöÖÜÆÚ,Èç¹ûÈÕÆÚ´óÓÚ1000£¨4Äê¾ÍÈ¡1000£©£¬·ñÔòÈ¡×î´ó
+    ##è®¾ç½®åˆ†æžå‘¨æœŸ,å¦‚æžœæ—¥æœŸå¤§äºŽ1000ï¼?å¹´å°±å?000ï¼‰ï¼Œå¦åˆ™å–æœ€å¤?
     iDaysPeriodUser=len(curStock.dayStrList) if len(curStock.dayStrList)<=1000 else 1000
-    ##ÆðÊ¼·ÖÎöÈÕÆÚ dateStrStart
+    ##èµ·å§‹åˆ†æžæ—¥æœŸ dateStrStart
     dateStrStart=curStock.dayStrList[-iDaysPeriodUser]
-    ##ÖÕÁË·ÖÎöÈÕÆÚ dateStrEnd
+    ##ç»ˆäº†åˆ†æžæ—¥æœŸ dateStrEnd
     dateStrEnd=curStock.dayStrList[-1]
 
-    print ("ÕýÔÚ½øÐÐÀúÊ·Ê±¿Õ·ÖÎö£º")
+    print ("æ­£åœ¨è¿›è¡ŒåŽ†å²æ—¶ç©ºåˆ†æžï¼?)
     for dayPeriod in [3,5,10,20,30,60,90,120,250]:
         resultDir="resultDir"
         if not os.path.exists(resultDir):

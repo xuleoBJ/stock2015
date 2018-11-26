@@ -2,8 +2,8 @@
 import datetime
 import lxml.etree as etree
 import lxml.html
-import ConfigParser
-import time,sched,os,urllib2,re,string
+#import ConfigParser
+import time,sched,os,re,string
 import Ccomfunc,trendAna
 import ctypes
 from Cstock import Stock

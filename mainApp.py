@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui # Import the PyQt4 module we'll need
+from PyQt5 import QtGui # Import the PyQt5 module we'll need
 import sys # We need sys so that we can pass argv to QApplication
-from PyQt4.QtGui import *
-from PyQt4.QtCore import * 
+from PyQt5.QtGui import *
+from PyQt5.QtCore import * 
 
 import mainUI # This file holds our MainWindow and all design related things
               # it also keeps events etc that we defined in Qt Designer
 
 from Cstock import Stock
-from candleStickPlot import drawCandleStick
+#from candleStickPlot import drawCandleStick
 
 import configOS
 import stockPatternRecognition
@@ -107,7 +107,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
 
     def patternRec(self):
         sDate=str(self.lineEditDateRec.text())
-        print sDate
+        print (sDate)
         stockPatternRecognition.mainAppCall(sDate)
 
     def tradeStart(self):
@@ -122,7 +122,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
             dateList=configOS.config.get('patternRecDate', 'SH').split(',')
         if stockIDselect=="399001":
             dateList=configOS.config.get('patternRecDate', 'SZ').split(',')
-        print dateList
+        print (dateList)
         updateListWidgetItem(self.listWidgetMatchDate,dateList)
 
     def calGDP(self):
@@ -133,7 +133,7 @@ class mainApp(QtGui.QMainWindow, mainUI.Ui_MainWindow):
     
     def selectExe(self):
         stockID=str(self.comboBoxStockID.currentText())
-        print stockID
+        print (stockID)
         curStock=Stock(stockID)
         dateFind=self.listWidgetMatchDate.currentItem().text()
         drawCandleStick(curStock,dateFind)

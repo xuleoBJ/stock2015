@@ -181,7 +181,7 @@ class Stock:
                 if lineIndex==1:
                     self.stockName=splitLine[1]
                     print ("{},{}".format(self.stockID,self.stockName))
-                if line!="" and lineIndex>=3 and len(splitLine)>=5:
+                if line!="" and lineIndex>=5 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
                     self.dateList.append(Ccomfunc.convertDateStr2Date(self.dayStrList[-1]))
                     
@@ -283,7 +283,7 @@ class StockUniDate:
                 if lineIndex==1:
                     self.stockName=splitLine[1]
                     print ("{},{}".format(self.stockID,self.stockName))
-                if line!="" and lineIndex>=3 and len(splitLine)>=5:
+                if line!="" and lineIndex>=5 and len(splitLine)>=5:
                     indexOfdate = self.dayStrList.index(splitLine[0])
                     self.dayPriceOpenArray[indexOfdate] = float(splitLine[1])
                     self.dayPriceHighestArray[indexOfdate]=float(splitLine[2])
@@ -312,7 +312,7 @@ if __name__=="__main__":
     shStock=Stock('999999')
     print (shStock.dateList[-10:])
     
-    curStock=Stock('002001')
+    curStock=Stock('999999')
     curStock.list2array()
     print (shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName)
     print (shStock.dayStrList[-10:],shStock.stockID,shStock.stockName)

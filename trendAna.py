@@ -17,8 +17,6 @@ import datetime
 from matplotlib.dates import  DateFormatter, WeekdayLocator, HourLocator, \
      DayLocator, MONDAY,YearLocator, MonthLocator
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 ## 市场评价 
 def marketSummary(_curStock,index):
