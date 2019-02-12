@@ -21,7 +21,7 @@ def writeConfig(websites):
 '''
 set proxy here
 '''
-enable_proxy = 0  
+enable_proxy = 1  
 proxy_handler = urllib2.ProxyHandler({"http" : '10.22.96.29:8080'})  
 null_proxy_handler = urllib2.ProxyHandler({})  
 if enable_proxy:  
