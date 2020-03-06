@@ -1,5 +1,5 @@
-from ConfigParser import SafeConfigParser
-import ConfigParser
+"""  """""" from ConfigParser import SafeConfigParser """
+# import ConfigParser
 import codecs  
 
 config = ConfigParser.ConfigParser()

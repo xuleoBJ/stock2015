@@ -154,7 +154,7 @@ class Stock:
         wordList.append(u"最高涨幅")
         wordList.append(u"最低涨幅")
         headLine= "\t".join(wordList)
-        print headLine
+        print (headLine)
         return headLine
 
     def printLineDateData(self,indexDate):
@@ -166,7 +166,7 @@ class Stock:
         wordList.append(str(self.dayRiseRateHighestFList[indexDate]))
         wordList.append(str(self.dayRiseRateLowestFList[indexDate]))
         dataLine= "\t".join(wordList)
-        print dataLine
+        print (dataLine)
         return dataLine
 
     def __init__(self,stockID,stockDirData="C:\\new_dxzq_v6\\T0002\\export\\"):
@@ -205,7 +205,7 @@ class Stock:
                 splitLine=line.split()
                 if lineIndex==1:
                     self.stockName=splitLine[1]
-                    print "{},{}".format(self.stockID,self.stockName)
+                    print ("{},{}".format(self.stockID,self.stockName))
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     self.dayStrList.append(splitLine[0])
                     curDate = Ccomfunc.convertDateStr2Date(self.dayStrList[-1])
@@ -309,7 +309,7 @@ class StockUniDate:
                 splitLine=line.split()
                 if lineIndex==1:
                     self.stockName=splitLine[1]
-                    print "{},{}".format(self.stockID,self.stockName)
+                    print ("{},{}".format(self.stockID,self.stockName))
                 if line!="" and lineIndex>=3 and len(splitLine)>=5:
                     indexOfdate = self.dayStrList.index(splitLine[0])
                     self.dayPriceOpenArray[indexOfdate] = float(splitLine[1])
@@ -340,14 +340,11 @@ if __name__=="__main__":
     shStock.printHeadLineDateData()
     for i in range(10,20):
         shStock.printLineDateData(i)
-    print shStock.dateList[-10:]
+    print (shStock.dateList[-10:])
     
     curStock=Stock('002001')
-    print shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName
-    print shStock.dayStrList[-10:],shStock.stockID,shStock.stockName
-    print curStock.dayPriceOpenFList[-10:],curStock.stockID,curStock.stockName
-    print curStock.dayRiseRateLowestArray[-10:]
-    print curStock.day5PriceAverageArray[-10:]
+    print (shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName)
+
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

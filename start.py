@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
 import datetime,time
-import ConfigParser
+#import ConfigParser
 import Cstock
 import Ccomfunc
-import configOS
+# import configOS
 import stockPatternRecognition
 import stockTradeModel
-import stockTrendAna
+# import stockTrendAna
 import ctypes 
 
 from PyQt4 import QtGui # Import the PyQt4 module we'll need
@@ -33,13 +33,13 @@ def WarnBigEvent():
 
 ##历史上相同的周，和相同的交易日
 def specialWeekDaySatis(curStock,strDate):
-    print strDate
+    print (strDate)
 
 ##历史上的今天
 def specialDateSatis(curStock,strDate):
-    print strDate
+    print (strDate)
     resultLine= u"代码\t日期\t当日涨幅\t次日涨幅\t前日涨幅"
-    print resultLine
+    print (resultLine)
     split = strDate.split('/')
     for iYear in range(2000,2016):
         inputStr="/".join([str(iYear),split[1],split[2]])
@@ -47,7 +47,7 @@ def specialDateSatis(curStock,strDate):
         resultLine= u"{}\t{}({})\t{}\t{}\t{}".format( \
                 curStock.stockID,curStock.dayStrList[index], curStock.weekDayList[index], \
                 curStock.dayRiseRateCloseFList[index],curStock.dayRiseRateCloseFList[index+1],curStock.dayRiseRateCloseFList[index-1])
-        print resultLine
+        print (resultLine)
 
 def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ##近期事务提醒，希望建立数据库
@@ -73,19 +73,19 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ## 通过大盘上证成交量判断目前的市场位置,30日均线的位置
     if curStock.stockID == "999999":
         if curStock.dayTurnOverArray[matchDateIndex]>=2000*10**8:
-            print u"市场强势"
+            print (u"市场强势")
         elif 1500*10**8<=curStock.dayTurnOverArray[matchDateIndex]<2000*10**8:
-            print u"平衡市场"
+            print (u"平衡市场")
         elif curStock.dayTurnOverArray[matchDateIndex]<=1500*10**8:
-            print u"弱市场"
+            print (u"弱市场")
         if curStock.dayPriceClosedArray[matchDateIndex] < curStock.day30PriceAverageArray[matchDateIndex] :
-            print u"30日均线以下"
+            print (u"30日均线以下")
         else:
-            print u"30日均线以上"
+            print (u"30日均线以上")
         if curStock.dayPriceClosedArray[matchDateIndex] < curStock.day5PriceAverageArray[matchDateIndex] :
-            print u"5日均线以下"
+            print (u"5日均线以下")
         else:
-            print u"5日均线以上"
+            print (u"5日均线以上")
     ## 历史上的今天
     print (u"-"*72)
     headLine=u"历史上今天的涨幅:"
@@ -157,13 +157,13 @@ def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
                     resultLine+=u"\t注意压力位！"
                 if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
                     resultLine+=u"\t支撑位！"
-            print resultLine
+            print (resultLine)
 
 
 
 def mainAppCall(strDate=""):
     for line in lineWritedList:
-        print line
+        print (line)
     
     dayStr=strDate.replace("/","")
     goalFilePath= os.path.join( dirPatternRec, dayStr+".txt" ) ##输出文件名
