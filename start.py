@@ -10,9 +10,8 @@ import stockPatternRecognition
 import volumeEnerge
 import trendAna
 import ctypes 
+import tkinter.messagebox
 
-from PyQt5 import QtGui # Import the PyQt4 module we'll need
-from PyQt5.QtGui import *
 
 
 ##需要从配置文件中读取不同周期的极值，以便计算压力位和支撑位
@@ -29,7 +28,7 @@ def calGDG():
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
 def WarnBigEvent():
-    ctypes.windll.user32.MessageBoxA(0, "2016-1-8 Big Share Sells!", "infor", 1)
+    tkinter.messagebox.showinfo("提示", "2016-1-8 Big Share Sells!")
 
 def main(stockID,strDate=Ccomfunc.defaultDateInputStr()):
     ##近期事务提醒，希望建立数据库

@@ -122,6 +122,14 @@ def write2Text(goalFilePath,lineList):
     print("-"*72)
     print(u"数据保存在{}".format(goalFilePath))
 
+def write2TextUTF8(goalFilePath,lineList):
+    fileWrited=open(goalFilePath,'w',encoding='utf8')
+    for line in lineList:
+        fileWrited.write(line+'\n')
+    fileWrited.close()
+    print("-"*72)
+    print(u"数据保存在{}".format(goalFilePath))
+
 if __name__=="__main__":
     today=datetime.date.today()
     print (today)

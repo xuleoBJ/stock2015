@@ -31,13 +31,13 @@ def printResult(curStock,kMatchIndexList):
             configOS.patternRecDateListSZ.append(curStock.dayStrList[i])
     
     matchNum=len(kMatchIndexList)
-    value0_smaller0=len(filter(lambda x:x<=0,riseRateNextList))
-    value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
-    value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
+    # value0_smaller0=len(filter(lambda x:x<=0,riseRateNextList))
+    # value_smaller_1=len(filter(lambda x:x<=-1,riseRateNextList))
+    # value_bigger1=len(filter(lambda x:x>=1,riseRateNextList))
     if matchNum>0:
         lineWritedList.append("-"*72)
-        lineWritedList.append(u"识别结果：{}, 涨幅<=0个数: {}({:.2f}%), 涨幅>=1个数: {}, 涨幅<-1个数: {}".format( \
-                matchNum,value0_smaller0,float(value0_smaller0)*100/matchNum,value_bigger1,value_smaller_1))
+        lineWritedList.append(u"识别结果：{}".format( matchNum))
+                
         valueLine='\t'.join(map(str,sorted(riseRateNextList)))
         _median=np.median(riseRateNextList)
         lineWritedList.append(u"收盘涨幅:{}\t中位数:{:.2f}".format(valueLine,_median))

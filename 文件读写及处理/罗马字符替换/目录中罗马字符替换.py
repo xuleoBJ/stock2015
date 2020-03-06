@@ -1,0 +1,41 @@
+# -*- coding: cp936 -*-
+import os
+import shutil
+
+if __name__=="__main__":
+
+    sourceDirPath="$UserData#"
+    goalDirPath='$UserData#changed'
+    if os.path.exists(goalDirPath):
+        shutil.rmtree(goalDirPath)
+    os.mkdir(goalDirPath)
+        
+    fileNames=os.listdir(sourceDirPath)
+
+    for fileItem in fileNames:
+        print ('-'*10,'Current dealing...'+fileItem)
+        fileOpened=open(sourceDirPath+'\\'+fileItem,'r')
+        fileWrited=open(goalDirPath+'\\'+fileItem.lower(),'w')
+        lineIndex=0
+        for line in fileOpened.readlines():
+            lineIndex+=1
+            line=line.replace('¢ñ','I')
+            line=line.replace('¢ò','II')
+            line=line.replace('¢ó','III')
+            line=line.replace('¢ô','IV')
+            line=line.replace('¢õ','V')
+            line=line.replace('¢ö','VI')
+            line=line.replace('¢÷','VII')
+            line=line.replace('¢ø','VIII')
+            line=line.replace('¢ù','IX')
+            line=line.replace('¢ú','X')
+            line=line.replace('¢û','XI')
+            line=line.replace('¢ü','XII')
+
+
+    
+            
+            fileWrited.write(line)
+    fileWrited.close()
+    fileOpened.close()
+    print(goalDirPath)
