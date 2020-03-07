@@ -203,10 +203,10 @@ class Stock:
             for line in fileOpened.readlines():
                 lineIndex=lineIndex+1
                 splitLine=line.split()
-                if lineIndex==1:
+                if lineIndex==1: ## 第一行是文件头 
                     self.stockName=splitLine[1]
                     print ("{},{}".format(self.stockID,self.stockName))
-                if line!="" and lineIndex>=3 and len(splitLine)>=5:
+                if line!="" and lineIndex>=5 and len(splitLine)>=5:  ## 第5行才是数据
                     self.dayStrList.append(splitLine[0])
                     curDate = Ccomfunc.convertDateStr2Date(self.dayStrList[-1])
                     curWeekDay = curDate.isoweekday()
@@ -342,9 +342,6 @@ if __name__=="__main__":
         shStock.printLineDateData(i)
     print (shStock.dateList[-10:])
     
-    curStock=Stock('002001')
-    print (shStock.dayPriceOpenFList[-10:],shStock.stockID,shStock.stockName)
-
     
     timeSpan=time.clock()-startClock
     print("Time used(s):",round(timeSpan,2))

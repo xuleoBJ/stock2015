@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import shutil
 import time
@@ -9,239 +8,262 @@ import Ccomfunc
 import stockTrendAna
 
 
-stockID="999999"
+stockID = "999999"
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
-##·ÖÎö²»Í¬ÖÜÆÚµÄ¸ßµã¼°·ù¶È
+# åˆ†æä¸åŒå‘¨æœŸçš„é«˜ç‚¹åŠå¹…åº¦
 
-def getDateOfPrice(price,priceFList,dayStrList):
-    indexPrice=priceFList.index(price)
+def getDateOfPrice(price, priceFList, dayStrList):
+    indexPrice = priceFList.index(price)
     return dayStrList[indexPrice]
 
-def findPeakPrice(dayPeriod,curDateStrList,curPriceOpenFList,curPriceHighestFList,curPriceLowestFList,curPriceClosedFList,resultDir="resultDir"):
-    print('½øĞĞ¼Û¸ñ·åÖµ·ÖÎö£¬·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisPrice.txt') ##Êä³öÎÄ¼şÃû
-    lineWritedList=[]
+
+def findPeakPrice(dayPeriod, curDateStrList, curPriceOpenFList, curPriceHighestFList, curPriceLowestFList, curPriceClosedFList, resultDir="resultDir"):
+    print('è¿›è¡Œä»·æ ¼å³°å€¼åˆ†æï¼Œåˆ†æå‘¨æœŸ(å¤©):'+str(dayPeriod))
+    goalFilePath = os.path.join(
+        resultDir, stockID+"_"+str(dayPeriod)+'_peakAnalysisPrice.txt')  # è¾“å‡ºæ–‡ä»¶å
+    lineWritedList = []
 
     lineWritedList.append('-'*50)
-    lineWritedList.append('¼Û¸ñ·åÖµ·ÖÎö·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    lineWritedList.append("ÈÕÆÚ"+"\t¾àÉÏ´Î·åÖµ½»Ò×ÈÕ¸öÊı\t"+"\t¾àÉÏ´Î·åÖµ×ÔÈ»ÈÕ¸öÊı\t"+"\t¾Ö²¿¸ßµã/µÍµã\t"+"¸¡¶¯·ù¶È%:\t")
-   
-    ##±äÁ¿ ÓÃÓÚ¼ÆËã½»Ò×ÈÕ¼ä¸ô
-    d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
-    d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
-    standValue=100
-    daySpanLast=10 ## record last span dayPeriod
-    indexLast=1
-    dayPeriod=dayPeriod/2 ##ÖÜÆÚÄÚ×îÖµ ÓÃ°ëÖÜÆÚÇ°ºóËã£¬iÑ­»·Ê± ±È½Ïµ±ÈÕÊÇ·ñÊÇÇ°ºó°ëÖÜÆÚµÄ¼«Öµ
-    for i in range(dayPeriod,len(curDateStrList)):
-        ##Èç¹ûiÇ°ºóµÄdayPeriodÂú×ãÖÜÆÚ ,iºóÃæµÄ½»Ò×ÈÕ²»Âú×ã°ëÖÜÆÚ ¾ÍÓÃelseµÄ
+    lineWritedList.append('ä»·æ ¼å³°å€¼åˆ†æåˆ†æå‘¨æœŸ(å¤©):'+str(dayPeriod))
+    lineWritedList.append("æ—¥æœŸ"+"\tè·ä¸Šæ¬¡å³°å€¼äº¤æ˜“æ—¥ä¸ªæ•°\t" +
+                          "\tè·ä¸Šæ¬¡å³°å€¼è‡ªç„¶æ—¥ä¸ªæ•°\t"+"\tå±€éƒ¨é«˜ç‚¹/ä½ç‚¹\t"+"æµ®åŠ¨å¹…åº¦%:\t")
+
+    # å˜é‡ ç”¨äºè®¡ç®—äº¤æ˜“æ—¥é—´éš”
+    d1 = Ccomfunc.convertDateStr2Date(curDateStrList[0])
+    d2 = Ccomfunc.convertDateStr2Date(curDateStrList[0])
+    standValue = 100
+    daySpanLast = 10  # record last span dayPeriod
+    indexLast = 1
+    dayPeriod = int(dayPeriod/2)  # å‘¨æœŸå†…æœ€å€¼ ç”¨åŠå‘¨æœŸå‰åç®—ï¼Œiå¾ªç¯æ—¶ æ¯”è¾ƒå½“æ—¥æ˜¯å¦æ˜¯å‰ååŠå‘¨æœŸçš„æå€¼
+    for i in range(dayPeriod, len(curDateStrList)):
+        # å¦‚æœiå‰åçš„dayPeriodæ»¡è¶³å‘¨æœŸ ,iåé¢çš„äº¤æ˜“æ—¥ä¸æ»¡è¶³åŠå‘¨æœŸ å°±ç”¨elseçš„
         max_value = -999
         max_index = 0
-        if i<len(curDateStrList)-dayPeriod:
-            ##get the highest price of curStock in a period
+        if i < len(curDateStrList)-dayPeriod:
+            # get the highest price of curStock in a period
             max_value = max(curPriceHighestFList[i-dayPeriod:i+dayPeriod])
             max_index = curPriceHighestFList.index(max_value)
         else:
             max_value = max(curPriceHighestFList[i-dayPeriod:])
             max_index = curPriceHighestFList.index(max_value)
-            ## write to  file when  the max_index equals to i or pass 
-        if max_index==i:
-            d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
-            daysSpan=(d2-d1).days
-            daySpanLast=dayPeriod if daySpanLast==0 else daySpanLast
-            riseRate=-999
-            if standValue!=0:
-                riseRate=round((max_value-standValue)/standValue,3)*100
-            lineWritedList.append(curDateStrList[i]+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t" \
-                    +str(curPriceHighestFList[i])+"\t"+str(riseRate)+"\t")
-            d1=d2
-            indexLast=max_index
-            standValue=max_value
-            daySpanLast=daysSpan
-           
-        min_value = 999 
+            # write to  file when  the max_index equals to i or pass
+        if max_index == i:
+            d2 = Ccomfunc.convertDateStr2Date(curDateStrList[i])
+            daysSpan = (d2-d1).days
+            daySpanLast = dayPeriod if daySpanLast == 0 else daySpanLast
+            riseRate = -999
+            if standValue != 0:
+                riseRate = round((max_value-standValue)/standValue, 3)*100
+            lineWritedList.append(curDateStrList[i]+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t"
+                                  + str(curPriceHighestFList[i])+"\t"+str("%.2f"%riseRate)+"\t")
+            d1 = d2
+            indexLast = max_index
+            standValue = max_value
+            daySpanLast = daysSpan
+
+        min_value = 999
         min_index = 0
-        if i<len(curDateStrList)-dayPeriod:
+        if i < len(curDateStrList)-dayPeriod:
             min_value = min(curPriceLowestFList[i-dayPeriod:i+dayPeriod])
             min_index = curPriceLowestFList.index(min_value)
         else:
             min_value = min(curPriceLowestFList[i-dayPeriod:])
             min_index = curPriceLowestFList.index(min_value)
-        if min_index==i:
-            d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
-            daysSpan=(d2-d1).days
-            riseRate=-999
-            if standValue!=0:
-                riseRate=round((min_value-standValue)/standValue,3)*100
-            lineWritedList.append(curDateStrList[i]+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t" \
-                    +str(curPriceLowestFList[i])+"\t"+str(riseRate)+"\t")
-            d1=d2
-            indexLast=min_index
-            standValue=min_value
-            daySpanLast=daysSpan
-    ## deal the last day
-    d2=Ccomfunc.convertDateStr2Date(curDateStrList[-1])
-    daysSpan=(d2-d1).days
-    daySpanLast=dayPeriod if daySpanLast==0 else daySpanLast
-    lineWritedList.append(curDateStrList[-1]+"\t" +str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t" \
-            +str(curPriceClosedFList[-1])+"\t"+str(round((curPriceClosedFList[-1]-standValue)/standValue,3)*100))
-    Ccomfunc.write2Text(goalFilePath,lineWritedList) 
+        if min_index == i:
+            d2 = Ccomfunc.convertDateStr2Date(curDateStrList[i])
+            daysSpan = (d2-d1).days
+            riseRate = -999
+            if standValue != 0:
+                riseRate = round((min_value-standValue)/standValue, 3)*100
+            lineWritedList.append(curDateStrList[i]+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t"
+                                  + str(curPriceLowestFList[i])+"\t"+str("%.2f"%riseRate)+"\t")
+            d1 = d2
+            indexLast = min_index
+            standValue = min_value
+            daySpanLast = daysSpan
+    # deal the last day
+    d2 = Ccomfunc.convertDateStr2Date(curDateStrList[-1])
+    daysSpan = (d2-d1).days
+    daySpanLast = dayPeriod if daySpanLast == 0 else daySpanLast
+    lineWritedList.append(curDateStrList[-1]+"\t" + str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"
+                          + str(curPriceClosedFList[-1])+"\t"+str(round((curPriceClosedFList[-1]-standValue)/standValue, 3)*100))
+    Ccomfunc.write2Text(goalFilePath, lineWritedList)
 
-def findPeakVolume(dayPeriod,curDateStrList,curTradeVolumeFList):
-    print('½øĞĞ³É½»Á¿·åÖµ·ÖÎö£¬·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    goalFilePath=os.path.join(resultDir,stockID+"_"+str(dayPeriod)+'_peakAnalysisVolume.txt') ##Êä³öÎÄ¼şÃû
-    lineWritedList=[]
+
+def findPeakVolume(dayPeriod, curDateStrList, curTradeVolumeFList):
+    print('è¿›è¡Œæˆäº¤é‡å³°å€¼åˆ†æï¼Œåˆ†æå‘¨æœŸ(å¤©):'+str(dayPeriod))
+    goalFilePath = os.path.join(
+        resultDir, stockID+"_"+str(dayPeriod)+'_peakAnalysisVolume.txt')  # è¾“å‡ºæ–‡ä»¶å
+    lineWritedList = []
     lineWritedList.append('-'*50)
-    lineWritedList.append('³É½»Á¿·åÖµ·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    lineWritedList.append("ÈÕÆÚ"+"\t¾Ö²¿¸ßµã/µÍµã(ÍòÊÖ)\t"+"\t¾àÉÏ´Î·åÖµ½»Ò×ÈÕ¸öÊı\t"+"\t¾àÉÏ´Î·åÖµ×ÔÈ»ÈÕ¸öÊı\t"+"\t¸¡¶¯·ù¶È%:\t")
+    lineWritedList.append('æˆäº¤é‡å³°å€¼åˆ†æå‘¨æœŸ(å¤©):'+str(dayPeriod))
+    lineWritedList.append("æ—¥æœŸ"+"\tå±€éƒ¨é«˜ç‚¹/ä½ç‚¹(ä¸‡æ‰‹)\t" +
+                          "\tè·ä¸Šæ¬¡å³°å€¼äº¤æ˜“æ—¥ä¸ªæ•°\t"+"\tè·ä¸Šæ¬¡å³°å€¼è‡ªç„¶æ—¥ä¸ªæ•°\t"+"\tæµ®åŠ¨å¹…åº¦%:\t")
 
-    d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
-    d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
-    standValue=100
-    indexLast=1
-    dayPeriod=dayPeriod/2
-    for i in range(dayPeriod,len(curDateStrList)-dayPeriod):
+    d1 = Ccomfunc.convertDateStr2Date(curDateStrList[0])
+    d2 = Ccomfunc.convertDateStr2Date(curDateStrList[0])
+    standValue = 100
+    indexLast = 1
+    dayPeriod = dayPeriod/2
+    for i in range(dayPeriod, len(curDateStrList)-dayPeriod):
         max_value = max(curTradeVolumeFList[i-dayPeriod:i+dayPeriod])
         max_index = curTradeVolumeFList.index(max_value)
-        if max_index==i:
-            d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
-            daysSpan=(d2-d1).days
-            lineWritedList.append(curDateStrList[i]+"\t"+str(curTradeVolumeFList[i])+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((max_value-standValue)/standValue,3)*100))
-            d1=d2
-            indexLast=max_index
-            standValue=max_value
-           
+        if max_index == i:
+            d2 = Ccomfunc.convertDateStr2Date(curDateStrList[i])
+            daysSpan = (d2-d1).days
+            lineWritedList.append(curDateStrList[i]+"\t"+str(curTradeVolumeFList[i])+"\t"+str(
+                max_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((max_value-standValue)/standValue, 3)*100))
+            d1 = d2
+            indexLast = max_index
+            standValue = max_value
+
         min_value = min(curTradeVolumeFList[i-dayPeriod:i+dayPeriod])
         min_index = curTradeVolumeFList.index(min_value)
-        if min_index==i:
-            d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
-            daysSpan=(d2-d1).days
-            lineWritedList.append(curDateStrList[i]+"\t"+str(curTradeVolumeFList[i])+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((min_value-standValue)/standValue,3)*100))
-            d1=d2
-            indexLast=min_index
-            standValue=min_value
-    d2=Ccomfunc.convertDateStr2Date(curDateStrList[-1])
-    daysSpan=(d2-d1).days
-    lineWritedList.append(curDateStrList[-1]+"\t"+str(curTradeVolumeFList[-1])+"\t"+str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curTradeVolumeFList[-1]-standValue)/standValue,3)*100))
-    Ccomfunc.write2Text(goalFilePath,lineWritedList) 
+        if min_index == i:
+            d2 = Ccomfunc.convertDateStr2Date(curDateStrList[i])
+            daysSpan = (d2-d1).days
+            lineWritedList.append(curDateStrList[i]+"\t"+str(curTradeVolumeFList[i])+"\t"+str(
+                min_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((min_value-standValue)/standValue, 3)*100))
+            d1 = d2
+            indexLast = min_index
+            standValue = min_value
+    d2 = Ccomfunc.convertDateStr2Date(curDateStrList[-1])
+    daysSpan = (d2-d1).days
+    lineWritedList.append(curDateStrList[-1]+"\t"+str(curTradeVolumeFList[-1])+"\t"+str(len(
+        curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curTradeVolumeFList[-1]-standValue)/standValue, 3)*100))
+    Ccomfunc.write2Text(goalFilePath, lineWritedList)
 
-def findPeakTurnover(dayPeriod,curDateStrList,curTurnover):
-    print('½øĞĞ½»Ò×¶î·åÖµ·ÖÎö£¬·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
+
+def findPeakTurnover(dayPeriod, curDateStrList, curTurnover):
+    lineWritedList=[]
+    print('è¿›è¡Œäº¤æ˜“é¢å³°å€¼åˆ†æï¼Œåˆ†æå‘¨æœŸ(å¤©):'+str(dayPeriod))
     lineWritedList.append('-'*50)
-    lineWritedList.append('ĞĞ½»Ò×¶î·åÖµ·ÖÎöÖÜÆÚ(Ìì):'+str(dayPeriod))
-    lineWritedList.append("ÈÕÆÚ"+"\t¾Ö²¿¸ßµã/µÍµã(ÒÚÔª)\t"+"\t¾àÉÏ´Î·åÖµ½»Ò×ÈÕ¸öÊı\t"+"\t¾àÉÏ´Î·åÖµ×ÔÈ»ÈÕ¸öÊı\t"+"\t¸¡¶¯·ù¶È%:\t")
-    d1=Ccomfunc.convertDateStr2Date(curDateStrList[0])
-    d2=Ccomfunc.convertDateStr2Date(curDateStrList[0])
-    standValue=100
-    indexLast=1
-    dayPeriod=dayPeriod/2
-    for i in range(dayPeriod,len(curDateStrList)-dayPeriod):
+    lineWritedList.append('è¡Œäº¤æ˜“é¢å³°å€¼åˆ†æå‘¨æœŸ(å¤©):'+str(dayPeriod))
+    lineWritedList.append("æ—¥æœŸ"+"\tå±€éƒ¨é«˜ç‚¹/ä½ç‚¹(äº¿å…ƒ)\t" +
+                          "\tè·ä¸Šæ¬¡å³°å€¼äº¤æ˜“æ—¥ä¸ªæ•°\t"+"\tè·ä¸Šæ¬¡å³°å€¼è‡ªç„¶æ—¥ä¸ªæ•°\t"+"\tæµ®åŠ¨å¹…åº¦%:\t")
+    d1 = Ccomfunc.convertDateStr2Date(curDateStrList[0])
+    d2 = Ccomfunc.convertDateStr2Date(curDateStrList[0])
+    standValue = 100
+    indexLast = 1
+    dayPeriod = dayPeriod/2
+    for i in range(dayPeriod, len(curDateStrList)-dayPeriod):
         max_value = max(curTurnover[i-dayPeriod:i+dayPeriod])
         max_index = curTurnover.index(max_value)
-        if max_index==i:
-            d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
-            daysSpan=(d2-d1).days
-            lineWritedList.append(curDateStrList[i]+"\t"+str(round(curTurnover[i]/10000,1))+"\t"+str(max_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((max_value-standValue)/standValue,3)*100))
-            d1=d2
-            indexLast=max_index
-            standValue=max_value
-           
+        if max_index == i:
+            d2 = Ccomfunc.convertDateStr2Date(curDateStrList[i])
+            daysSpan = (d2-d1).days
+            lineWritedList.append(curDateStrList[i]+"\t"+str(round(curTurnover[i]/10000, 1))+"\t"+str(
+                max_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((max_value-standValue)/standValue, 3)*100))
+            d1 = d2
+            indexLast = max_index
+            standValue = max_value
+
         min_value = min(curTurnover[i-dayPeriod:i+dayPeriod])
         min_index = curTurnover.index(min_value)
-        if min_index==i:
-            d2=Ccomfunc.convertDateStr2Date(curDateStrList[i])
-            daysSpan=(d2-d1).days
-            lineWritedList.append(curDateStrList[i]+"\t"+str(round(curTurnover[i]/10000,1))+"\t"+str(min_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((min_value-standValue)/standValue,3)*100))
-            d1=d2
-            indexLast=min_index
-            standValue=min_value
-    d2=Ccomfunc.convertDateStr2Date(curDateStrList[-1])
-    daysSpan=(d2-d1).days
-    lineWritedList.append(curDateStrList[-1]+"\t"+str(round(curTurnover[-1]/10000,1))+"\t"+str(len(curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curTurnover[-1]-standValue)/standValue,3)*100))
+        if min_index == i:
+            d2 = Ccomfunc.convertDateStr2Date(curDateStrList[i])
+            daysSpan = (d2-d1).days
+            lineWritedList.append(curDateStrList[i]+"\t"+str(round(curTurnover[i]/10000, 1))+"\t"+str(
+                min_index-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((min_value-standValue)/standValue, 3)*100))
+            d1 = d2
+            indexLast = min_index
+            standValue = min_value
+    d2 = Ccomfunc.convertDateStr2Date(curDateStrList[-1])
+    daysSpan = (d2-d1).days
+    lineWritedList.append(curDateStrList[-1]+"\t"+str(round(curTurnover[-1]/10000, 1))+"\t"+str(len(
+        curDateStrList)-indexLast)+"\t"+str(daysSpan)+"\t"+str(round((curTurnover[-1]-standValue)/standValue, 3)*100))
 
-def analysisDate(dateStrStart,dateStrEnd,curDateStrList,curPriceOpenFList,curPriceHighestFList,curPriceLowestFList,curPriceClosedFList):
-## get analysis indexStartDay and indexEndDay by dayStrList
-    indexStart=curDateStrList.index(dateStrStart)
-    indexEnd=curDateStrList.index(dateStrEnd)
+
+def analysisDate(dateStrStart, dateStrEnd, curDateStrList, curPriceOpenFList, curPriceHighestFList, curPriceLowestFList, curPriceClosedFList):
+    # get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart = curDateStrList.index(dateStrStart)
+    indexEnd = curDateStrList.index(dateStrEnd)
     print("-"*50)
-    print("·ÖÎöÖÜÆÚ(½»Ò×ÈÕ/Ìì):\t"+str(indexEnd-indexStart)+"ÆğÊ¼ÈÕÆÚ:\t"+curDateStrList[indexStart]+"\t½áÊøÈÕÆÚ:"+curDateStrList[indexEnd])
-    
-    curPriceHighest=max(curPriceHighestFList[indexStart:indexEnd])
-    datePriceHighest=getDateOfPrice(curPriceHighest,curPriceHighestFList,curDateStrList)
-    print("Çø¼äÄÚ×î¸ß¼Û:\t"+str(curPriceHighest)+"³öÏÖÈÕÆÚ:\t"+datePriceHighest)
-    
-    curPriceLowest=min(curPriceLowestFList[indexStart:indexEnd])
-    datePriceLowest=getDateOfPrice(curPriceLowest,curPriceLowestFList,curDateStrList)
-    print("Çø¼äÄÚ×îµÍ¼Û:\t"+str(curPriceLowest)+"³öÏÖÈÕÆÚ:\t"+datePriceLowest)
+    print("åˆ†æå‘¨æœŸ(äº¤æ˜“æ—¥/å¤©):\t"+str(indexEnd-indexStart)+"èµ·å§‹æ—¥æœŸ:\t" +
+          curDateStrList[indexStart]+"\tç»“æŸæ—¥æœŸ:"+curDateStrList[indexEnd])
 
-    natureDaysNumFromLastPeak2Today=-1  
-    if datePriceHighest>=datePriceLowest:
-        natureDaysNumFromLastPeak2Today=datetime.date.today()-Ccomfunc.convertDateStr2Date(datePriceHighest)
+    curPriceHighest = max(curPriceHighestFList[indexStart:indexEnd])
+    datePriceHighest = getDateOfPrice(
+        curPriceHighest, curPriceHighestFList, curDateStrList)
+    print("åŒºé—´å†…æœ€é«˜ä»·:\t"+str(curPriceHighest)+"å‡ºç°æ—¥æœŸ:\t"+datePriceHighest)
+
+    curPriceLowest = min(curPriceLowestFList[indexStart:indexEnd])
+    datePriceLowest = getDateOfPrice(
+        curPriceLowest, curPriceLowestFList, curDateStrList)
+    print("åŒºé—´å†…æœ€ä½ä»·:\t"+str(curPriceLowest)+"å‡ºç°æ—¥æœŸ:\t"+datePriceLowest)
+
+    natureDaysNumFromLastPeak2Today = -1
+    if datePriceHighest >= datePriceLowest:
+        natureDaysNumFromLastPeak2Today = datetime.date.today(
+        )-Ccomfunc.convertDateStr2Date(datePriceHighest)
     else:
-        natureDaysNumFromLastPeak2Today=datetime.date.today()-Ccomfunc.convertDateStr2Date(datePriceLowest)
-    print("ÉÏ¸ö×îÖµ¾àÀë½ñÌìµÄ×ÔÈ»ÈÕ¸öÊı(Ìì):\t"+str(natureDaysNumFromLastPeak2Today.days))
-    print("×î¸ßµã³öÏÖÓë×îµÍµã³öÏÖ½»Ò×ÈÕ¸öÊı(Ìì):\t"+str(1+curPriceHighestFList.index(curPriceHighest)-curPriceLowestFList.index(curPriceLowest)))
-    daySpan=calNatureDays(datePriceHighest,datePriceLowest)
-    print("×î¸ßµã³öÏÖÓë×îµÍµã³öÏÖ×ÔÈ»ÈÕ¸öÊı(Ìì):\t"+str(daySpan))
-    print("×î¸ßµã/×îµÍµã:\t"+str(round(curPriceHighest/curPriceLowest,2)))
+        natureDaysNumFromLastPeak2Today = datetime.date.today(
+        )-Ccomfunc.convertDateStr2Date(datePriceLowest)
+    print("ä¸Šä¸ªæœ€å€¼è·ç¦»ä»Šå¤©çš„è‡ªç„¶æ—¥ä¸ªæ•°(å¤©):\t"+str(natureDaysNumFromLastPeak2Today.days))
+    print("æœ€é«˜ç‚¹å‡ºç°ä¸æœ€ä½ç‚¹å‡ºç°äº¤æ˜“æ—¥ä¸ªæ•°(å¤©):\t"+str(1+curPriceHighestFList.index(curPriceHighest) -
+                                       curPriceLowestFList.index(curPriceLowest)))
+    daySpan = calNatureDays(datePriceHighest, datePriceLowest)
+    print("æœ€é«˜ç‚¹å‡ºç°ä¸æœ€ä½ç‚¹å‡ºç°è‡ªç„¶æ—¥ä¸ªæ•°(å¤©):\t"+str(daySpan))
+    print("æœ€é«˜ç‚¹/æœ€ä½ç‚¹:\t"+str(round(curPriceHighest/curPriceLowest, 2)))
 
-def analysisScale(stockID,dateStrStart,dateStrEnd):
-## get analysis indexStartDay and indexEndDay by dayStrList
-    indexStart=dayStrList.index(dateStrStart)
-    indexEnd=dayStrList.index(dateStrEnd)
+
+def analysisScale(stockID, dateStrStart, dateStrEnd):
+    # get analysis indexStartDay and indexEndDay by dayStrList
+    indexStart = dayStrList.index(dateStrStart)
+    indexEnd = dayStrList.index(dateStrEnd)
     print("-"*50)
-    print("·ÖÎö¼Û²îºÍÕÇ·ù")
-    
-    zhenfuFList=[] ## ²¨¶¯·ù¶È
-    zhangdiefuFList=[]  ##ÕÇµø·ù
-    for i in range(indexStart,indexEnd):
-        priceDelta1=(dayPriceClosedFList[i]-dayPriceOpenFList[i])/dayPriceClosedFList[i-1]
-        priceDelta2=(dayPriceHighestFList[i]-dayPriceLowestFList[i])/dayPriceClosedFList[i-1]
-        if priceDelta1>=0.05:
+    print("åˆ†æä»·å·®å’Œæ¶¨å¹…")
+
+    zhenfuFList = []  # æ³¢åŠ¨å¹…åº¦
+    zhangdiefuFList = []  # æ¶¨è·Œå¹…
+    for i in range(indexStart, indexEnd):
+        priceDelta1 = (
+            dayPriceClosedFList[i]-dayPriceOpenFList[i])/dayPriceClosedFList[i-1]
+        priceDelta2 = (
+            dayPriceHighestFList[i]-dayPriceLowestFList[i])/dayPriceClosedFList[i-1]
+        if priceDelta1 >= 0.05:
             zhenfuFList.append(i)
-        if abs(priceDelta2)>=0.05:
+        if abs(priceDelta2) >= 0.05:
             zhangdiefuFList.append(i)
-    strDate=""
+    strDate = ""
     for item in zhenfuFList:
-        strDate=strDate+dayStrList[item]+"\t"
-    print("Õñ·ù³¬¹ı5%ÌìÊı:\t"+str(len(zhenfuFList))+"\tÆğÊ¼ÈÕÆÚÊÇ£º"+strDate)
-    strDate=""
+        strDate = strDate+dayStrList[item]+"\t"
+    print("æŒ¯å¹…è¶…è¿‡5%å¤©æ•°:\t"+str(len(zhenfuFList))+"\tèµ·å§‹æ—¥æœŸæ˜¯ï¼š"+strDate)
+    strDate = ""
     for item in zhangdiefuFList:
-        strDate=strDate+dayStrList[item]+"\t"
-    print("ÕÇµø·ù³¬¹ı5%:\t"+str(len(zhangdiefuFList))+"\tÆğÊ¼ÈÕÆÚÊÇ£º"+strDate)
+        strDate = strDate+dayStrList[item]+"\t"
+    print("æ¶¨è·Œå¹…è¶…è¿‡5%:\t"+str(len(zhangdiefuFList))+"\tèµ·å§‹æ—¥æœŸæ˜¯ï¼š"+strDate)
 
 
 def mainApp(curStock):
-    resultDir="resultDir"
+    resultDir = "resultDir"
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
-    print ("ÕıÔÚ½øĞĞÀúÊ·Ê±¿Õ·ÖÎö£º")
-    for dayPeriod in [3,5,10,20,30,60,90,120,250]:
-        findPeakPrice(dayPeriod,curStock.dayStrList,curStock.dayPriceOpenFList,curStock.dayPriceHighestFList,curStock.dayPriceLowestFList,curStock.dayPriceClosedFList)
+    print("æ­£åœ¨è¿›è¡Œå†å²æ—¶ç©ºåˆ†æï¼š")
+    for dayPeriod in [3, 5, 10, 20, 30, 60, 90, 120, 250]:
+        findPeakPrice(dayPeriod, curStock.dayStrList, curStock.dayPriceOpenFList,
+                      curStock.dayPriceHighestFList, curStock.dayPriceLowestFList, curStock.dayPriceClosedFList)
 #        findPeakVolume(dayPeriod,curStock.dayStrList,curStock.dayTradeVolumeFList)
 #        findPeakTurnover(dayPeriod,curStock.dayStrList,curStock.dayTurnOverFList)
 
 
-if __name__=="__main__":
-   
-    startClock=time.clock() ##¼ÇÂ¼³ÌĞò¿ªÊ¼¼ÆËãÊ±¼ä
-    
-    ##¶ÁÈ¡¹ÉÆ±´úÂë£¬´æ´¢ÔÚcurStockÀï
-    curStock=Cstock.Stock(stockID)
+if __name__ == "__main__":
 
-    ##ÉèÖÃ·ÖÎöÖÜÆÚ,Èç¹ûÈÕÆÚ´óÓÚ1000£¨4Äê¾ÍÈ¡1000£©£¬·ñÔòÈ¡×î´ó
-    iDaysPeriodUser=len(curStock.dayStrList) if len(curStock.dayStrList)<=1000 else 1000
-    ##ÆğÊ¼·ÖÎöÈÕÆÚ dateStrStart
-    dateStrStart=curStock.dayStrList[-iDaysPeriodUser]
-    ##ÖÕÁË·ÖÎöÈÕÆÚ dateStrEnd
-    dateStrEnd=curStock.dayStrList[-1]
+    startClock = time.clock()  # è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
+
+    # è¯»å–è‚¡ç¥¨ä»£ç ï¼Œå­˜å‚¨åœ¨curStocké‡Œ
+    curStock = Cstock.Stock(stockID)
+
+    # è®¾ç½®åˆ†æå‘¨æœŸ,å¦‚æœæ—¥æœŸå¤§äº1000ï¼ˆ4å¹´å°±å–1000ï¼‰ï¼Œå¦åˆ™å–æœ€å¤§
+    iDaysPeriodUser = len(curStock.dayStrList) if len(
+        curStock.dayStrList) <= 1000 else 1000
+    # èµ·å§‹åˆ†ææ—¥æœŸ dateStrStart
+    dateStrStart = curStock.dayStrList[-iDaysPeriodUser]
+    # ç»ˆäº†åˆ†ææ—¥æœŸ dateStrEnd
+    dateStrEnd = curStock.dayStrList[-1]
 
     mainApp(curStock)
 
-    timeSpan=time.clock()-startClock
-    print("Time used(s):",round(timeSpan,2))
-
-
+    timeSpan = time.clock()-startClock
+    print("Time used(s):", round(timeSpan, 2))

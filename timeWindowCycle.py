@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import datetime
-import ConfigParser
-import time,sched,os,urllib2,re,string
+import configparser 
+import time,sched,os,re,string
 import Ccomfunc
 
 def May(vDay):
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     filePath ="999999_250_peakAnalysisPrice.txt"
     strDate = "2015/10/10"
     curdate =  Ccomfunc.convertDateStr2Date(strDate)
-    print getCycleType(curdate,filePath)
+    print (getCycleType(curdate,filePath))
     May(today)
     Weekends(today)
     

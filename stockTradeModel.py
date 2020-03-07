@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# stock track model 
+""" # stock track model
 # conditions for trading
-# 
+#
 # 1 recogenize the pattern and get the possible model
 # 2 analisys the openPrice model
 # 3 you can miss it but no make mistake.
 
-# according to market trending,  
+# according to market trending,   """
 import os
 import shutil
 import time
@@ -19,233 +19,262 @@ import configOS
 import scipy.optimize as optimize
 import math
 
-def calTBuy(curStock,strDate=Ccomfunc.defaultDateInputStr()):
-    lineWritedList=[]
-    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock,strDate)
-    lineWritedList.append("ÈÕÆÚ£º{}£¬ÊÕÅÌ¼Û{}".format(curStock.dayStrList[matchDateIndex],curStock.dayPriceClosedArray[matchDateIndex])) 
-    priceTBuyDic={}
+
+def calTBuy(curStock, strDate=Ccomfunc.defaultDateInputStr()):
+    lineWritedList = []
+    matchDateIndex = Ccomfunc.getIndexByStrDate(curStock, strDate)
+    lineWritedList.append("æ—¥æœŸï¼š{}ï¼Œæ”¶ç›˜ä»·{}".format(
+        curStock.dayStrList[matchDateIndex], curStock.dayPriceClosedArray[matchDateIndex]))
+    priceTBuyDic = {}
     priceTBuyDic['CloseYesto'] = curStock.dayPriceClosedArray[matchDateIndex]
     priceTBuyDic['CloseDay5Ave'] = curStock.day5PriceAverageArray[matchDateIndex]
     priceTBuyDic['CloseDay98'] = curStock.dayPriceClosedArray[matchDateIndex]*0.98
-    priceTBuyDic['Lowest5'] = curStock.dayPriceLowestArray[matchDateIndex-5:matchDateIndex].min()
-    priceTBuyDic['Lowest3'] = curStock.dayPriceLowestArray[matchDateIndex-3:matchDateIndex].min()
-    headLine="ÖÜÆÚ(ÈÕ)·ù¶È\tµÍµã\t¸ßµã\tµãÎ»"
-    lineWritedList.append(headLine) 
-    for period in [5,10,20,30,60]:
-        cycleHigh=curStock.dayPriceHighestArray[matchDateIndex-period:matchDateIndex].max()
-        cycleLow=curStock.dayPriceLowestArray[matchDateIndex-period:matchDateIndex].min()
-        for keyPoint in [0.25,0.33,0.5,0.618,0.75,0.825]:
-            resistLinePoint=cycleLow+(cycleHigh-cycleLow)*keyPoint
-            resultLine="{}ÈÕ\t{}\t{}\t{}\t{:.2f}".format(period,keyPoint,cycleLow,cycleHigh,resistLinePoint)
-            if 0.99<=curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint<=1.01:
-                if curStock.dayPriceClosedFList[matchDateIndex]<=resistLinePoint:
-                    resultLine+="\t×¢ÒâÑ¹Á¦Î»£¡"
-                if curStock.dayPriceClosedFList[matchDateIndex]>=resistLinePoint:
-                    resultLine+="\tÖ§³ÅÎ»£¡"
+    priceTBuyDic['Lowest5'] = curStock.dayPriceLowestArray[matchDateIndex -
+        5:matchDateIndex].min()
+    priceTBuyDic['Lowest3'] = curStock.dayPriceLowestArray[matchDateIndex -
+        3:matchDateIndex].min()
+    headLine = "å‘¨æœŸ(æ—¥)å¹…åº¦\tä½ç‚¹\té«˜ç‚¹\tç‚¹ä½"
+    lineWritedList.append(headLine)
+    for period in [5, 10, 20, 30, 60]:
+        cycleHigh = curStock.dayPriceHighestArray[matchDateIndex -
+            period:matchDateIndex].max()
+        cycleLow = curStock.dayPriceLowestArray[matchDateIndex -
+            period:matchDateIndex].min()
+        for keyPoint in [0.25, 0.33, 0.5, 0.618, 0.75, 0.825]:
+            resistLinePoint = cycleLow+(cycleHigh-cycleLow)*keyPoint
+            resultLine = "{}æ—¥\t{}\t{}\t{}\t{:.2f}".format(
+                period, keyPoint, cycleLow, cycleHigh, resistLinePoint)
+            if 0.99 <= curStock.dayPriceClosedFList[matchDateIndex]/resistLinePoint <= 1.01:
+                if curStock.dayPriceClosedFList[matchDateIndex] <= resistLinePoint:
+                    resultLine += "\tæ³¨æ„å‹åŠ›ä½ï¼"
+                if curStock.dayPriceClosedFList[matchDateIndex] >= resistLinePoint:
+                    resultLine += "\tæ”¯æ’‘ä½ï¼"
             lineWritedList.append(resultLine)
-    for key,value in sorted(priceTBuyDic.items(), key=lambda x:-x[1]):
-        line="{}\t{:.2f}".format(key,value)
+    for key, value in sorted(priceTBuyDic.items(), key=lambda x: -x[1]):
+        line = "{}\t{:.2f}".format(key, value)
         lineWritedList.append(line)
-    for line in lineWritedList: 
-        print line 
-    goalFilePath=os.path.join(Ccomfunc.resultDir,curStock.stockID+"_"+strDate.replace("/","")+'_tradeTec.txt') ##Êä³öÎÄ¼şÃû
-    Ccomfunc.write2Text(goalFilePath,lineWritedList)
+    for line in lineWritedList:
+        print(line)
+    goalFilePath = os.path.join(
+        Ccomfunc.resultDir, curStock.stockID+"_"+strDate.replace("/", "")+'_tradeTec.txt')  # è¾“å‡ºæ–‡ä»¶å
+    Ccomfunc.write2Text(goalFilePath, lineWritedList)
     os.startfile(goalFilePath)
-    
 
-def func(fData,a,b,c,d):
+
+def func(fData, a, b, c, d):
     return fData[0]*a+fData[1]*b+fData[2]*c + d
 
-def historyPrint_optimize_curve_fit(cStock,countOfEle,kPeriod,params): 
-    ##ÓÃÄ£Ê½Ê¶±ğµÄÈÕÆÚ£¬Ñ°ÕÒÖ¸Êı£¬È»ºóÕÒ³ö±ÈÀı 
-    for indexDate in range(countOfEle-kPeriod,countOfEle-1):
-        knum=3
+
+def historyPrint_optimize_curve_fit(cStock, countOfEle, kPeriod, params):
+    # ç”¨æ¨¡å¼è¯†åˆ«çš„æ—¥æœŸï¼Œå¯»æ‰¾æŒ‡æ•°ï¼Œç„¶åæ‰¾å‡ºæ¯”ä¾‹
+    for indexDate in range(countOfEle-kPeriod, countOfEle-1):
+        knum = 3
         print("-"*72)
         print(cStock.dayStrList[indexDate-knum:indexDate])
-        priceRiseRate3day=(cStock.dayRiseRateArray[indexDate-knum:indexDate]).mean()
-        priceHigh3days=cStock.dayPriceHighestArray[indexDate-knum:indexDate].mean()
-        priceClose3days=cStock.dayPriceClosedArray[indexDate-knum:indexDate].mean()
-        priceLowFit=(cStock.dayPriceLowestArray[indexDate-knum:indexDate]*params[:3]).sum()+params[3]
-        priceLow3days=cStock.dayPriceLowestArray[indexDate-knum:indexDate].mean()
-        priceOpen3days=cStock.dayPriceOpenArray[indexDate-knum:indexDate].mean()
-        priceWave3days=cStock.dayWaveRateArray[indexDate-knum:indexDate].mean()
-        print("{}ÈÕÕÇ·ùÆ½¾ù{:.2f}£¬¿ªÅÌ¾ù¼Û{:.2f}£¬¸ß¾ù¼Û{:.2f}£¬µÍ¾ù¼Û{:.2f}£¬ÊÕÅÌ¾ù¼Û{:.2f},Æ½¾ù²¨·ù{:.2f}".format\
-                (knum,priceRiseRate3day,priceOpen3days,priceHigh3days,priceLow3days,priceClose3days,priceWave3days))
-        print("{}ÈÕ×îµÍ¼Û{:.2f}£¬×î¸ß¼Û{:.2f}£¬×îĞ¡²¨·ù{:.2f}".format\
-                (knum,cStock.dayPriceLowestArray[indexDate-knum:indexDate].min(),\
-                cStock.dayPriceHighestArray[indexDate-knum:indexDate].max(),\
-                cStock.dayWaveRateArray[indexDate-knum:indexDate].min() \
-                )\
+        priceRiseRate3day = (
+            cStock.dayRiseRateArray[indexDate-knum:indexDate]).mean()
+        priceHigh3days = cStock.dayPriceHighestArray[indexDate -
+            knum:indexDate].mean()
+        priceClose3days = cStock.dayPriceClosedArray[indexDate -
+            knum:indexDate].mean()
+        priceLowFit = (
+            cStock.dayPriceLowestArray[indexDate-knum:indexDate]*params[:3]).sum()+params[3]
+        priceLow3days = cStock.dayPriceLowestArray[indexDate -
+            knum:indexDate].mean()
+        priceOpen3days = cStock.dayPriceOpenArray[indexDate -
+            knum:indexDate].mean()
+        priceWave3days = cStock.dayWaveRateArray[indexDate -
+            knum:indexDate].mean()
+        print("{}æ—¥æ¶¨å¹…å¹³å‡{:.2f}ï¼Œå¼€ç›˜å‡ä»·{:.2f}ï¼Œé«˜å‡ä»·{:.2f}ï¼Œä½å‡ä»·{:.2f}ï¼Œæ”¶ç›˜å‡ä»·{:.2f},å¹³å‡æ³¢å¹…{:.2f}".format
+                (knum, priceRiseRate3day, priceOpen3days, priceHigh3days, priceLow3days, priceClose3days, priceWave3days))
+        print("{}æ—¥æœ€ä½ä»·{:.2f}ï¼Œæœ€é«˜ä»·{:.2f}ï¼Œæœ€å°æ³¢å¹…{:.2f}".format
+                (knum, cStock.dayPriceLowestArray[indexDate-knum:indexDate].min(),
+                cStock.dayPriceHighestArray[indexDate-knum:indexDate].max(),
+                cStock.dayWaveRateArray[indexDate-knum:indexDate].min()
+                )
                 )
 
-        priceTbuy=priceLowFit*0.5+priceLow3days*0.5
-        priceTsell=priceTbuy*1.025
-        printTStop=priceTbuy*0.975
-        print("×îÓÅ»¯T-buy¼Û{:.2f}£¬´ÎÈÕ×îµÍ{},T-sell¼Û{:.2f}£¬´ÎÈÕ×î¸ß{},´ÎÈÕÖ¹Ëğ{:.2f},´ÎÈÕÊÕÅÌ{}".format(\
-                priceTbuy,cStock.dayPriceLowestArray[indexDate+1],\
-                priceTsell,cStock.dayPriceHighestArray[indexDate+1],\
-                printTStop,cStock.dayPriceClosedArray[indexDate+1])\
+        priceTbuy = priceLowFit*0.5+priceLow3days*0.5
+        priceTsell = priceTbuy*1.025
+        printTStop = priceTbuy*0.975
+        print("æœ€ä¼˜åŒ–T-buyä»·{:.2f}ï¼Œæ¬¡æ—¥æœ€ä½{},T-sellä»·{:.2f}ï¼Œæ¬¡æ—¥æœ€é«˜{},æ¬¡æ—¥æ­¢æŸ{:.2f},æ¬¡æ—¥æ”¶ç›˜{}".format(
+                priceTbuy, cStock.dayPriceLowestArray[indexDate+1],
+                priceTsell, cStock.dayPriceHighestArray[indexDate+1],
+                printTStop, cStock.dayPriceClosedArray[indexDate+1])
                 )
-def patternRecCalTPrice(cStock,dayRadioLinkPriceLowArray):
-    curMarket=Ccomfunc.getMarketStock(cStock.stockID)
-    matchDateIndex=-1 ##Ê¶±ğÈÕµÄÖ¸Êı
-    stockPatternRecognition.patternRecByMarketAndStock(curMarket,cStock,matchDateIndex)
-    listPatternRecBycStock=stockPatternRecognition.patternRecByRiseRate(cStock,300,3,matchDateIndex)
+
+
+def patternRecCalTPrice(cStock, dayRadioLinkPriceLowArray):
+    curMarket = Ccomfunc.getMarketStock(cStock.stockID)
+    matchDateIndex = -1  # è¯†åˆ«æ—¥çš„æŒ‡æ•°
+    stockPatternRecognition.patternRecByMarketAndStock(
+        curMarket, cStock, matchDateIndex)
+    listPatternRecBycStock = stockPatternRecognition.patternRecByRiseRate(
+        cStock, 300, 3, matchDateIndex)
 #    print listPatternRecBycStock
-    findIndex=cStock.findIndexByDayStr("2012/05/21")
-    scale= dayRadioLinkPriceLowArray[findIndex+1]
-    print "Æ¥ÅäÈÕ´Ë´ÎÔ¤²âµÍ¼Û{:.2f}".format(cStock.dayPriceLowestArray[-1]*(1+scale*0.01))
+    findIndex = cStock.findIndexByDayStr("2012/05/21")
+    scale = dayRadioLinkPriceLowArray[findIndex+1]
+    print("åŒ¹é…æ—¥æ­¤æ¬¡é¢„æµ‹ä½ä»·{:.2f}".format(
+        cStock.dayPriceLowestArray[-1]*(1+scale*0.01)))
+
 
 def outPutPriceRef(cStock):
-    headWrited=[]
-    wordWrited=[]
-    for i in [3,5,8,13,21]:
-        argsort=cStock.dayPriceLowestArray.argsort()
-        headWrited.append("{}ÈÕµÍ".format(i))
-        headWrited.append("{}ÈÕ¸ß".format(i))
-        wordWrited.append("{}".format(cStock.dayPriceLowestArray[-i:].min()))
-        wordWrited.append("{}".format(cStock.dayPriceHighestArray[-i:].max()))
+    headWrited = []
+    wordWrited = []
+    
+    for i in [3, 5, 8, 13, 21]:
+        if len(cStock.dateList)>i:
+            headWrited.append(str(i)+"æ—¥ä½")
+            headWrited.append(str(i)+"æ—¥é«˜")
+            wordWrited.append(str(min(cStock.dayPriceLowestArray[-i:])))
+            wordWrited.append(str(max(cStock.dayPriceHighestArray[-i:])))
     print("\t".join(headWrited))
     print("\t".join(wordWrited))
 
 def main(cStock):
-    print ("Ò»¡¢ ÂòÂôµÄÄ¿µÄ£º1 ½¨²Ö 2 T¼Û²î 3 ¿ØÖÆ²ÖÎ» 4 Ö¹Ëğ")
-    print ("¶ş¡¢ ÂôµÄÌõ¼ş£º1 ¼Û²î 2 Ê±¼ä²î ¼Û²îÃ»µ½£¬Ê±¼ä²îµ½ÁË£¬Ò²ÒªÂô¡£")
-    print ("Èı¡¢ ÔçÅÌÂòÈëÒª×¢Òâ£º1. ÃÀ¹É±©µø£¬10£º30Ç°²»Âò¡£ 2.¸ß¿ª10£º30Ç°²»Âò")
-    print ("ËÄ¡¢ ÖÜÎå£¬Ö¸ÊıÔÚÑ¹Á¦Î»¸½½ü£¬±ØĞëÂô¡£")
-    print ("-"*72)
-    
+    print("ä¸€ã€ ä¹°å–çš„ç›®çš„ï¼š1 å»ºä»“ 2 Tä»·å·® 3 æ§åˆ¶ä»“ä½ 4 æ­¢æŸ")
+    print("äºŒã€ å–çš„æ¡ä»¶ï¼š1 ä»·å·® 2 æ—¶é—´å·® ä»·å·®æ²¡åˆ°ï¼Œæ—¶é—´å·®åˆ°äº†ï¼Œä¹Ÿè¦å–ã€‚")
+    print("ä¸‰ã€ æ—©ç›˜ä¹°å…¥è¦æ³¨æ„ï¼š1. ç¾è‚¡æš´è·Œï¼Œ10ï¼š30å‰ä¸ä¹°ã€‚ 2.é«˜å¼€10ï¼š30å‰ä¸ä¹°")
+    print("å››ã€ å‘¨äº”ï¼ŒæŒ‡æ•°åœ¨å‹åŠ›ä½é™„è¿‘ï¼Œå¿…é¡»å–ã€‚")
+    print("-"*72)
+
     outPutPriceRef(cStock)
-   
-   
-    ##ÂòÈëµã£ºÓÃ15·ÖÖÓKÏßµÄÖ§³ÅÎ»ÂòÈëT
-    ##×·¸ßµã£ºÕÇ·ù³¬¹ı3¸öµã¾ø¶Ô²»ÄÜ×·¸ß¡£
-    ##Âô³öµã£º5ÈÕÄÚ¸ßµã£¬»òÕßÈÕÄÚ3¸öµã¡£
-    ##¸îÈâµã£ºÈıÈÕÆÆÎ»»òÕß´óĞĞÇé²»ºÃ¡£
 
-## Èç¹ûÔ¤²âµ±ÈÕ´óÅÌºÃ£¬ÓÃ½üÆÚ¸ßµãµÄ97%×÷ÎªÂòÈëµãÎ»¡£
-## Ô¤²â´óÅÌ²»ºÃ£¬ÓÃ½üÆÚµÍµã97%×÷ÎªµãÎ»¡£
 
-## ÂòÈë¼ÛÒ»¶¨Òª ³¬³öÂòÈëÔ¤ÆÚ£¬Âô³ö¼ÛÒª½µ±ê×¼ 
+    # ä¹°å…¥ç‚¹ï¼šç”¨15åˆ†é’ŸKçº¿çš„æ”¯æ’‘ä½ä¹°å…¥T
+    # è¿½é«˜ç‚¹ï¼šæ¶¨å¹…è¶…è¿‡3ä¸ªç‚¹ç»å¯¹ä¸èƒ½è¿½é«˜ã€‚
+    # å–å‡ºç‚¹ï¼š5æ—¥å†…é«˜ç‚¹ï¼Œæˆ–è€…æ—¥å†…3ä¸ªç‚¹ã€‚
+    # å‰²è‚‰ç‚¹ï¼šä¸‰æ—¥ç ´ä½æˆ–è€…å¤§è¡Œæƒ…ä¸å¥½ã€‚
+
+# å¦‚æœé¢„æµ‹å½“æ—¥å¤§ç›˜å¥½ï¼Œç”¨è¿‘æœŸé«˜ç‚¹çš„97%ä½œä¸ºä¹°å…¥ç‚¹ä½ã€‚
+# é¢„æµ‹å¤§ç›˜ä¸å¥½ï¼Œç”¨è¿‘æœŸä½ç‚¹97%ä½œä¸ºç‚¹ä½ã€‚
+
+# ä¹°å…¥ä»·ä¸€å®šè¦ è¶…å‡ºä¹°å…¥é¢„æœŸï¼Œå–å‡ºä»·è¦é™æ ‡å‡†
 
     countOfEle=len(cStock.dayStrList)
     dayRadioLinkPriceLowArray=np.zeros(countOfEle)
-    for i in range(1,countOfEle):
-        if cStock.dayPriceLowestArray[i-1]>0:
-            dayRadioLinkPriceLowArray[i]=100*(cStock.dayPriceLowestArray[i]-cStock.dayPriceLowestArray[i-1])/cStock.dayPriceLowestArray[i-1]
+    for i in range(1, countOfEle):
+        if cStock.dayPriceLowestArray[i-1] > 0:
+            dayRadioLinkPriceLowArray[i]=100*(cStock.dayPriceLowestArray[i] - \
+                                              cStock.dayPriceLowestArray[i-1])/cStock.dayPriceLowestArray[i-1]
 #    print(dayRadioLinkPriceLowArray[-10:])
-    
-    
-##----Ä£Ê½Ê¶±ğ·¨ÂòÂô¼Û¼ÆËãÄ£¿é
-    ## ÀûÓÃÆ¥ÅäÈÕÇóÈ¡ÂòÈë¼Û
-    ##ÓÃ×î½üµÄÒ»¸öÆ¥ÅäÈÕµÄ×îµÍ¼ÛµÄÕÇ·ù
+
+
+# ----æ¨¡å¼è¯†åˆ«æ³•ä¹°å–ä»·è®¡ç®—æ¨¡å—
+    # åˆ©ç”¨åŒ¹é…æ—¥æ±‚å–ä¹°å…¥ä»·
+    # ç”¨æœ€è¿‘çš„ä¸€ä¸ªåŒ¹é…æ—¥çš„æœ€ä½ä»·çš„æ¶¨å¹…
     print("-"*72)
-    print("\nÄ£Ê½Ê¶±ğ·¨¼ÆËã£º")
+    print("\næ¨¡å¼è¯†åˆ«æ³•è®¡ç®—ï¼š")
     print("-"*72)
 #    patternRecCalTPrice(cStock,dayRadioLinkPriceLowArray)
-##----Ä£Ê½Ê¶±ğ·¨ÂòÂô¼Û¼ÆËãÄ£¿é
-  
-##----×îÓÅ»¯·½·¨ÂòÂô¼Û¼ÆËãÄ£¿é
-##×ĞÏ¸·ÖÎöÄâºÏËã·¨
-##ÀûÓÃ3ÈÕµÄ×îµÍ¼Û×ö¶àÏîÊ½ÄâºÏ£¬ÖÜÆÚÑ¡14¡£
-    kPeriod=7 ##ÄâºÏÇø¼ä
+# ----æ¨¡å¼è¯†åˆ«æ³•ä¹°å–ä»·è®¡ç®—æ¨¡å—
+
+# ----æœ€ä¼˜åŒ–æ–¹æ³•ä¹°å–ä»·è®¡ç®—æ¨¡å—
+# ä»”ç»†åˆ†ææ‹Ÿåˆç®—æ³•
+# åˆ©ç”¨3æ—¥çš„æœ€ä½ä»·åšå¤šé¡¹å¼æ‹Ÿåˆï¼Œå‘¨æœŸé€‰14ã€‚
+    kPeriod=7  # æ‹ŸåˆåŒºé—´
     indexDateFit=-3
-    ##Ò²¿ÉÒÔÓÃnp.vstack((x,y,z))×éºÏfData
+    # ä¹Ÿå¯ä»¥ç”¨np.vstack((x,y,z))ç»„åˆfData
     fDataLow=np.array([cStock.dayPriceLowestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
             cStock.dayPriceLowestArray[indexDateFit-1-kPeriod:indexDateFit-1],\
             cStock.dayPriceLowestArray[indexDateFit-kPeriod:indexDateFit]])
-    guess = (0.3,0.4,0.3,0)
-    paramsLow, pcovLow = optimize.curve_fit(func, fDataLow,cStock.dayPriceLowestArray[-kPeriod:], guess)
-    
+    guess=(0.3, 0.4, 0.3, 0)
+    paramsLow, pcovLow=optimize.curve_fit(
+        func, fDataLow, cStock.dayPriceLowestArray[-kPeriod:], guess)
+
     fDataHigh=np.array([cStock.dayPriceHighestArray[indexDateFit-2-kPeriod:indexDateFit-2],\
             cStock.dayPriceHighestArray[indexDateFit-1-kPeriod:indexDateFit-1],\
             cStock.dayPriceHighestArray[indexDateFit-kPeriod:indexDateFit]])
-    paramsHigh, pcovHigh = optimize.curve_fit(func, fDataHigh,cStock.dayPriceHighestArray[-kPeriod:], guess)
-#    print(paramsLow) ##×îĞ¡¶ş³Ë·¨¼ÆËã²ÎÊı
-    
+    paramsHigh, pcovHigh=optimize.curve_fit(
+        func, fDataHigh, cStock.dayPriceHighestArray[-kPeriod:], guess)
+#    print(paramsLow) ##æœ€å°äºŒä¹˜æ³•è®¡ç®—å‚æ•°
+
 #    historyPrint_optimize_curve_fit(cStock,countOfEle,kPeriod,paramsLow)
-    
+
     print("-"*72)
-    print("×îÓÅ»¯¼ÆËã£º")
+    print("æœ€ä¼˜åŒ–è®¡ç®—ï¼š")
     print("-"*72)
-    priceTbuy=(cStock.dayPriceLowestArray[-3:]*paramsLow[:3]).sum()+paramsLow[3]
+    priceTbuy=(cStock.dayPriceLowestArray[-3:]
+               * paramsLow[:3]).sum()+paramsLow[3]
     priceTsell=priceTbuy*1.025
     printTStop=priceTbuy*0.975
-    priceTfitHigh=(cStock.dayPriceHighestArray[-3:]*paramsHigh[:3]).sum()+paramsHigh[3]
-    print("×îÓÅ»¯T-buy¼Û: {:.2f}£¬T-sell¼Û: {:.2f}, T-FitHigh¼Û: {:.2f}, T-stop¼Û: {:.2f}".format(priceTbuy,priceTsell,priceTfitHigh,printTStop))
-##----×îÓÅ»¯·½·¨ÂòÂô¼Û
+    priceTfitHigh=(
+        cStock.dayPriceHighestArray[-3:]*paramsHigh[:3]).sum()+paramsHigh[3]
+    print("æœ€ä¼˜åŒ–T-buyä»·: {:.2f}ï¼ŒT-sellä»·: {:.2f}, T-FitHighä»·: {:.2f}, T-stopä»·: {:.2f}".format(
+        priceTbuy, priceTsell, priceTfitHigh, printTStop))
+# ----æœ€ä¼˜åŒ–æ–¹æ³•ä¹°å–ä»·
 
     print("-"*72)
-##----5ÈÕ×îÖµ·¨ÂòÂô¼ÛÄ£¿é
-    print("\n×îÖµ·¨¼ÆËã£º")
+# ----5æ—¥æœ€å€¼æ³•ä¹°å–ä»·æ¨¡å—
+    print("\næœ€å€¼æ³•è®¡ç®—ï¼š")
     print("-"*72)
-    for period in [3,5,7]:
-        indexHighPoint=Ccomfunc.rindex(cStock.dayPriceHighestFList,max(cStock.dayPriceHighestFList[countOfEle-period:]))
-        indexLowPoint=Ccomfunc.rindex(cStock.dayPriceLowestFList,min(cStock.dayPriceLowestFList[countOfEle-period:]))
+    for period in [3, 5, 7]:
+        indexHighPoint=Ccomfunc.rindex(cStock.dayPriceHighestFList, max(
+            cStock.dayPriceHighestFList[countOfEle-period:]))
+        indexLowPoint=Ccomfunc.rindex(cStock.dayPriceLowestFList, min(
+            cStock.dayPriceLowestFList[countOfEle-period:]))
         priceHigh=cStock.dayPriceHighestFList[indexHighPoint]
         priceLow=cStock.dayPriceLowestFList[indexLowPoint]
-        print("{}ÈÕ×î¸ßµã:{}£¬³öÏÖÈÕÆÚ:{}, {}ÈÕ×îµÍµã:{}£¬³öÏÖÈÕÆÚ:{}".format( \
-                period,priceHigh,cStock.dayStrList[indexHighPoint], \
-                period,priceLow,cStock.dayStrList[indexLowPoint]))
+        print("{}æ—¥æœ€é«˜ç‚¹:{}ï¼Œå‡ºç°æ—¥æœŸ:{}, {}æ—¥æœ€ä½ç‚¹:{}ï¼Œå‡ºç°æ—¥æœŸ:{}".format( \
+                period, priceHigh, cStock.dayStrList[indexHighPoint], \
+                period, priceLow, cStock.dayStrList[indexLowPoint]))
         print("-"*72)
-##----5ÈÕ×îÖµ·¨ÂòÂô¼ÛÄ£¿é
+# ----5æ—¥æœ€å€¼æ³•ä¹°å–ä»·æ¨¡å—
 
     print("-"*72)
-##----¶ÌÏßÖ§³ÅÎ»Âòµã
-    print("\n¶ÌÏßÖ§³ÅÎ»Âòµã¼ÆËã£º")
+# ----çŸ­çº¿æ”¯æ’‘ä½ä¹°ç‚¹
+    print("\nçŸ­çº¿æ”¯æ’‘ä½ä¹°ç‚¹è®¡ç®—ï¼š")
     print("-"*72)
-    print("×¼±¸¼ÆËã")
-##---- Ö§³ÅÎ»Âòµã
+    print("å‡†å¤‡è®¡ç®—")
+# ---- æ”¯æ’‘ä½ä¹°ç‚¹
 
-##----´óÅÌµÄ·ù¶È²îµÄÂòÂô·¨
+# ----å¤§ç›˜çš„å¹…åº¦å·®çš„ä¹°å–æ³•
     print("-"*72)
-    print("\nÀûÓÃ´óÅÌµ÷ÕûµÄ·ù¶È²î¿ØÖÆÂòÂôµã")
+    print("\nåˆ©ç”¨å¤§ç›˜è°ƒæ•´çš„å¹…åº¦å·®æ§åˆ¶ä¹°å–ç‚¹")
     print("-"*72)
-##----Ä£¿é
+# ----æ¨¡å—
 
-##----¸ö¹ÉÈÕÄÚµ÷ÕûµÄ·ù¶È¾ùÖµ
+# ----ä¸ªè‚¡æ—¥å†…è°ƒæ•´çš„å¹…åº¦å‡å€¼
     print("-"*72)
-    print("\n¸ö¹ÉÈÕÄÚµ÷ÕûµÄ¾ùÖµÂòÂô")
+    print("\nä¸ªè‚¡æ—¥å†…è°ƒæ•´çš„å‡å€¼ä¹°å–")
     print("-"*72)
-##----Ä£¿é
+# ----æ¨¡å—
 
 
     print("-"*72)
-    for i in range(-3,0): ##Ñ­»·Ö¸ÊıÆğÊ¼±ÈÆ¥ÅäÖ¸ÊıÉÙ1
-        weekDay=Ccomfunc.convertDateStr2Date(cStock.dayStrList[i]).isoweekday() 
-        resultLine="{},ĞÇÆÚ{}\tÊÕÅÌ¼Û:{}\tÕÇ·ù:{}\tÁ¿ÄÜ»·±È:{}\t²¨¶¯·ù¶È:{}".format(\
-                cStock.dayStrList[i],weekDay,cStock.dayPriceClosedArray[i],cStock.dayRiseRateCloseArray[i],\
-                cStock.dayRadioLinkOfTradeVolumeFList[i],cStock.dayWaveRateFList[i])
-        print resultLine
-    
-    
+    for i in range(-3, 0):  # å¾ªç¯æŒ‡æ•°èµ·å§‹æ¯”åŒ¹é…æŒ‡æ•°å°‘1
+        weekDay=Ccomfunc.convertDateStr2Date(cStock.dayStrList[i]).isoweekday()
+        resultLine="{},æ˜ŸæœŸ{}\tæ”¶ç›˜ä»·:{}\tæ¶¨å¹…:{}\té‡èƒ½ç¯æ¯”:{}\tæ³¢åŠ¨å¹…åº¦:{}".format(\
+                cStock.dayStrList[i], weekDay, cStock.dayPriceClosedArray[i], cStock.dayRiseRateCloseArray[i],\
+                cStock.dayRadioLinkOfTradeVolumeFList[i], cStock.dayWaveRateFList[i])
+        print(resultLine)
+
+
     calTBuy(curStock)
 
-    ## ÃÀ¹É-1.5ÒÔÉÏ£¬µ±ÈÕÉÏÎç²»Âò×öT£¬¿ÉÒÔÊÊ¶ÈµÄÉÏÎç¼õ²Ö×öT¡£ 
-    ## Éè¼Æ×öTµÄ¼Û¸ñ£¬ÓÃ15·ÖÖÓKÏßµÄÖ§³Å»òÕßÆäËüµãÎ»¡£
-    ## ´óÅÌÕÇ¼ÛÉÙ µø¼Ò¶à ²»×ö¶ÌÏß¡£ 
+    # ç¾è‚¡-1.5ä»¥ä¸Šï¼Œå½“æ—¥ä¸Šåˆä¸ä¹°åšTï¼Œå¯ä»¥é€‚åº¦çš„ä¸Šåˆå‡ä»“åšTã€‚
+    # è®¾è®¡åšTçš„ä»·æ ¼ï¼Œç”¨15åˆ†é’ŸKçº¿çš„æ”¯æ’‘æˆ–è€…å…¶å®ƒç‚¹ä½ã€‚
+    # å¤§ç›˜æ¶¨ä»·å°‘ è·Œå®¶å¤š ä¸åšçŸ­çº¿ã€‚
 
-    ##×öTµÄ¼Û¸ñÈç¹ûµÍÁË2¸öµã ¼á¾ö³ö¡£
+    # åšTçš„ä»·æ ¼å¦‚æœä½äº†2ä¸ªç‚¹ åšå†³å‡ºã€‚
 
-    ## Èç¹ûµ±ÌìÔ¤²âĞĞÇé²»ºÃ£¬¾ø¶Ô²»¼Ó²ÖÂò£¬Äş¿É²»¶¯ 
-    ## ×öTÓ¦¸Ã¸ù¾İ¿ªÅÌ¼Û£¬´óÅÌÓë¸ö¹ÉµÄ×ßÊÆ¹ØÏµÁª¶¯¡£¸ßÅ×µÍÎü¡£×¢Òâ±£³Ö²ÖÎ»¡£µ«ÊÇ´óÅÌ±ØĞëÊÇÕğµ´ÊĞ£¬²»ÄÜÊÇµ¥±ßÊĞ
-    ## µ¥±ßÊĞºÍÕğµ´ÊĞµÄÅĞ¶Ï£¬ĞèÒª½áºÏ´óÅÌºÍ¸ö¹É×÷·ÖÎö¡£
-    ## ÈçºÎT·ÉÁË »òÕß²ÖÎ»²»¹»µÄ»°£¬¿ÉÒÔÎ²ÅÌ2£º45ÔÙÂò»ØÀ´£¡Äş¿É²»×¬Ç®£¬²»ÄÜÅâÇ®¡£
-    ## ÈõÊÆ±ğÏë×Å±©ÕÇ£¬ÂôÁË¾ÍÕÇ·ÉÁË£¿ÄÇÖÖ¿ÉÄÜĞÔÒ²²»ÊÇÄÇÃ´´óµÄ¡£Ò»ÄêÒ²²»»á·¢Éú¼¸»Ø¡£¶øÇÒÆ½Ì¯ÁË²ÖÎ»·çÏÕ¡£¿÷²»ÁË¶àÉÙ¡£
+    # å¦‚æœå½“å¤©é¢„æµ‹è¡Œæƒ…ä¸å¥½ï¼Œç»å¯¹ä¸åŠ ä»“ä¹°ï¼Œå®å¯ä¸åŠ¨
+    # åšTåº”è¯¥æ ¹æ®å¼€ç›˜ä»·ï¼Œå¤§ç›˜ä¸ä¸ªè‚¡çš„èµ°åŠ¿å…³ç³»è”åŠ¨ã€‚é«˜æŠ›ä½å¸ã€‚æ³¨æ„ä¿æŒä»“ä½ã€‚ä½†æ˜¯å¤§ç›˜å¿…é¡»æ˜¯éœ‡è¡å¸‚ï¼Œä¸èƒ½æ˜¯å•è¾¹å¸‚
+    # å•è¾¹å¸‚å’Œéœ‡è¡å¸‚çš„åˆ¤æ–­ï¼Œéœ€è¦ç»“åˆå¤§ç›˜å’Œä¸ªè‚¡ä½œåˆ†æã€‚
+    # å¦‚ä½•Té£äº† æˆ–è€…ä»“ä½ä¸å¤Ÿçš„è¯ï¼Œå¯ä»¥å°¾ç›˜2ï¼š45å†ä¹°å›æ¥ï¼å®å¯ä¸èµšé’±ï¼Œä¸èƒ½èµ”é’±ã€‚
+    # å¼±åŠ¿åˆ«æƒ³ç€æš´æ¶¨ï¼Œå–äº†å°±æ¶¨é£äº†ï¼Ÿé‚£ç§å¯èƒ½æ€§ä¹Ÿä¸æ˜¯é‚£ä¹ˆå¤§çš„ã€‚ä¸€å¹´ä¹Ÿä¸ä¼šå‘ç”Ÿå‡ å›ã€‚è€Œä¸”å¹³æ‘Šäº†ä»“ä½é£é™©ã€‚äºä¸äº†å¤šå°‘ã€‚
 
 
-if __name__=="__main__":
-    
+if __name__ == "__main__":
+
     print("\n"+"#"*80)
-    
-    startClock=time.clock() ##¼ÇÂ¼³ÌĞò¿ªÊ¼¼ÆËãÊ±¼ä
-    stocIDkList=["600699"]
+
+    startClock=time.clock()  # è®°å½•ç¨‹åºå¼€å§‹è®¡ç®—æ—¶é—´
+    stocIDkList=["999999"]
     for stockID in stocIDkList:
         curStock=Stock(stockID)
         curStock.list2array()
         main(curStock)
-    
+
     timeSpan=time.clock()-startClock
-    print("Time used(s):",round(timeSpan,2))
-
-
+    print("Time used(s):", round(timeSpan, 2))

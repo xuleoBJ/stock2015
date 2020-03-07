@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
 import datetime,time
-#import ConfigParser
+import configparser 
 import Cstock
 import Ccomfunc
-# import configOS
+import configOS
 import stockPatternRecognition
 import stockTradeModel
-# import stockTrendAna
+import stockTrendAna
 import ctypes 
-
-from PyQt4 import QtGui # Import the PyQt4 module we'll need
-from PyQt4.QtGui import *
+import tkinter
+import tkinter.messagebox #弹窗库
 
 lineWritedList=[]
 
@@ -29,7 +28,7 @@ def calGDG():
     print (u"股市与GDP值比{:.2f}".format((AB_SH+AB_SZ)/gdp2014))
 
 def WarnBigEvent():
-    ctypes.windll.user32.MessageBoxA(0, "goal:3200,sell:1/2", "infor", 1)
+    tkinter.messagebox.showinfo('提示',"goal:3200,sell:1/2")
 
 ##历史上相同的周，和相同的交易日
 def specialWeekDaySatis(curStock,strDate):
