@@ -5,7 +5,7 @@ import codecs
 config = configparser.ConfigParser()
 cfgfile='config.ini'
 #config.read('config.ini')
-config.readfp(codecs.open(cfgfile, "r", "utf-8-sig"))
+config.readfp(codecs.open(cfgfile, "r"))
 
 stockIDMarketList=config.get("stock","stockIDMarket").split(',')
 stockIDList=config.get("stock","stockIDList").split(',')
@@ -21,7 +21,6 @@ def updatePetternRectDateList():
     updateConfig()
 
 def creatConfig():
-    config = SafeConfigParser()
     config.read('config.ini')
     config.add_section('stock')
     config.set('stock', 'stockID', '999999')

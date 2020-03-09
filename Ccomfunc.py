@@ -7,9 +7,7 @@ from datetime import timedelta
 import sys
 import Cstock
 import ctypes 
-# import ConfigParser
-
-
+import configparser
 
 
 ##数据目录字符串

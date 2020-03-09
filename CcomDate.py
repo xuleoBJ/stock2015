@@ -72,7 +72,7 @@ def get_month_begin(ts = time.time(),N = 0):
 if __name__ == "__main__":
     #get current week num of the year
     dateStr="2016/07/10"
-    print getStrDateMonday_of_week(dateStr)
+    print (getStrDateMonday_of_week(dateStr))
     now = datetime.date(2016, 7, 17)
     numWeek = now.isocalendar()[1]
     print ( now.strftime("%Y%m%d")+ "是年度"+str(numWeek)+"周，星期"+str(now.weekday()))
